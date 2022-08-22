@@ -1,0 +1,17 @@
+{
+    "name": "evon/laravel_lcg",
+    "authors": [
+        {
+            "name": "Evon",
+            "email": "evon1991@163.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Lcg\\BreezeServiceProvider"
+            ]
+        }
+    },
+    "require": {}
+}

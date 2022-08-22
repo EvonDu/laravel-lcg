@@ -1,0 +1,34 @@
+*[v-cloak]{
+    display:none;
+}
+.lte-counted{
+    display: flex;
+    justify-content: flex-start;
+    color: #909399;
+    font-size: 14px;
+}
+.lte-pagination{
+    display: flex;
+    justify-content: flex-end;
+}
+.lte-form-search{
+    margin-bottom: -18px;
+}
+.lte-form-search .lte-form-item{
+    width: 100%;
+}
+.lte-actions-footer{
+    float: right
+}
+.el-form-item label{
+    margin-bottom: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.el-card + .el-card{
+    margin-top: 8px;
+}
+.el-button--text {
+    border: 0;
+}
