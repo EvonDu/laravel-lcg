@@ -3,7 +3,7 @@ import LteHeader from "../components/LteHeader.vue";
 import LteSidebar from "../components/LteSidebar.vue";
 import LteFooter from "../components/LteFooter.vue";
 
-defineProps({
+const props = defineProps({
     lte: Object,
     user: Object,
     status: String,

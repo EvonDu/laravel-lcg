@@ -1,3 +1,85 @@
+<script setup>
+import $ from 'jquery'
+import defaultLogo from '../images/AdminLTELogo.png'
+import defaultProfile from '../images/user-128x128.jpg'
+//import Treeview from "admin-lte/build/js/Treeview"
+import { onMounted } from 'vue'
+
+const props = defineProps({
+    project: {
+        type: String,
+        default() {
+            return "AdminLTE 3"
+        }
+    },
+    logo: {
+        type: String,
+        default() {
+            return null
+        }
+    },
+    user: {
+        type: Object,
+        default() {
+            return {
+                "name" : "Admin",
+                "profile" : null
+            }
+        }
+    },
+    navs: {
+        type: Array,
+        default() {
+            return [
+                {
+                    title: "Dashboard",
+                    icon: "fas fa-tachometer-alt",
+                    url: "#",
+                    badge: "Demo",
+                },
+                {
+                    title: "SYSTEM",
+                    type: "header",
+                },
+                {
+                    title: "List",
+                    icon: "fas fa-th",
+                    url: "#",
+                    childList: [
+                        {title: "Item1", url: "#"},
+                        {title: "Item2", url: "#"},
+                    ]
+                },
+            ]
+        }
+    },
+});
+
+onMounted(() => {
+    //重新触发AdminLTE中TreeView的加载事件
+    $(window).trigger("load.lte.treeview");
+})
+
+//处理导航栏当前活跃
+let handleActive = function(list, url){
+    for (let i in list){
+        if(list[i].url === url){
+            list[i].active = true;
+            return true;
+        }
+        else if(list[i].childList){
+            let isChildActive = handleActive(list[i].childList, url);
+            if(isChildActive){
+                list[i].active = true;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+handleActive(props.navs, location.href);
+</script>
+
 <template>
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
@@ -11,7 +93,7 @@
             <!-- Sidebar user (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex" v-if="user">
                 <div class="image">
-                    <img :src="user.image" class="img-circle elevation-2" alt="User Image" v-if="user.image">
+                    <img :src="user.profile" class="img-circle elevation-2" alt="User Image" v-if="user.profile">
                     <img :src="defaultProfile" class="img-circle elevation-2" alt="User Image" v-else>
                 </div>
                 <div class="info" v-if="user.name">
@@ -58,91 +140,3 @@
         </div>
     </aside>
 </template>
-
-<script>
-import $ from 'jquery'
-//import Treeview from "admin-lte/build/js/Treeview"
-
-export default {
-    name: "LteSidebar",
-    props: {
-        project: {
-            type: String,
-            default() {
-                return "AdminLTE 3"
-            }
-        },
-        logo: {
-            type: String,
-            default() {
-                return null
-            }
-        },
-        user: {
-            type: Object,
-            default() {
-                return {
-                    "name" : "Admin",
-                    "image" : null
-                }
-            }
-        },
-        navs: {
-            type: Array,
-            default() {
-                return [
-                    {
-                        title: "Dashboard",
-                        icon: "fas fa-tachometer-alt",
-                        url: "#",
-                        badge: "Demo",
-                    },
-                    {
-                        title: "SYSTEM",
-                        type: "header",
-                    },
-                    {
-                        title: "List",
-                        icon: "fas fa-th",
-                        url: "#",
-                        childList: [
-                            {title: "Item1", url: "#"},
-                            {title: "Item2", url: "#"},
-                        ]
-                    },
-                ]
-            }
-        },
-    },
-    created(){
-        //处理导航栏当前活跃
-        let handleActive = function(list, url){
-            for (let i in list){
-                if(list[i].url === url){
-                    list[i].active = true;
-                    return true;
-                }
-                else if(list[i].childList){
-                    let isChildActive = handleActive(list[i].childList, url);
-                    if(isChildActive){
-                        list[i].active = true;
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        handleActive(this.navs, location.href);
-    },
-    data(){
-        return {
-            defaultLogo : new URL(`../images/AdminLTELogo.png`, import.meta.url).href,
-            defaultProfile : new URL(`../images/user-128x128.jpg`, import.meta.url).href,
-        };
-    },
-    mounted(){
-        //重新触发AdminLTE中TreeView的加载事件
-        $(window).trigger("load.lte.treeview");
-    },
-}
-</script>

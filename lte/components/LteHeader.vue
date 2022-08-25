@@ -1,8 +1,9 @@
 <script setup>
 import "bootstrap"
-import {useForm} from "@inertiajs/inertia-vue3";
+import defaultImage from '../images/user-128x128.jpg'
+import { useForm } from "@inertiajs/inertia-vue3";
 
-defineProps({
+const props = defineProps({
     links: {
         type: Array,
         default() {
@@ -30,7 +31,6 @@ defineProps({
 });
 
 const form = useForm({});
-const defaultImage = new URL(`../images/user-128x128.jpg`, import.meta.url).href;
 
 const logout = () => {
     form.post(route('logout'), {});
@@ -88,7 +88,7 @@ const logout = () => {
                         <a :href="message.url" class="dropdown-item">
                             <!-- Message Start -->
                             <div class="media">
-                                <img :src="defaultImage" alt="User Avatar" class="img-size-50 img-circle mr-3" v-if="defaultImage">
+                                <img :src="messages.img" alt="User Avatar" class="img-size-50 img-circle mr-3" v-if="messages.img">
                                 <img :src="defaultImage" alt="User Avatar" class="img-size-50 img-circle mr-3" v-else>
                                 <div class="media-body">
                                     <h3 class="dropdown-item-title">
@@ -139,3 +139,10 @@ const logout = () => {
     </nav>
 </template>
 
+<style scoped>
+/** 防止CSS警告 */
+.dropdown-menu{
+    margin: 0;
+    padding: 0;
+}
+</style>

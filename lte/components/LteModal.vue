@@ -1,3 +1,66 @@
+<script setup>
+import { Modal } from "bootstrap";
+import { watch, onMounted, getCurrentInstance } from 'vue';
+
+let modal = null;
+
+const props = defineProps({
+    modelValue : {
+        type: Boolean,
+        default() {
+            return false;
+        }
+    },
+    title: {
+        type: String,
+        default() {
+            return "标题";
+        }
+    },
+    scrollable: {
+        type: Boolean,
+        default() {
+            return false;
+        }
+    },
+    size: {
+        type: String,
+        default() {
+            return "";
+        }
+    }
+});
+
+const emits = defineEmits(['update:modelValue'])
+
+const close = function(){
+    emits('update:modelValue', false);
+};
+
+const onShow = function(){
+    modal.show();
+};
+
+const onClose = function(){
+    modal.hide();
+};
+
+watch(() => props.modelValue, (new_val) => {
+    if(new_val){
+        onShow()
+    } else {
+        onClose()
+    }
+});
+
+onMounted(() => {
+    //获取元素
+    let currentInstance = getCurrentInstance();
+    //创建模态框
+    modal = new Modal(currentInstance.ctx.$refs.modal, {});
+});
+</script>
+
 <template>
     <div class="modal fade" @click.self="close" ref="modal">
         <div class="modal-dialog" :class="{
@@ -23,70 +86,3 @@
         </div>
     </div>
 </template>
-
-<script>
-export default {
-    name: "LteModal",
-    props: {
-        modelValue : {
-            type: Boolean,
-            default() {
-                return false;
-            }
-        },
-        title: {
-            type: String,
-            default() {
-                return "标题";
-            }
-        },
-        scrollable: {
-            type: Boolean,
-            default() {
-                return false;
-            }
-        },
-        size: {
-            type: String,
-            default() {
-                return "";
-            }
-        }
-    },
-    emits: ['update:modelValue', 'submit'],
-    data() {
-        return {
-            el: null,
-            modal: null,
-        }
-    },
-    watch: {
-        modelValue (new_val) {
-            if(new_val){
-                this.onShow()
-            } else {
-                this.onClose()
-            }
-        },
-    },
-    methods: {
-        close: function(){
-            this.$emit('update:modelValue', false);
-        },
-        onShow: function(){
-            this.getModal().show();
-        },
-        onClose: function(){
-            this.getModal().hide();
-        },
-        getModal: function(){
-            if(this.modal)
-                return this.modal;
-            else {
-                this.modal = new bootstrap.Modal(this.$refs.modal, {});
-                return this.modal;
-            }
-        }
-    },
-}
-</script>

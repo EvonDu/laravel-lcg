@@ -1,3 +1,40 @@
+<script setup>
+const props = defineProps({
+    type: {
+        type: String,
+        default: "primary",
+    },
+    icon: {
+        type: String,
+        default: "",
+    },
+    title: {
+        type: String,
+        default: "",
+    },
+    outline: {
+        type: Boolean,
+        default: false,
+    },
+    collapsed: {
+        type: Boolean,
+        default: false,
+    },
+    collapse: {
+        type: Boolean,
+        default: false,
+    },
+    maximize: {
+        type: Boolean,
+        default: false,
+    },
+    remove: {
+        type: Boolean,
+        default: false,
+    },
+});
+</script>
+
 <template>
     <div class="card card-primary" :class="{
         'card-outline': outline,
@@ -32,47 +69,3 @@
         </div>
     </div>
 </template>
-
-<script>
-export default {
-    name: "LteCard",
-    props: {
-        type: {
-            type: String,
-            default: "primary",
-        },
-        icon: {
-            type: String,
-            default: "",
-        },
-        title: {
-            type: String,
-            default: "",
-        },
-        outline: {
-            type: Boolean,
-            default: false,
-        },
-        collapsed: {
-            type: Boolean,
-            default: false,
-        },
-        collapse: {
-            type: Boolean,
-            default: false,
-        },
-        maximize: {
-            type: Boolean,
-            default: false,
-        },
-        remove: {
-            type: Boolean,
-            default: false,
-        },
-    }
-}
-</script>
-
-<style scoped>
-
-</style>

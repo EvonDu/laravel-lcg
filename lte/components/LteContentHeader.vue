@@ -1,3 +1,22 @@
+<script setup>
+const props = defineProps({
+    title: {
+        type: String,
+        default() {
+            return "AdminLTE"
+        }
+    },
+    breadcrumbs: {
+        type: Array,
+        default() {
+            return [
+                {"url": "#", "title": "Home"},
+            ]
+        }
+    },
+});
+</script>
+
 <template>
     <section class="content-header">
         <div class="container-fluid">
@@ -17,29 +36,3 @@
         </div>
     </section>
 </template>
-
-<script>
-export default {
-    name: "LteContentHeader",
-    props: {
-        title: {
-            type: String,
-            default() {
-                return "AdminLTE"
-            }
-        },
-        breadcrumbs: {
-            type: Array,
-            default() {
-                return [
-                    {"url": "#", "title": "Home"},
-                ]
-            }
-        },
-    },
-}
-</script>
-
-<style scoped>
-
-</style>
