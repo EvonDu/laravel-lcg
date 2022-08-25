@@ -5,12 +5,13 @@ namespace Lcg\Console;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Lcg\Console\Stacks\InstallsInertiaViteStacks;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
 {
-    use InstallsInertiaStacks;
+    use InstallsInertiaViteStacks;
 
     /**
      * The name and signature of the console command.
@@ -37,7 +38,7 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        return $this->installInertiaVueStack();
+        return $this->installInertiaViteVueStack();
     }
 
     /**

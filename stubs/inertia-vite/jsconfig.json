@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
+        "baseUrl": "../inertia-common",
         "paths": {
             "@/*": ["resources/js/*"]
         }
