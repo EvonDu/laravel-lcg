@@ -6,12 +6,14 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Lcg\Console\Stacks\InstallsInertiaViteStacks;
+use Lcg\Console\Stacks\InstallsInertiaWebpackStacks;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
 {
     use InstallsInertiaViteStacks;
+    use InstallsInertiaWebpackStacks;
 
     /**
      * The name and signature of the console command.
@@ -38,7 +40,11 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        return $this->installInertiaViteVueStack();
+        if(app()->version()[0] >= 9){
+            return $this->installInertiaViteVueStack();
+        } else {
+            return $this->installInertiaWebpackVueStack();
+        }
     }
 
     /**
