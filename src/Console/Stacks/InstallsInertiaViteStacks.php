@@ -9,7 +9,7 @@ use Lcg\Utils\PathUtil;
 trait InstallsInertiaViteStacks
 {
     /**
-     * Install the Inertia Vue Breeze stack.
+     * Install the Inertia Vue Vite stack.
      *
      * @return void
      */
@@ -92,7 +92,7 @@ trait InstallsInertiaViteStacks
             $this->installInertiaVueSsrStack();
         }
 
-        $this->components->info('Breeze scaffolding installed successfully.');
+        $this->components->info('Lcg scaffolding installed successfully.');
         $this->components->warn('Please execute the [npm install && npm run dev] commands to build your assets.');
     }
 }

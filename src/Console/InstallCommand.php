@@ -20,7 +20,7 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'lcg:install {stack=blade : The development stack that should be installed (blade,react,vue,api)}
+    protected $signature = 'lcg:install {stack=auto : The development stack that should be installed (vite,webpack)}
                             {--inertia : Indicate that the Vue Inertia stack should be installed (Deprecated)}
                             {--pest : Indicate that Pest should be installed}
                             {--ssr : Indicates if Inertia SSR support should be installed}
@@ -31,7 +31,7 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Install the Breeze controllers and resources';
+    protected $description = 'Install the laravel code generators controllers and resources';
 
     /**
      * Execute the console command.
@@ -40,15 +40,23 @@ class InstallCommand extends Command
      */
     public function handle()
     {
-        if(app()->version()[0] >= 9){
+        if($this->argument('stack') === 'vite'){
             return $this->installInertiaViteVueStack();
-        } else {
+        }
+        else if($this->argument('stack') === 'webpack'){
             return $this->installInertiaWebpackVueStack();
+        }
+        else{
+            if(app()->version()[0] >= 9){
+                return $this->installInertiaViteVueStack();
+            } else {
+                return $this->installInertiaWebpackVueStack();
+            }
         }
     }
 
     /**
-     * Install Breeze's tests.
+     * Install laravel code generators tests.
      *
      * @return void
      */

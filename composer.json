@@ -9,7 +9,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Lcg\\BreezeServiceProvider"
+                "Lcg\\LcgServiceProvider"
             ]
         }
     },

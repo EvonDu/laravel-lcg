@@ -11,7 +11,7 @@ use function resource_path;
 trait InstallsInertiaWebpackStacks
 {
     /**
-     * Install the Inertia Vue Breeze stack.
+     * Install the Inertia Vue Webpack stack.
      *
      * @return void
      */
@@ -81,7 +81,7 @@ trait InstallsInertiaWebpackStacks
         copy(__DIR__.'/../../../stubs/inertia-webpack/webpack.mix.js', base_path('webpack.mix.js'));
         copy(__DIR__.'/../../../stubs/inertia-webpack/resources/js/app.js', base_path('resources/js/app.js'));
 
-        $this->info('Breeze scaffolding installed successfully.');
+        $this->info('Lcg scaffolding installed successfully.');
         $this->warn('Please execute the [npm install && npm run dev] commands to build your assets.');
     }
 }
