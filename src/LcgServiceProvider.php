@@ -30,6 +30,7 @@ class LcgServiceProvider extends ServiceProvider implements DeferrableProvider
 
         $this->commands([
             Console\InstallCommand::class,
+            Console\CurdCommand::class,
         ]);
     }
 
@@ -40,6 +41,9 @@ class LcgServiceProvider extends ServiceProvider implements DeferrableProvider
      */
     public function provides()
     {
-        return [Console\InstallCommand::class];
+        return [
+            Console\InstallCommand::class,
+            Console\CurdCommand::class,
+        ];
     }
 }
