@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\__MODEL_NAME__;
 use Illuminate\Http\Request;
-use Lcg\Exceptions\Inertia;
 use Lcg\Exceptions\ApiResponse;
+use Lcg\Exceptions\Inertia\Inertia;
 
 /**
  * @OA\Tag(name="__MODEL_NAME__",description="__MODEL_NAME__")

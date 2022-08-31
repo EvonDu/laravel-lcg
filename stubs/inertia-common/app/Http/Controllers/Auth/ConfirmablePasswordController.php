@@ -7,7 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Lcg\Exceptions\Inertia;
+use Lcg\Exceptions\Inertia\Inertia;
 
 class ConfirmablePasswordController extends Controller
 {

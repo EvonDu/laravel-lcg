@@ -1,5 +1,5 @@
 <?php
-namespace Lcg\Exceptions;
+namespace Lcg\Exceptions\Inertia;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;

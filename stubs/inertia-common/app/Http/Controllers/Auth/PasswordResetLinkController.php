@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
-use Lcg\Exceptions\Inertia;
+use Lcg\Exceptions\Inertia\Inertia;
 
 class PasswordResetLinkController extends Controller
 {

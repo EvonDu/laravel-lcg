@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
-use Lcg\Exceptions\Inertia;
+use Lcg\Exceptions\Inertia\Inertia;
 
 class NewPasswordController extends Controller
 {

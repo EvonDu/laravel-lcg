@@ -1,5 +1,5 @@
 <?php
-namespace Lcg\Exceptions;
+namespace Lcg\Exceptions\Inertia;
 
 class Inertia extends \Inertia\Inertia{
     protected static function getFacadeAccessor(): string

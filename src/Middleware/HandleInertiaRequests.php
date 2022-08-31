@@ -5,7 +5,7 @@ namespace Lcg\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-use Lcg\Exceptions\Inertia as InertiaExt;
+use Lcg\Exceptions\Inertia\Inertia as InertiaExt;
 
 class HandleInertiaRequests extends Middleware
 {
