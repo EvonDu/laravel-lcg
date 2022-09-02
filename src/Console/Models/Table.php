@@ -189,12 +189,12 @@ class Table{
          foreach ($this->fields as $field){
             if(in_array($field->name, ["created_at", "updated_at"]))
                 continue;
-             $contents[] = $this->getTabString(4) . "<el-form-item :label='labels.{$field->name}'>";
-             $contents[] = $this->getTabString(5) . "<el-input v-model='search.temp.{$field->name}'></el-input>";
-             $contents[] = $this->getTabString(4) . "</el-form-item>";
+            $contents[] = $this->getTabString(4) . "<el-form-item :label='labels.{$field->name}'>";
+            $contents[] = $this->getTabString(5) . "<el-input v-model='search.temp.{$field->name}'></el-input>";
+            $contents[] = $this->getTabString(4) . "</el-form-item>";
         }
         if(isset($contents[0]))
-            $contents[0] = str_replace($this->getTabString(5), "", $contents[0]);
+            $contents[0] = str_replace($this->getTabString(4), "", $contents[0]);
         return implode("\n", $contents);
     }
 
@@ -206,10 +206,10 @@ class Table{
     public function getBladeTableContent(){
         $contents = [];
         foreach ($this->fields as $field){
-            $contents[] = $this->getTabString(4) . "<el-table-column prop='{$field->name}' :label='labels.{$field->name}' sortable='custom' show-overflow-tooltip></el-table-column>";
+            $contents[] = $this->getTabString(5) . "<el-table-column prop='{$field->name}' :label='labels.{$field->name}' sortable='custom' show-overflow-tooltip></el-table-column>";
         }
         if(isset($contents[0]))
-            $contents[0] = str_replace($this->getTabString(4), "", $contents[0]);
+            $contents[0] = str_replace($this->getTabString(5), "", $contents[0]);
         return implode("\n", $contents);
     }
 
