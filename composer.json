@@ -1,11 +1,16 @@
 {
-    "name": "evon/laravel_lcg",
+    "name": "evondu/laravel-lcg",
     "authors": [
         {
             "name": "Evon",
             "email": "evon1991@163.com"
         }
     ],
+    "autoload":{
+        "psr-4":{
+            "Lcg\\": "src"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
