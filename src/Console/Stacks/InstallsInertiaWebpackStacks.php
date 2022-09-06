@@ -1,6 +1,6 @@
 <?php
 
-namespace Lcg\Console\stacks;
+namespace Lcg\Console\Stacks;
 
 use Illuminate\Filesystem\Filesystem;
 use Lcg\Utils\PathUtil;
