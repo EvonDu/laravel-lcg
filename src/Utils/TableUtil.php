@@ -19,8 +19,9 @@ class TableUtil {
      * 成员属性
      */
     public $table;
+    public $fields;
     public $primary_key;
-    public $fields = [];
+    public $foreign_keys;
 
     /**
      * 构造函数
@@ -39,6 +40,7 @@ class TableUtil {
         }
 
         //获取字段
+        $fields = [];
         $fieldsData = DB::select("SHOW FULL COLUMNS FROM $table");
         foreach ($fieldsData as $fieldData){
             //构建字段模型
@@ -47,7 +49,22 @@ class TableUtil {
             if($fieldModel->isPk)
                 $this->primary_key = $fieldModel;
             //添加到字段列表
-            $this->fields[] = $fieldModel;
+            $fields[] = $fieldModel;
         }
+        $this->fields = $fields;
+
+        //获取外键
+        $foreignKeys = [];
+        $foreignKeysData = DB::select("SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE CONSTRAINT_SCHEMA = SCHEMA() AND (REFERENCED_TABLE_NAME IS NOT NULL) AND (TABLE_NAME = '$table' OR REFERENCED_TABLE_NAME = '$table')");
+        foreach ($foreignKeysData as $foreignKeyData){
+            $foreignKeys[] = [
+                "type" => ($foreignKeyData->TABLE_NAME === $table) ? "one" : "many",
+                "table" => $foreignKeyData->TABLE_NAME,
+                "column" => $foreignKeyData->COLUMN_NAME,
+                "referenced_table" => $foreignKeyData->REFERENCED_TABLE_NAME,
+                "referenced_column" => $foreignKeyData->REFERENCED_COLUMN_NAME,
+            ];
+        }
+        $this->foreign_keys = $foreignKeys;
     }
 }

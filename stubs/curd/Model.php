@@ -14,7 +14,14 @@ class __MODEL_NAME__ extends Model
     use ModelExpand;
 
     /**
-     * 字段列表
+     * Table
+     *
+     * @var string
+     */
+    protected $table = '__MODEL_TABLE__';
+
+    /**
+     * Fields
      *
      * @return string[]
      */
@@ -25,7 +32,7 @@ class __MODEL_NAME__ extends Model
     }
 
     /**
-     * 字段标签
+     * Labels
      *
      * @return string[]
      */
@@ -36,7 +43,7 @@ class __MODEL_NAME__ extends Model
     }
 
     /**
-     * 表单验证
+     * Validate
      *
      * @param Request $request
      * @return array
@@ -46,4 +53,6 @@ class __MODEL_NAME__ extends Model
             /** MODEL_RULES */
         ]);
     }
+
+    /** MODEL_FK_RELEVANCE */
 }

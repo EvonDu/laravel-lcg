@@ -51,10 +51,12 @@ trait CurdGeneratorStacks
         //读取模板
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Model.php");
         $content = str_replace("__MODEL_NAME__", $name->getPascal(), $content);
+        $content = str_replace("__MODEL_TABLE__", $model->table, $content);
         $content = str_replace("/** MODEL_ANNOTATE */", $this->getModelAnnotateContent($model, $name), $content);
         $content = str_replace("/** MODEL_FIELDS */", $this->getModelFieldsContent($model, $name), $content);
         $content = str_replace("/** MODEL_LABELS */", $this->getModelLabelsContent($model, $name), $content);
         $content = str_replace("/** MODEL_RULES */", $this->getModelRulesContent($model, $name), $content);
+        $content = str_replace("/** MODEL_FK_RELEVANCE */", $this->getModelRelevanceContent($model, $name), $content);
 
         //生成文件
         $filename = base_path("app/Models/{$name->getPascal()}.php");
@@ -122,6 +124,15 @@ trait CurdGeneratorStacks
         foreach ($model->fields as $field){
             $contents[] = " * @property {$field->type} \${$field->name} {$field->comment}";
         }
+        foreach ($model->foreign_keys as $foreign_key){
+            if($foreign_key["type"] === "one"){
+                $fk_table = new NameUtil($foreign_key["referenced_table"]);
+                $contents[] = " * @property {$fk_table->getPascal()} \${$fk_table->getCamel(false)}";
+            } else {
+                $fk_table = new NameUtil($foreign_key["table"]);
+                $contents[] = " * @property {$fk_table->getPascal()}[] \${$fk_table->getCamel(true)}";
+            }
+        }
         $contents[] = " */";
         return implode("\n", $contents);
     }
@@ -137,6 +148,44 @@ trait CurdGeneratorStacks
         }
         if(isset($contents[0]))
             $contents[0] = str_replace($this->getTabString(3), "", $contents[0]);
+        return implode("\n", $contents);
+    }
+
+    /**
+     * 获取模型外键映射
+     * @param TableUtil $model
+     * @param NameUtil $name
+     * @return string
+     */
+    private function getModelRelevanceContent(TableUtil $model, NameUtil $name){
+        $contents = [];
+        foreach ($model->foreign_keys as $foreign_key){
+            //添加分割空行
+            if(count($contents) > 0)
+                $contents[] = "";
+            //根据类型生成
+            if($foreign_key["type"] === "one"){
+                $fk_table = new NameUtil($foreign_key["referenced_table"]);
+                $contents[] = $this->getTabString(1) . "/**";
+                $contents[] = $this->getTabString(1) . " * Property - {$fk_table->getCamel(false)}";
+                $contents[] = $this->getTabString(1) . " * @return \Illuminate\Database\Eloquent\Relations\BelongsTo";
+                $contents[] = $this->getTabString(1) . " */";
+                $contents[] = $this->getTabString(1) . "public function {$fk_table->getCamel(false)}(){";
+                $contents[] = $this->getTabString(2) . "return \$this->belongsTo('App\Models\\{$fk_table->getPascal()}', '{$foreign_key["column"]}', '{$foreign_key["referenced_column"]}');";
+                $contents[] = $this->getTabString(1) . "}";
+            }else{
+                $fk_table = new NameUtil($foreign_key["table"]);
+                $contents[] = $this->getTabString(1) . "/**";
+                $contents[] = $this->getTabString(1) . " * Property - {$fk_table->getCamel(false)}";
+                $contents[] = $this->getTabString(1) . " * @return \Illuminate\Database\Eloquent\Relations\HasMany";
+                $contents[] = $this->getTabString(1) . " */";
+                $contents[] = $this->getTabString(1) . "public function {$fk_table->getCamel(true)}(){";
+                $contents[] = $this->getTabString(2) . "return \$this->hasMany('App\Models\\{$fk_table->getPascal()}', '{$foreign_key["column"]}', '{$foreign_key["referenced_column"]}');";
+                $contents[] = $this->getTabString(1) . "}";
+            }
+        }
+        if(isset($contents[0]))
+            $contents[0] = ltrim($contents[0]);
         return implode("\n", $contents);
     }
 
