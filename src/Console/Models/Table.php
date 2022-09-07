@@ -54,7 +54,7 @@ class Table{
         }
 
         //获取字段
-        $fieldsData = DB::select("desc $table");
+        $fieldsData = DB::select("SHOW FULL COLUMNS FROM $table");
         foreach ($fieldsData as $fieldData){
             //构建字段模型
             $fieldModel = new TableField($fieldData);
@@ -127,7 +127,7 @@ class Table{
         $contents[] = "/**";
         $contents[] = "/* {$this->model}";
         foreach ($this->fields as $field){
-            $contents[] = " * @property {$field->type} \${$field->name}";
+            $contents[] = " * @property {$field->type} \${$field->name} {$field->comment}";
         }
         $contents[] = " */";
         return implode("\n", $contents);

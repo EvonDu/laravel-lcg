@@ -7,6 +7,7 @@ class TableField{
     public $type;
     public $length;
     public $default;
+    public $comment;
     public $dbType;
     public $isPk = false;
     public $allowNull = false;
@@ -23,6 +24,7 @@ class TableField{
         $this->length = $this->getLength($fieldData->Type);
         $this->default = $fieldData->Default;
         $this->dbType = $fieldData->Type;
+        $this->comment = $fieldData->Comment;
 
         if($fieldData->Key === "PRI")
             $this->isPk = true;
@@ -73,7 +75,10 @@ class TableField{
      * @return string
      */
     public function getLabel(){
-        return ucwords(str_replace("_", " ", $this->name));
+        if(!empty($this->comment))
+            return $this->comment;
+        else
+            return ucwords(str_replace("_", " ", $this->name));
     }
 
     /**
