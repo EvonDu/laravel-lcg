@@ -3,7 +3,6 @@
 namespace Lcg\Console\Stacks;
 
 use Illuminate\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
 use Lcg\Utils\PathUtil;
 
 trait InstallsInertiaViteStacks

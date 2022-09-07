@@ -4,11 +4,13 @@ namespace Lcg\Console;
 
 use Illuminate\Console\Command;
 use Lcg\Console\Models\Table;
-use Lcg\Console\Stacks\CurdStacks;
+use Lcg\Console\Stacks\CurdGeneratorStacks;
+use Lcg\Utils\NameUtil;
+use Lcg\Utils\TableUtil;
 
 class CurdCommand extends Command
 {
-    use CurdStacks;
+    use CurdGeneratorStacks;
 
     /**
      * The name and signature of the console command.
@@ -37,34 +39,37 @@ class CurdCommand extends Command
         $table = $this->argument("table");
 
         //构建模型
-        $model = null;
+        $table_util = null;
         try{
-            $model = new Table($table);
+            $table_util = new TableUtil($table);
         }catch (\Exception $e){
             $this->error("[ERROR] ".$e->getMessage());
         }
 
+        //名称工具
+        $name_util = new NameUtil($table_util->table);
+
         //创建试图
-        $this->makeCurdViewStack($model, true);
+        $this->curdGeneratorViewStack($table_util, $name_util, true);
 
         //创建模型
-        $this->makeCurdModelStack($model, true);
+        $this->curdGeneratorModelStack($table_util, $name_util, true);
 
         //创建控制器
-        $this->makeCurdControllerStack($model, true);
+        $this->curdGeneratorControllerStack($table_util, $name_util, true);
 
         //组合路由信息
         $tips = [];
         $tips[] = "[ TIPS ] Please add routing configuration:";
         $tips[] = "``````````````````````````````````````````````````````````````````";
         $tips[] = "[*]routes/web.php:";
-        $tips[] = "Route::get('/{$model->table}', 'App\\Http\\Controllers\\{$model->model}Controller@page');";
+        $tips[] = "Route::get('/{$name_util->getUnder(true)}', 'App\\Http\\Controllers\\{$name_util->getPascal()}Controller@page');";
         $tips[] = "//Route::prefix('/api')->group(function () {";
-        $tips[] = "//    Route::resource('/{$model->url}', App\\Http\\Controllers\\{$model->model}Controller::class);";
+        $tips[] = "//    Route::resource('/{$name_util->getUnder(true)}', App\\Http\\Controllers\\{$name_util->getPascal()}Controller::class);";
         $tips[] = "//});";
         $tips[] = "";
         $tips[] = "[*]routes/api.php:";
-        $tips[] = "Route::resource('/{$model->url}', App\\Http\\Controllers\\{$model->model}Controller::class);";
+        $tips[] = "Route::resource('/{$name_util->getUnder(true)}', App\\Http\\Controllers\\{$name_util->getPascal()}Controller::class);";
         $tips[] = "``````````````````````````````````````````````````````````````````";
         $message = implode("\n", $tips);
 
