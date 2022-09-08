@@ -4,10 +4,6 @@ namespace Lcg\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
-use Lcg\Console\Stacks\InstallsInertiaViteStacks;
-use Lcg\Console\Stacks\InstallsInertiaWebpackStacks;
-use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 class SwaggerCommand extends Command{
@@ -17,7 +13,6 @@ class SwaggerCommand extends Command{
      * @var string
      */
     protected $signature = 'lcg:swagger
-                            {--cover=n : Overwrite existing file}
                             {--composer=global : Absolute path to the Composer binary which should be used to install packages}';
 
     /**
@@ -25,7 +20,7 @@ class SwaggerCommand extends Command{
      *
      * @var string
      */
-    protected $description = 'Generate curd of table';
+    protected $description = 'Install swagger module';
 
     /**
      * Execute the console command.

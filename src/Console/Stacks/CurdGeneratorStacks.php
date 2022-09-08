@@ -115,6 +115,9 @@ trait CurdGeneratorStacks
 
     /**
      * 获取模型注解内容
+     *
+     * @param TableUtil $model
+     * @param NameUtil $name
      * @return string
      */
     private function getModelAnnotateContent(TableUtil $model, NameUtil $name){
@@ -157,6 +160,9 @@ trait CurdGeneratorStacks
 
     /**
      * 获取模型字段映射
+     *
+     * @param TableUtil $model
+     * @param NameUtil $name
      * @return string
      */
     private function getModelFieldsContent(TableUtil $model, NameUtil $name){
@@ -171,6 +177,7 @@ trait CurdGeneratorStacks
 
     /**
      * 获取模型外键映射
+     *
      * @param TableUtil $model
      * @param NameUtil $name
      * @return string
@@ -210,6 +217,8 @@ trait CurdGeneratorStacks
     /**
      * 获取模型标签映射
      *
+     * @param TableUtil $model
+     * @param NameUtil $name
      * @return string
      */
     private function getModelLabelsContent(TableUtil $model, NameUtil $name){
@@ -225,6 +234,8 @@ trait CurdGeneratorStacks
     /**
      * 获取模型验证规则
      *
+     * @param TableUtil $model
+     * @param NameUtil $name
      * @return string
      */
     private function getModelRulesContent(TableUtil $model, NameUtil $name){
@@ -242,6 +253,8 @@ trait CurdGeneratorStacks
     /**
      * 获取模板搜索内容
      *
+     * @param TableUtil $model
+     * @param NameUtil $name
      * @return string
      */
     private function getBladeSearchContent(TableUtil $model, NameUtil $name){
@@ -261,6 +274,8 @@ trait CurdGeneratorStacks
     /**
      * 获取模板表格内容
      *
+     * @param TableUtil $model
+     * @param NameUtil $name
      * @return string
      */
     private function getBladeTableContent(TableUtil $model, NameUtil $name){
@@ -276,6 +291,8 @@ trait CurdGeneratorStacks
     /**
      * 获取模板表单内容
      *
+     * @param TableUtil $model
+     * @param NameUtil $name
      * @return string
      */
     private function getBladeFormContent(TableUtil $model, NameUtil $name){
@@ -295,6 +312,8 @@ trait CurdGeneratorStacks
     /**
      * 获取模板详情内容
      *
+     * @param TableUtil $model
+     * @param NameUtil $name
      * @return string
      */
     private function getBladeViewContent(TableUtil $model, NameUtil $name){
@@ -311,6 +330,8 @@ trait CurdGeneratorStacks
     /**
      * 获取Swagger字段描述
      *
+     * @param TableUtil $model
+     * @param NameUtil $name
      * @return string
      */
     private function getSwaggerFieldsContent(TableUtil $model, NameUtil $name){
