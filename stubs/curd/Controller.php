@@ -82,7 +82,7 @@ class __MODEL_NAME__Controller extends Controller
      */
     public function show(Request $request, $id){
         //Find
-        $model = __MODEL_NAME__::query()->find($id);
+        $model = __MODEL_NAME__::findOne($id);
         if($model == null)
             return ApiResponse::NotFound("Not Found");
 
@@ -111,7 +111,7 @@ class __MODEL_NAME__Controller extends Controller
         __MODEL_NAME__::validate($request);
 
         //Find
-        $model = __MODEL_NAME__::query()->find($id);
+        $model = __MODEL_NAME__::findOne($id);
         if($model == null)
             return ApiResponse::NotFound("Not Found");
 
@@ -136,7 +136,7 @@ class __MODEL_NAME__Controller extends Controller
      */
     public function destroy(Request $request, $id){
         //Find
-        $model = __MODEL_NAME__::query()->find($id);
+        $model = __MODEL_NAME__::findOne($id);
         if($model == null)
             return ApiResponse::NotFound("Not Found");
 

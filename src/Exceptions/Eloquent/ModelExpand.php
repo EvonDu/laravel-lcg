@@ -105,6 +105,39 @@ trait ModelExpand{
     }
 
     /**
+     * 查询主键
+     *
+     * @param  mixed  $id
+     * @return \Illuminate\Database\Eloquent\Model|static|null
+     */
+    public static function findOne($id){
+        return self::find($id);
+    }
+
+    /**
+     * 查询全部
+     *
+     * @param array $condition
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public static function findAll($condition = []){
+        $find = self::query();
+        foreach ($condition as $key => $value){
+            if(is_array($value)){
+                if(count($value) >= 3)
+                    $find->where($value[0], $value[1], $value[2]);
+                else if(count($value) >= 2)
+                    $find->where($value[0], '=', $value[1]);
+                else
+                    throw new \Exception("findALL \$condition error.");
+            } else {
+                $find->where($key, '=', $value);
+            }
+        }
+        return $find->get();
+    }
+
+    /**
      * 获取字段标签
      * @param $field
      * @return mixed|string
