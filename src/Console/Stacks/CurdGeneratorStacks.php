@@ -118,8 +118,10 @@ trait CurdGeneratorStacks
      * @return string
      */
     private function getModelAnnotateContent(TableUtil $model, NameUtil $name){
+        //注解开始
         $contents = [];
         $contents[] = "/**";
+        //属性注解
         $contents[] = "/* {$name->getPascal()}";
         foreach ($model->fields as $field){
             $contents[] = " * @property {$field->type} \${$field->name} {$field->comment}";
@@ -133,6 +135,22 @@ trait CurdGeneratorStacks
                 $contents[] = " * @property {$fk_table->getPascal()}[] \${$fk_table->getCamel(true)}";
             }
         }
+        //文档注解
+        $contents[] = "";
+        $contents[] = " * @OA\Schema()";
+        foreach ($model->fields as $field){
+            $contents[] = " * @OA\Property(property=\"{$field->name}\", type=\"{$field->type}\", description=\"{$field->comment}\")";
+        }
+        foreach ($model->foreign_keys as $foreign_key){
+            if($foreign_key["type"] === "one"){
+                $fk_table = new NameUtil($foreign_key["referenced_table"]);
+                $contents[] = " * @OA\Property(property=\"{$fk_table->getCamel(false)}\", ref=\"#/components/schemas/{$fk_table->getPascal()}\")";
+            } else {
+                $fk_table = new NameUtil($foreign_key["table"]);
+                $contents[] = " * @OA\Property(property=\"{$fk_table->getCamel(true)}\", ref=\"#/components/schemas/{$fk_table->getPascal()}\")";
+            }
+        }
+        //注解结尾
         $contents[] = " */";
         return implode("\n", $contents);
     }
