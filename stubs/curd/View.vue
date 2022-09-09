@@ -25,7 +25,7 @@ const form = reactive({
     model: {},
     errors: {},
 });
-const view = reactive({
+const detail = reactive({
     show: false,
     model: {},
 });
@@ -53,8 +53,8 @@ const handleAdd = function(){
     form.errors = {};
 };
 const handleView = function(model){
-    view.model = model;
-    view.show = true;
+    detail.model = model;
+    detail.show = true;
 };
 const handleEdit = function(model){
     form.title = "编辑";
@@ -197,9 +197,9 @@ handleSearch();
             </template>
         </lte-modal>
         <!-- 视图 -->
-        <lte-modal v-model="view.show" title="详情" size="lg">
+        <lte-modal v-model="detail.show" title="详情" size="lg">
             <el-descriptions size="large" :column="2" border>
-                __VIEW_ITEMS__
+                __DETAIL_ITEMS__
             </el-descriptions>
         </lte-modal>
         <!-- 搜索 -->

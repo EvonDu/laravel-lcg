@@ -2,7 +2,9 @@
 
 namespace Lcg\Console\Stacks;
 
+use Illuminate\Filesystem\Filesystem;
 use Lcg\Utils\NameUtil;
+use Lcg\Utils\PathUtil;
 use Lcg\Utils\TableUtil;
 
 trait CurdGeneratorStacks
@@ -12,28 +14,29 @@ trait CurdGeneratorStacks
      *
      * @param TableUtil $model
      * @param NameUtil $name
+     * @param string $prefix
      * @param bool $isCover
      * @return void
      */
-    protected function curdGeneratorViewStack(TableUtil $model, NameUtil $name, bool $isCover=false){
-        //获取内容
+    protected function curdGeneratorViewStack(TableUtil $model, NameUtil $name, string $prefix, bool $isCover=false){
+        //读取模板
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/View.vue");
-
-        //替换内容
         $content = str_replace("__MODEL_PK__", $model->primary_key->name, $content);
         $content = str_replace("__MODEL_NAME__", $name->getPascal(), $content);
-        $content = str_replace("__FORM_ITEMS__", $this->getBladeFormContent($model, $name), $content);
-        $content = str_replace("__VIEW_ITEMS__", $this->getBladeViewContent($model, $name), $content);
-        $content = str_replace("__TABLE_ITEMS__", $this->getBladeTableContent($model, $name), $content);
-        $content = str_replace("__SEARCH_ITEMS__", $this->getBladeSearchContent($model, $name), $content);
+        $content = str_replace("__FORM_ITEMS__", $this->getViewFormContent($model, $name), $content);
+        $content = str_replace("__TABLE_ITEMS__", $this->getViewTableContent($model, $name), $content);
+        $content = str_replace("__DETAIL_ITEMS__", $this->getViewDetailContent($model, $name), $content);
+        $content = str_replace("__SEARCH_ITEMS__", $this->getViewSearchContent($model, $name), $content);
 
         //生成文件
-        $filename = base_path("resources/js/Pages/{$name->getPascal()}.vue");
+        $filename = base_path("resources/js/Pages/". PathUtil::linkPath($prefix, $name->getPascal()) . ".vue");
         if(!is_file($filename) || $isCover){
             //保存文件
+            (new Filesystem)->ensureDirectoryExists(dirname($filename));
             file_put_contents($filename, $content);
             $this->info("[APPEND] $filename");
-        } else {
+        }
+        else {
             //显示记录
             $this->warn("[WARRING] Exist: $filename");
         }
@@ -44,27 +47,36 @@ trait CurdGeneratorStacks
      *
      * @param TableUtil $model
      * @param NameUtil $name
+     * @param string $prefix
      * @param bool $isCover
      * @return void
      */
-    protected function curdGeneratorModelStack(TableUtil $model, NameUtil $name, bool $isCover=false){
+    protected function curdGeneratorModelStack(TableUtil $model, NameUtil $name, string $prefix, bool $isCover=false){
+        //相关属性
+        $model_name = $name->getPascal();
+        $model_table = $model->table;
+        $model_namespace = PathUtil::linkPath("App\\Models", $prefix, "\\");
+
         //读取模板
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Model.php");
-        $content = str_replace("__MODEL_NAME__", $name->getPascal(), $content);
-        $content = str_replace("__MODEL_TABLE__", $model->table, $content);
-        $content = str_replace("/** MODEL_ANNOTATE */", $this->getModelAnnotateContent($model, $name), $content);
-        $content = str_replace("/** MODEL_FIELDS */", $this->getModelFieldsContent($model, $name), $content);
-        $content = str_replace("/** MODEL_LABELS */", $this->getModelLabelsContent($model, $name), $content);
-        $content = str_replace("/** MODEL_RULES */", $this->getModelRulesContent($model, $name), $content);
-        $content = str_replace("/** MODEL_FK_RELEVANCE */", $this->getModelRelevanceContent($model, $name), $content);
+        $content = str_replace("__MODEL_NAME__", $model_name, $content);
+        $content = str_replace("__MODEL_TABLE__", $model_table, $content);
+        $content = str_replace("__MODEL_NAMESPACE__", $model_namespace, $content);
+        $content = str_replace("/** MODEL_ANNOTATE */", $this->getModelAnnotateContent($model, $name, $prefix), $content);
+        $content = str_replace("/** MODEL_FIELDS */", $this->getModelFieldsContent($model, $name, $prefix), $content);
+        $content = str_replace("/** MODEL_LABELS */", $this->getModelLabelsContent($model, $name, $prefix), $content);
+        $content = str_replace("/** MODEL_RULES */", $this->getModelRulesContent($model, $name, $prefix), $content);
+        $content = str_replace("/** MODEL_FK_RELEVANCE */", $this->getModelRelevanceContent($model, $name, $prefix), $content);
 
         //生成文件
-        $filename = base_path("app/Models/{$name->getPascal()}.php");
+        $filename = base_path("app/Models/". PathUtil::linkPath($prefix, $name->getPascal()) . ".php");
         if(!is_file($filename) || $isCover){
             //保存文件
+            (new Filesystem)->ensureDirectoryExists(dirname($filename));
             file_put_contents($filename, $content);
             $this->info("[APPEND] $filename");
-        } else {
+        }
+        else {
             //显示记录
             $this->warn("[WARRING] Exist: $filename");
         }
@@ -75,25 +87,45 @@ trait CurdGeneratorStacks
      *
      * @param TableUtil $model
      * @param NameUtil $name
+     * @param string $prefix
      * @param bool $isCover
      * @return void
      */
-    protected function curdGeneratorControllerStack(TableUtil $model, NameUtil $name, bool $isCover=false){
+    protected function curdGeneratorControllerStack(TableUtil $model, NameUtil $name, string $prefix, bool $isCover=false){
+        //相关属性
+        $model_name = $name->getPascal();
+        $model_name_full = PathUtil::linkPath("App\\Models\\$prefix", $name->getPascal(), "\\");
+        $controller_name = $name->getPascal() . "Controller";
+        $controller_namespace = PathUtil::linkPath("App\\Http\\Controllers", $prefix,"\\");
+
+        //引入列表
+        $use_list = [ "use $model_name_full;" ];
+        if($prefix){
+            $use_list[] = "use App\\Http\\Controllers\\Controller;";
+        }
+        $controller_uses = implode("\n", $use_list);
+
         //读取模板
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Controller.php");
-        $content = str_replace("__MODEL_NAME__", $name->getPascal(), $content);
-        $content = str_replace("__MODEL_URL__", $name->getUnder(true), $content);
+        $content = str_replace("__CONTROLLER_NAME__", $controller_name, $content);
+        $content = str_replace("__CONTROLLER_NAMESPACE__", $controller_namespace, $content);
+        $content = str_replace("/** CONTROLLER_USES */", $controller_uses, $content);
+        $content = str_replace("__MODEL_NAME__", $model_name, $content);
+        $content = str_replace("__MODEL_NAME_FULL__", $model_name_full, $content);
         $content = str_replace("__MODEL_PK__", $model->primary_key->name, $content);
         $content = str_replace("__MODEL_PK_TYPE__", $model->primary_key->type, $content);
         $content = str_replace("__MODEL_SWAGGER_FIELDS__", $this->getSwaggerFieldsContent($model, $name), $content);
+        $content = str_replace("__BASE_URL__", PathUtil::linkPath($prefix, $name->getUnder(true)), $content);
 
         //生成文件
-        $filename = base_path("app/Http/Controllers/{$name->getPascal()}Controller.php");
+        $filename = base_path("app/Http/Controllers/". PathUtil::linkPath($prefix, $name->getPascal()) . "Controller.php");
         if(!is_file($filename) || $isCover){
             //保存文件
+            (new Filesystem)->ensureDirectoryExists(dirname($filename));
             file_put_contents($filename, $content);
             $this->info("[APPEND] $filename");
-        } else {
+        }
+        else {
             //显示记录
             $this->warn("[WARRING] Exist: $filename");
         }
@@ -118,9 +150,10 @@ trait CurdGeneratorStacks
      *
      * @param TableUtil $model
      * @param NameUtil $name
+     * @param string $prefix
      * @return string
      */
-    private function getModelAnnotateContent(TableUtil $model, NameUtil $name){
+    private function getModelAnnotateContent(TableUtil $model, NameUtil $name, string $prefix){
         //注解开始
         $contents = [];
         $contents[] = "/**";
@@ -140,17 +173,17 @@ trait CurdGeneratorStacks
         }
         //文档注解
         $contents[] = "";
-        $contents[] = " * @OA\Schema()";
+        $contents[] = " * @OA\Schema(schema=\"" . PathUtil::linkPath($prefix, $name->getPascal()) . "\", description=\"\")";
         foreach ($model->fields as $field){
             $contents[] = " * @OA\Property(property=\"{$field->name}\", type=\"{$field->type}\", description=\"{$field->comment}\")";
         }
         foreach ($model->foreign_keys as $foreign_key){
             if($foreign_key["type"] === "one"){
                 $fk_table = new NameUtil($foreign_key["referenced_table"]);
-                $contents[] = " * @OA\Property(property=\"{$fk_table->getCamel(false)}\", ref=\"#/components/schemas/{$fk_table->getPascal()}\")";
+                $contents[] = " * @OA\Property(property=\"{$fk_table->getCamel(false)}\", ref=\"#/components/schemas/" . PathUtil::linkPath($prefix, $name->getPascal()) . "\")";
             } else {
                 $fk_table = new NameUtil($foreign_key["table"]);
-                $contents[] = " * @OA\Property(property=\"{$fk_table->getCamel(true)}\", ref=\"#/components/schemas/{$fk_table->getPascal()}\")";
+                $contents[] = " * @OA\Property(property=\"{$fk_table->getCamel(true)}\", ref=\"#/components/schemas/" . PathUtil::linkPath($prefix, $name->getPascal()) . "\")";
             }
         }
         //注解结尾
@@ -163,9 +196,10 @@ trait CurdGeneratorStacks
      *
      * @param TableUtil $model
      * @param NameUtil $name
+     * @param string $prefix
      * @return string
      */
-    private function getModelFieldsContent(TableUtil $model, NameUtil $name){
+    private function getModelFieldsContent(TableUtil $model, NameUtil $name, string $prefix){
         $contents = [];
         foreach ($model->fields as $field){
             $contents[] = $this->getTabString(3) . "'{$field->name}' => '{$field->type}',";
@@ -180,9 +214,10 @@ trait CurdGeneratorStacks
      *
      * @param TableUtil $model
      * @param NameUtil $name
+     * @param string $prefix
      * @return string
      */
-    private function getModelRelevanceContent(TableUtil $model, NameUtil $name){
+    private function getModelRelevanceContent(TableUtil $model, NameUtil $name, string $prefix){
         $contents = [];
         foreach ($model->foreign_keys as $foreign_key){
             //添加分割空行
@@ -196,7 +231,7 @@ trait CurdGeneratorStacks
                 $contents[] = $this->getTabString(1) . " * @return \Illuminate\Database\Eloquent\Relations\BelongsTo";
                 $contents[] = $this->getTabString(1) . " */";
                 $contents[] = $this->getTabString(1) . "public function {$fk_table->getCamel(false)}(){";
-                $contents[] = $this->getTabString(2) . "return \$this->belongsTo('App\Models\\{$fk_table->getPascal()}', '{$foreign_key["column"]}', '{$foreign_key["referenced_column"]}');";
+                $contents[] = $this->getTabString(2) . "return \$this->belongsTo({$fk_table->getPascal()}::class, '{$foreign_key["column"]}', '{$foreign_key["referenced_column"]}');";
                 $contents[] = $this->getTabString(1) . "}";
             }else{
                 $fk_table = new NameUtil($foreign_key["table"]);
@@ -205,7 +240,7 @@ trait CurdGeneratorStacks
                 $contents[] = $this->getTabString(1) . " * @return \Illuminate\Database\Eloquent\Relations\HasMany";
                 $contents[] = $this->getTabString(1) . " */";
                 $contents[] = $this->getTabString(1) . "public function {$fk_table->getCamel(true)}(){";
-                $contents[] = $this->getTabString(2) . "return \$this->hasMany('App\Models\\{$fk_table->getPascal()}', '{$foreign_key["column"]}', '{$foreign_key["referenced_column"]}');";
+                $contents[] = $this->getTabString(2) . "return \$this->hasMany({$fk_table->getPascal()}::class, '{$foreign_key["referenced_column"]}');";
                 $contents[] = $this->getTabString(1) . "}";
             }
         }
@@ -219,9 +254,10 @@ trait CurdGeneratorStacks
      *
      * @param TableUtil $model
      * @param NameUtil $name
+     * @param string $prefix
      * @return string
      */
-    private function getModelLabelsContent(TableUtil $model, NameUtil $name){
+    private function getModelLabelsContent(TableUtil $model, NameUtil $name, string $prefix){
         $contents = [];
         foreach ($model->fields as $field){
             $contents[] = $this->getTabString(3) . "'{$field->name}' => '{$field->label}',";
@@ -236,9 +272,10 @@ trait CurdGeneratorStacks
      *
      * @param TableUtil $model
      * @param NameUtil $name
+     * @param string $prefix
      * @return string
      */
-    private function getModelRulesContent(TableUtil $model, NameUtil $name){
+    private function getModelRulesContent(TableUtil $model, NameUtil $name, string $prefix){
         $contents = [];
         foreach ($model->fields as $field){
             if(in_array($field->name, ["id", "created_at", "updated_at"]))
@@ -251,34 +288,13 @@ trait CurdGeneratorStacks
     }
 
     /**
-     * 获取模板搜索内容
-     *
-     * @param TableUtil $model
-     * @param NameUtil $name
-     * @return string
-     */
-    private function getBladeSearchContent(TableUtil $model, NameUtil $name){
-        $contents = [];
-        foreach ($model->fields as $field){
-            if(in_array($field->name, ["created_at", "updated_at"]))
-                continue;
-            $contents[] = $this->getTabString(4) . "<el-form-item :label='labels.{$field->name}'>";
-            $contents[] = $this->getTabString(5) . "<el-input v-model='search.temp.{$field->name}'></el-input>";
-            $contents[] = $this->getTabString(4) . "</el-form-item>";
-        }
-        if(isset($contents[0]))
-            $contents[0] = str_replace($this->getTabString(4), "", $contents[0]);
-        return implode("\n", $contents);
-    }
-
-    /**
      * 获取模板表格内容
      *
      * @param TableUtil $model
      * @param NameUtil $name
      * @return string
      */
-    private function getBladeTableContent(TableUtil $model, NameUtil $name){
+    private function getViewTableContent(TableUtil $model, NameUtil $name){
         $contents = [];
         foreach ($model->fields as $field){
             $contents[] = $this->getTabString(5) . "<el-table-column prop='{$field->name}' :label='labels.{$field->name}' sortable='custom' show-overflow-tooltip></el-table-column>";
@@ -295,7 +311,7 @@ trait CurdGeneratorStacks
      * @param NameUtil $name
      * @return string
      */
-    private function getBladeFormContent(TableUtil $model, NameUtil $name){
+    private function getViewFormContent(TableUtil $model, NameUtil $name){
         $contents = [];
         foreach ($model->fields as $field){
             if(in_array($field->name, ["id", "created_at", "updated_at"]))
@@ -316,11 +332,32 @@ trait CurdGeneratorStacks
      * @param NameUtil $name
      * @return string
      */
-    private function getBladeViewContent(TableUtil $model, NameUtil $name){
+    private function getViewDetailContent(TableUtil $model, NameUtil $name){
         $contents = [];
         foreach ($model->fields as $field){
             //$contents[] = $this->getTabString(4) . "<el-descriptions-item :label='labels.{$field->name}'>@{{ view.model.{$field->name} }}</el-descriptions-item>";
             $contents[] = $this->getTabString(4) . "<el-descriptions-item :label='labels.{$field->name}'><span v-text='view.model.{$field->name}'/></el-descriptions-item>";
+        }
+        if(isset($contents[0]))
+            $contents[0] = str_replace($this->getTabString(4), "", $contents[0]);
+        return implode("\n", $contents);
+    }
+
+    /**
+     * 获取模板搜索内容
+     *
+     * @param TableUtil $model
+     * @param NameUtil $name
+     * @return string
+     */
+    private function getViewSearchContent(TableUtil $model, NameUtil $name){
+        $contents = [];
+        foreach ($model->fields as $field){
+            if(in_array($field->name, ["created_at", "updated_at"]))
+                continue;
+            $contents[] = $this->getTabString(4) . "<el-form-item :label='labels.{$field->name}'>";
+            $contents[] = $this->getTabString(5) . "<el-input v-model='search.temp.{$field->name}'></el-input>";
+            $contents[] = $this->getTabString(4) . "</el-form-item>";
         }
         if(isset($contents[0]))
             $contents[0] = str_replace($this->getTabString(4), "", $contents[0]);

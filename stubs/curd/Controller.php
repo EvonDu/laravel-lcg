@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace __CONTROLLER_NAMESPACE__;
 
-use App\Models\__MODEL_NAME__;
+/** CONTROLLER_USES */
 use Illuminate\Http\Request;
 use Lcg\Exceptions\ApiResponse;
 use Lcg\Exceptions\Inertia\Inertia;
@@ -10,7 +10,7 @@ use Lcg\Exceptions\Inertia\Inertia;
 /**
  * @OA\Tag(name="__MODEL_NAME__",description="__MODEL_NAME__")
  */
-class __MODEL_NAME__Controller extends Controller
+class __CONTROLLER_NAME__ extends Controller
 {
     /**
      * VIEW - INDEX
@@ -19,7 +19,7 @@ class __MODEL_NAME__Controller extends Controller
     public function page(){
         $labels = __MODEL_NAME__::labels();
         return Inertia::render('__MODEL_NAME__', [
-            "api" => url("/api/__MODEL_URL__"),
+            "api" => url("/api/__BASE_URL__"),
             "labels" => $labels,
             "breadcrumbs" => [
                 [ "title" => "Home", "url" => url("/") ]
@@ -30,7 +30,7 @@ class __MODEL_NAME__Controller extends Controller
     /**
      * API - LIST
      * @OA\Get(
-     *      path="/api/__MODEL_URL__",
+     *      path="/api/__BASE_URL__",
      *      tags={"__MODEL_NAME__"},
      *      summary="List",
      *      description="List",
@@ -49,7 +49,7 @@ class __MODEL_NAME__Controller extends Controller
     /**
      * API - CREATE
      * @OA\Post(
-     *      path="/api/__MODEL_URL__",
+     *      path="/api/__BASE_URL__",
      *      tags={"__MODEL_NAME__"},
      *      summary="CREATE",
      *      description="CREATE",
@@ -72,7 +72,7 @@ class __MODEL_NAME__Controller extends Controller
     /**
      * API - SHOW
      * @OA\Get(
-     *      path="/api/__MODEL_URL__/{__MODEL_PK__}",
+     *      path="/api/__BASE_URL__/{__MODEL_PK__}",
      *      tags={"__MODEL_NAME__"},
      *      summary="GET",
      *      description="GET",
@@ -93,7 +93,7 @@ class __MODEL_NAME__Controller extends Controller
     /**
      * API - UPDATE
      * @OA\Put(
-     *      path="/api/__MODEL_URL__/{__MODEL_PK__}",
+     *      path="/api/__BASE_URL__/{__MODEL_PK__}",
      *      tags={"__MODEL_NAME__"},
      *      summary="UPDATE",
      *      description="UPDATE",
@@ -126,7 +126,7 @@ class __MODEL_NAME__Controller extends Controller
     /**
      * API - DELETE
      * @OA\Delete(
-     *      path="/api/__MODEL_URL__/{__MODEL_PK__}",
+     *      path="/api/__BASE_URL__/{__MODEL_PK__}",
      *      tags={"__MODEL_NAME__"},
      *      summary="DELETE",
      *      description="DELETE",
