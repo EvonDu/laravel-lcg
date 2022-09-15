@@ -18,7 +18,7 @@ class __CONTROLLER_NAME__ extends Controller
      */
     public function page(){
         $labels = __MODEL_NAME__::labels();
-        return Inertia::render('__MODEL_NAME__', [
+        return Inertia::render('__VIEW_PATH__', [
             "api" => url("/api/__BASE_URL__"),
             "labels" => $labels,
             "breadcrumbs" => [
