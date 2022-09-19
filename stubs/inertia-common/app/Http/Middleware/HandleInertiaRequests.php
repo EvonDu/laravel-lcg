@@ -48,9 +48,11 @@ class HandleInertiaRequests extends Middleware
                 ]);
             },
             'lte' => [
-                "logo" => null,
-                "project" => config('app.name'),
-                "version" => "1.0.0",
+                "app" => [
+                    "logo" => null,
+                    "name" => config('app.name'),
+                    "version" => "1.0.0",
+                ],
                 "header" => [
                     "links" => [
                         ["title" => "Home", "url" => url('/')],

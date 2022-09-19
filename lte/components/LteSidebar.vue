@@ -6,10 +6,10 @@ import defaultProfile from '../images/user-128x128.jpg'
 import { onMounted } from 'vue'
 
 const props = defineProps({
-    project: {
+    name: {
         type: String,
         default() {
-            return "AdminLTE 3"
+            return "AdminLTE"
         }
     },
     logo: {
@@ -86,7 +86,7 @@ handleActive(props.navs, location.href);
         <a href="#" class="brand-link">
             <img :src="logo" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8" v-if="logo">
             <img :src="defaultLogo" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8" v-else>
-            <span class="brand-text font-weight-light">{{ project }}</span>
+            <span class="brand-text font-weight-light">{{ name }}</span>
         </a>
         <!-- Sidebar -->
         <div class="sidebar">

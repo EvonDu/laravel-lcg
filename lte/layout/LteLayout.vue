@@ -27,15 +27,15 @@ const props = defineProps({
         <div id="app" class="wrapper" v-cloak>
             <!-- header -->
             <lte-header
-                :links="lte.header.links"
-                :messages="lte.header.messages"
-                :notifications="lte.header.notifications">
+                :links="lte?.header?.links"
+                :messages="lte?.header?.messages"
+                :notifications="lte?.header?.notifications">
             </lte-header>
             <!-- sidebar -->
             <lte-sidebar
-                :project="lte.project"
-                :logo="lte.logo"
-                :navs="lte.navs"
+                :name="lte?.app?.name"
+                :logo="lte?.app?.logo"
+                :navs="lte?.navs"
                 :user="user">
             </lte-sidebar>
             <!-- content -->
@@ -47,8 +47,8 @@ const props = defineProps({
             </div>
             <!-- footer -->
             <lte-footer
-                :version="lte.version"
-                :content="lte.footer.text">
+                :version="lte?.app?.version"
+                :content="lte?.footer?.text">
             </lte-footer>
             <!-- control-sidebar -->
             <!-- <aside class="control-sidebar control-sidebar-dark"></aside> -->

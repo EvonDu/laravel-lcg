@@ -21,7 +21,7 @@ const verificationLinkSent = computed(() => props.status === 'verification-link-
         <div class="verify-box">
             <!-- title -->
             <div class="login-logo">
-                <a><b>{{lte.project}}</b></a>
+                <a><b>{{lte?.app?.name}}</b></a>
             </div>
             <!-- form -->
             <div class="card">

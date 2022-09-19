@@ -25,7 +25,7 @@ const submit = () => {
         <div class="register-box">
             <!-- title -->
             <div class="register-logo">
-                <a><b>{{lte.project}}</b></a>
+                <a><b>{{lte?.app?.name}}</b></a>
             </div>
             <!-- form -->
             <div class="card">
