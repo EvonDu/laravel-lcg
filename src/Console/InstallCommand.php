@@ -24,6 +24,7 @@ class InstallCommand extends Command
                             {--inertia : Indicate that the Vue Inertia stack should be installed (Deprecated)}
                             {--pest : Indicate that Pest should be installed}
                             {--ssr : Indicates if Inertia SSR support should be installed}
+                            {--auth=ref : Install the mode indicating the authentication (ref,create)}
                             {--composer=global : Absolute path to the Composer binary which should be used to install packages}';
 
     /**
@@ -74,6 +75,24 @@ class InstallCommand extends Command
             (new Filesystem)->copy(__DIR__.'/../../stubs/'.$stubStack.'/pest-tests/Pest.php', base_path('tests/Pest.php'));
         } else {
             (new Filesystem)->copyDirectory(__DIR__.'/../../stubs/'.$stubStack.'/tests/Feature', base_path('tests/Feature/Auth'));
+        }
+    }
+
+    /**
+     * Install the service provider in the application configuration file.
+     *
+     * @param  string  $after
+     * @param  string  $name
+     * @return void
+     */
+    protected function installServiceProviderAfter($after, $name)
+    {
+        if (! Str::contains($appConfig = file_get_contents(config_path('app.php')), 'App\\Providers\\'.$name.'::class')) {
+            file_put_contents(config_path('app.php'), str_replace(
+                'App\\Providers\\'.$after.'::class,',
+                'App\\Providers\\'.$after.'::class,'.PHP_EOL.'        App\\Providers\\'.$name.'::class,',
+                $appConfig
+            ));
         }
     }
 

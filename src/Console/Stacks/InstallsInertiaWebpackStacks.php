@@ -39,13 +39,27 @@ trait InstallsInertiaWebpackStacks
                 ] + $packages;
         });
 
-        // Controllers...
-        (new Filesystem)->ensureDirectoryExists(app_path('Http/Controllers/Auth'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../stubs/inertia-common/app/Http/Controllers/Auth', app_path('Http/Controllers/Auth'));
+        // Auth Mode...
+        if ($this->option('auth') == "create") {
+            // Controllers...
+            (new Filesystem)->ensureDirectoryExists(app_path('Http/Controllers/Auth'));
+            (new Filesystem)->copyDirectory(__DIR__ . '/../../../stubs/inertia-common/app/Http/Controllers/Auth', app_path('Http/Controllers/Auth'));
 
-        // Requests...
-        (new Filesystem)->ensureDirectoryExists(app_path('Http/Requests/Auth'));
-        (new Filesystem)->copyDirectory(__DIR__.'/../../../stubs/inertia-common/app/Http/Requests/Auth', app_path('Http/Requests/Auth'));
+            // Requests...
+            (new Filesystem)->ensureDirectoryExists(app_path('Http/Requests/Auth'));
+            (new Filesystem)->copyDirectory(__DIR__ . '/../../../stubs/inertia-common/app/Http/Requests/Auth', app_path('Http/Requests/Auth'));
+
+            // Routes...
+            copy(__DIR__.'/../../../stubs/inertia-common/routes/web.php', base_path('routes/web.php'));
+            copy(__DIR__.'/../../../stubs/inertia-common/routes/auth.php', base_path('routes/auth.php'));
+        } else {
+            // Providers...
+            $this->installServiceProviderAfter('RouteServiceProvider', 'AuthRouteServiceProvider');
+            copy(__DIR__ . '/../../../stubs/inertia-common/app/Providers/AuthRouteServiceProvider.php', app_path('Providers/AuthRouteServiceProvider.php'));
+
+            // Routes...
+            copy(__DIR__.'/../../../stubs/inertia-common/routes/web_ref.php', base_path('routes/web.php'));
+        }
 
         // Middleware...
         $this->installMiddlewareAfter('SubstituteBindings::class', '\App\Http\Middleware\HandleInertiaRequests::class');
@@ -67,10 +81,6 @@ trait InstallsInertiaWebpackStacks
 
         // Tests...
         $this->installTests();
-
-        // Routes...
-        copy(__DIR__.'/../../../stubs/inertia-common/routes/web.php', base_path('routes/web.php'));
-        copy(__DIR__.'/../../../stubs/inertia-common/routes/auth.php', base_path('routes/auth.php'));
 
         // "Dashboard" Route...
         $this->replaceInFile('/home', '/dashboard', resource_path('js/Pages/Welcome.vue'));
