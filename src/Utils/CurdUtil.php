@@ -52,6 +52,7 @@ class CurdUtil{
         foreach ($this->prefixs as $prefix){
             $element[] = Str::studly($prefix);
         }
+        $element = array_filter($element);
         return implode("\\", $element);
     }
 
@@ -60,7 +61,7 @@ class CurdUtil{
      * @return string
      */
     public function getModelClassname(){
-        return $this->getModelNamespace() . "\\" . $this->getModelName();
+        return PathUtil::tidyPath($this->getModelNamespace() . "\\" . $this->getModelName(), "\\");
     }
 
     /**
@@ -80,6 +81,7 @@ class CurdUtil{
         foreach ($this->prefixs as $prefix){
             $element[] = Str::studly($prefix);
         }
+        $element = array_filter($element);
         return implode("\\", $element);
     }
 
@@ -88,7 +90,7 @@ class CurdUtil{
      * @return string
      */
     public function getControllerClassname(){
-        return $this->getControllerNamespace() . "\\" . $this->getControllerName();
+        return PathUtil::tidyPath($this->getControllerNamespace() . "\\" . $this->getControllerName(), "\\");
     }
 
     /**
@@ -100,7 +102,21 @@ class CurdUtil{
         foreach ($this->prefixs as $prefix){
             $element[] = Str::studly($prefix);
         }
+        $element = array_filter($element);
         return implode($separator, $element);
+    }
+
+    /**
+     * 获取视图路径
+     * @return string
+     */
+    public function getViewPath(){
+        $element = [
+            $this->getPath(),
+            $this->getModelName(),
+        ];
+        $element = array_filter($element);
+        return implode("/", $element);
     }
 
     /**
@@ -113,6 +129,7 @@ class CurdUtil{
             $element[] = Str::snake($prefix);
         }
         $element[] = Str::plural(Str::snake($this->table));
+        $element = array_filter($element);
         return implode("/", $element);
     }
 

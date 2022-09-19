@@ -64,7 +64,7 @@ class CurdCommand extends Command
         $tips[] = "[ TIPS ] Please add routing configuration:";
         $tips[] = "``````````````````````````````````````````````````````````````````";
         $tips[] = "[*]routes/web.php:";
-        $tips[] = "Route::get('/{$curd_util->getUrl()}', '{$curd_util->getControllerClassname()}@page');";
+        $tips[] = "Route::get('/{$curd_util->getUrl()}', [{$curd_util->getControllerClassname()}::class, 'page']);";
         $tips[] = "//Route::prefix('/api')->group(function () {";
         $tips[] = "//    Route::resource('/{$curd_util->getUrl()}', {$curd_util->getControllerClassname()}::class);";
         $tips[] = "//});";

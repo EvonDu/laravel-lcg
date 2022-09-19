@@ -101,7 +101,7 @@ trait CurdGeneratorStacks
         $content = str_replace("__MODEL_PK_TYPE__", $table->primary_key->type, $content);
         $content = str_replace("__MODEL_SWAGGER_FIELDS__", $this->getSwaggerFieldsContent($table), $content);
         $content = str_replace("__BASE_URL__", $mvc->getUrl(), $content);
-        $content = str_replace("__VIEW_PATH__", "{$mvc->getPath()}/{$mvc->getModelName()}", $content);
+        $content = str_replace("__VIEW_PATH__", $mvc->getViewPath(), $content);
 
         //生成文件
         $filename = base_path("app/Http/Controllers/{$mvc->getPath()}/{$mvc->getControllerName()}.php");
