@@ -63,7 +63,7 @@ trait InstallsInertiaWebpackStacks
 
         // Middleware...
         $this->installMiddlewareAfter('SubstituteBindings::class', '\App\Http\Middleware\HandleInertiaRequests::class');
-        $this->installMiddlewareAfter('SubstituteBindings::class', '\Lcg\Middleware\HandleMixBaseUrl::class');
+        $this->installMiddlewareAfter('SubstituteBindings::class', '\Lcg\Http\Middleware\HandleMixBaseUrl::class');
 
         copy(__DIR__.'/../../../stubs/inertia-common/app/Http/Middleware/HandleInertiaRequests.php', app_path('Http/Middleware/HandleInertiaRequests.php'));
 
