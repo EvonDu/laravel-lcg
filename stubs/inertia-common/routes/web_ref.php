@@ -2,8 +2,7 @@
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-//use Inertia\Inertia;
-use Lcg\Exceptions\Inertia\Inertia;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------

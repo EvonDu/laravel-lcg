@@ -4,13 +4,13 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 use Lcg\Contracts\ConfirmPasswordViewResponse;
 use Lcg\Contracts\LoginViewResponse;
 use Lcg\Contracts\RegisterViewResponse;
 use Lcg\Contracts\RequestPasswordResetLinkViewResponse;
 use Lcg\Contracts\ResetPasswordViewResponse;
 use Lcg\Contracts\VerifyEmailViewResponse;
-use Lcg\Exceptions\Inertia\Inertia;
 use Lcg\Http\Controllers\Auth\AuthenticatedSessionController;
 use Lcg\Http\Controllers\Auth\ConfirmablePasswordController;
 use Lcg\Http\Controllers\Auth\EmailVerificationNotificationController;

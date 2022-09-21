@@ -11,7 +11,6 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Lcg\Contracts\ResetPasswordViewResponse;
-use Lcg\Exceptions\Inertia\Inertia;
 
 class NewPasswordController extends Controller
 {

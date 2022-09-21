@@ -63,8 +63,11 @@ trait InstallsInertiaViteStacks
 
         // Middleware...
         $this->installMiddlewareAfter('SubstituteBindings::class', '\App\Http\Middleware\HandleInertiaRequests::class');
-
         copy(__DIR__ . '/../../../stubs/inertia-common/app/Http/Middleware/HandleInertiaRequests.php', app_path('Http/Middleware/HandleInertiaRequests.php'));
+
+        // Providers...
+        $this->installServiceProviderAfter('RouteServiceProvider', 'InertiaServiceProvider');
+        copy(__DIR__ . '/../../../stubs/inertia-common/app/Providers/InertiaServiceProvider.php', app_path('Providers/InertiaServiceProvider.php'));
 
         // Views...
         copy(__DIR__ . '/../../../stubs/inertia-vite/resources/views/app.blade.php', resource_path('views/app.blade.php'));
