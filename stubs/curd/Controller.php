@@ -5,7 +5,7 @@ namespace __CONTROLLER_NAMESPACE__;
 /** CONTROLLER_USES */
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Lcg\Exceptions\ApiResponse;
+use Lcg\Http\Responses\ApiResponse;
 
 /**
  * @OA\Tag(name="__MODEL_NAME__",description="__MODEL_NAME__")

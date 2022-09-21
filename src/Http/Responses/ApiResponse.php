@@ -1,5 +1,5 @@
 <?php
-namespace Lcg\Exceptions;
+namespace Lcg\Http\Responses;
 
 use Illuminate\Http\JsonResponse;
 
