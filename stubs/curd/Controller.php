@@ -8,7 +8,7 @@ use Inertia\Inertia;
 use Lcg\Http\Responses\ApiResponse;
 
 /**
- * @OA\Tag(name="__MODEL_NAME__",description="__MODEL_NAME__")
+ * @OA\Tag(name="__MODEL_NAME__", description="__MODEL_NAME__")
  */
 class __CONTROLLER_NAME__ extends Controller
 {
@@ -76,7 +76,7 @@ class __CONTROLLER_NAME__ extends Controller
      *      tags={"__MODEL_NAME__"},
      *      summary="GET",
      *      description="GET",
-     *      @OA\Parameter(name="__MODEL_PK__", required=true, in="path",description="__MODEL_PK__", @OA\Schema(type="__MODEL_PK_TYPE__")),
+     *      @OA\Parameter(name="__MODEL_PK__", required=true, in="path", description="__MODEL_PK__", @OA\Schema(type="__MODEL_PK_TYPE__")),
      *      @OA\Response(response="default", description="result")
      * )
      */
@@ -97,7 +97,7 @@ class __CONTROLLER_NAME__ extends Controller
      *      tags={"__MODEL_NAME__"},
      *      summary="UPDATE",
      *      description="UPDATE",
-     *      @OA\Parameter(name="__MODEL_PK__", required=true, in="path",description="__MODEL_PK__", @OA\Schema(type="__MODEL_PK_TYPE__")),
+     *      @OA\Parameter(name="__MODEL_PK__", required=true, in="path", description="__MODEL_PK__", @OA\Schema(type="__MODEL_PK_TYPE__")),
      *      @OA\RequestBody(required=true, @OA\MediaType(
      *          mediaType="application/json", @OA\Schema(
      *              __MODEL_SWAGGER_FIELDS__
@@ -130,7 +130,7 @@ class __CONTROLLER_NAME__ extends Controller
      *      tags={"__MODEL_NAME__"},
      *      summary="DELETE",
      *      description="DELETE",
-     *      @OA\Parameter(name="__MODEL_PK__", required=true, in="path",description="__MODEL_PK__", @OA\Schema(type="__MODEL_PK_TYPE__")),
+     *      @OA\Parameter(name="__MODEL_PK__", required=true, in="path", description="__MODEL_PK__", @OA\Schema(type="__MODEL_PK_TYPE__")),
      *      @OA\Response(response="default", description="result")
      * )
      */
