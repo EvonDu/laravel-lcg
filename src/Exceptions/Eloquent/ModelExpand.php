@@ -68,19 +68,17 @@ trait ModelExpand{
         }
 
         // 排序条件
-        $orderBy = $request->input('orderBy', null);
-        if($orderBy !== null){
-            $orderType = $request->input('orderType', 'ascending');
-            if($orderType === 'descending')
-                $find->orderBy($orderBy, "DESC");
-            else
-                $find->orderBy($orderBy, "ASC");
+        $sort = $request->input('sort', null);
+        if($sort !== null){
+            $order = $request->input('order', 'asc');
+            if(in_array($order, ["asc", "desc"]))
+                $find->orderBy($sort, $order);
         }
 
         // 分页相关
         $paginates = [
-            "size" => 20,
             "page" => $request->input('page', 1),
+            "size" => $request->input('size', 20),
         ];
         $find->paginate($paginates['size']);
 

@@ -280,10 +280,10 @@ trait CurdGeneratorStacks
     private function getViewTableContent(TableUtil $table){
         $contents = [];
         foreach ($table->fields as $field){
-            $contents[] = $this->getTabString(5) . "<el-table-column prop='{$field->name}' :label='labels.{$field->name}' sortable='custom' show-overflow-tooltip></el-table-column>";
+            $contents[] = $this->getTabString(4) . "<el-table-column prop='{$field->name}' :label='labels[\"{$field->name}\"]' sortable='custom' show-overflow-tooltip></el-table-column>";
         }
         if(isset($contents[0]))
-            $contents[0] = str_replace($this->getTabString(5), "", $contents[0]);
+            $contents[0] = str_replace($this->getTabString(4), "", $contents[0]);
         return implode("\n", $contents);
     }
 
@@ -298,12 +298,10 @@ trait CurdGeneratorStacks
         foreach ($table->fields as $field){
             if(in_array($field->name, ["id", "created_at", "updated_at"]))
                 continue;
-            $contents[] = $this->getTabString(4) . "<el-form-item :label='labels.{$field->name}' :error='form.errors.{$field->name}'>";
-            $contents[] = $this->getTabString(5) . "<el-input v-model='form.model.{$field->name}'></el-input>";
-            $contents[] = $this->getTabString(4) . "</el-form-item>";
+            $contents[] = $this->getTabString(5) . "<el-form-item :label='labels[\"{$field->name}\"]' :error='slot.errors.{$field->name}'><el-input v-model='slot.model.{$field->name}'></el-input></el-form-item>";
         }
         if(isset($contents[0]))
-            $contents[0] = str_replace($this->getTabString(4), "", $contents[0]);
+            $contents[0] = str_replace($this->getTabString(5), "", $contents[0]);
         return implode("\n", $contents);
     }
 
@@ -316,11 +314,10 @@ trait CurdGeneratorStacks
     private function getViewDetailContent(TableUtil $table){
         $contents = [];
         foreach ($table->fields as $field){
-            //$contents[] = $this->getTabString(4) . "<el-descriptions-item :label='labels.{$field->name}'>@{{ view.model.{$field->name} }}</el-descriptions-item>";
-            $contents[] = $this->getTabString(4) . "<el-descriptions-item :label='labels.{$field->name}'><span v-text='detail.model.{$field->name}'/></el-descriptions-item>";
+            $contents[] = $this->getTabString(5) . "<el-descriptions-item :label='labels[\"{$field->name}\"]'><span v-text='slot.model.{$field->name}'/></el-descriptions-item>";
         }
         if(isset($contents[0]))
-            $contents[0] = str_replace($this->getTabString(4), "", $contents[0]);
+            $contents[0] = str_replace($this->getTabString(5), "", $contents[0]);
         return implode("\n", $contents);
     }
 
@@ -335,12 +332,10 @@ trait CurdGeneratorStacks
         foreach ($table->fields as $field){
             if(in_array($field->name, ["created_at", "updated_at"]))
                 continue;
-            $contents[] = $this->getTabString(4) . "<el-form-item :label='labels.{$field->name}'>";
-            $contents[] = $this->getTabString(5) . "<el-input v-model='search.temp.{$field->name}'></el-input>";
-            $contents[] = $this->getTabString(4) . "</el-form-item>";
+            $contents[] = $this->getTabString(5) . "<el-form-item :label='labels[\"{$field->name}\"]'><el-input v-model='slot.model.{$field->name}'></el-input></el-form-item>";
         }
         if(isset($contents[0]))
-            $contents[0] = str_replace($this->getTabString(4), "", $contents[0]);
+            $contents[0] = str_replace($this->getTabString(5), "", $contents[0]);
         return implode("\n", $contents);
     }
 

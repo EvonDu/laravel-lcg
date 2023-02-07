@@ -50,8 +50,8 @@ class CurdCommand extends Command
         //构建工具
         $curd_util = new CurdUtil($table, $this->option('path'));
 
-        //创建试图
-        $this->curdGeneratorViewStack($table_util, $curd_util, true);
+        //创建视图
+        $this->curdGeneratorViewStack($table_util, $curd_util, true);-
 
         //创建模型
         $this->curdGeneratorModelStack($table_util, $curd_util, true);

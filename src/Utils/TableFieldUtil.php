@@ -49,6 +49,7 @@ class TableFieldUtil {
             case "datetime":
                 return "string";
             case "int":
+            case "bigint unsigned":
                 return "integer";
             default:
                 return $type;
