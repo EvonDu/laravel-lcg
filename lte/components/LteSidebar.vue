@@ -60,6 +60,14 @@ onMounted(() => {
     $(window).trigger("load.lte.treeview");
 })
 
+//处理展开切换
+let handleExpandToggle = function(event){
+    //对火狐做兼容处理(原本问题可能是jQuery或者Bootstrap的版本导致的)
+    let li = $(event.currentTarget).parent();
+    li.removeClass("menu-is-opening");
+    li.removeClass("menu-open");
+}
+
 //处理导航栏当前活跃
 let handleActive = function(list, url){
     for (let i in list){
@@ -117,7 +125,7 @@ handleActive(props.navs, location.href);
                     <template  v-for="nav in navs">
                         <li class="nav-header" v-if="nav.type === 'header'">{{ nav.title }}</li>
                         <li class="nav-item" :class="{'has-treeview': nav.childList, 'menu-is-opening': nav.active, 'menu-open': nav.active}" v-else>
-                            <a :href="nav.url" class="nav-link" :class="{'active':nav.active}">
+                            <a :href="nav.url" class="nav-link" :class="{'active':nav.active}" @click="handleExpandToggle">
                                 <i class="nav-icon" :class="nav.icon"></i>
                                 <p>
                                     {{ nav.title }}
