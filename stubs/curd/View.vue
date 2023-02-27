@@ -154,7 +154,7 @@ handleSearchSubmit({});
                 </el-row>
             </div>
             <!-- 表格 -->
-            <lte-curd-table :models="data.models" :loading="data.loading"
+            <lte-grid :models="data.models" :loading="data.loading"
                 :paginatePage="data.paginate.page" :paginateSize="data.paginate.size" :paginateTotal="data.paginate.total"
                 @sort-change="handleSearchSubmit({sort: $event})"
                 @page-change="handleSearchSubmit({paginate: $event})">
@@ -168,31 +168,31 @@ handleSearchSubmit({});
                         </el-button-group>
                     </template>
                 </el-table-column>
-            </lte-curd-table>
+            </lte-grid>
             <!-- 查看 -->
-            <lte-curd-modal ref="refView" title="详情" v-slot="slot">
+            <lte-window ref="refView" title="详情" v-slot="slot">
                 <el-descriptions size="large" :column="2" border>
                     __DETAIL_ITEMS__
                 </el-descriptions>
-            </lte-curd-modal>
+            </lte-window>
             <!-- 添加 -->
-            <lte-curd-modal ref="refAdd" title="添加" v-slot="slot" :existSubmit="true" @submit="handleAddSubmit">
+            <lte-window ref="refAdd" title="添加" v-slot="slot" :existSubmit="true" @submit="handleAddSubmit">
                 <el-form label-width="100px">
                     __FORM_ITEMS__
                 </el-form>
-            </lte-curd-modal>
+            </lte-window>
             <!-- 编辑 -->
-            <lte-curd-modal ref="refEdit" title="编辑" v-slot="slot" :existSubmit="true" @submit="handleEditSubmit">
+            <lte-window ref="refEdit" title="编辑" v-slot="slot" :existSubmit="true" @submit="handleEditSubmit">
                 <el-form label-width="100px">
                     __FORM_ITEMS__
                 </el-form>
-            </lte-curd-modal>
+            </lte-window>
             <!-- 搜索 -->
-            <lte-curd-modal ref="refSearch" title="搜索" v-slot="slot" :existSubmit="true" @submit="handleSearchSubmit({search:$event})">
+            <lte-window ref="refSearch" title="搜索" v-slot="slot" :existSubmit="true" @submit="handleSearchSubmit({search:$event})">
                 <el-form label-width="100px">
                     __SEARCH_ITEMS__
                 </el-form>
-            </lte-curd-modal>
+            </lte-window>
         </lte-card>
     </lte-layout>
 </template>

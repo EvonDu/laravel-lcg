@@ -5,8 +5,8 @@ import LteSidebar from "../components/LteSidebar.vue";
 import LteContentHeader from "../components/LteContentHeader.vue";
 import LteCard from "../components/LteCard.vue";
 import LteModal from "../components/LteModal.vue";
-import LteCurdTable from "../components/LteCurdTable.vue";
-import LteCurdModal from "../components/LteCurdModal.vue";
+import LteGrid from "../components/LteGrid.vue";
+import LteWindow from "../components/LteWindow.vue";
 
 export default {
     install(app, options){
@@ -18,7 +18,7 @@ export default {
         app.component("lte-content-header", LteContentHeader);
         app.component("lte-card", LteCard);
         app.component("lte-modal", LteModal);
-        app.component("lte-curd-table", LteCurdTable);
-        app.component("lte-curd-modal", LteCurdModal);
+        app.component("lte-grid", LteGrid);
+        app.component("lte-window", LteWindow);
     }
 }
