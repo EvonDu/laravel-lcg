@@ -6,7 +6,7 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 import {Plus, Search, Refresh} from '@element-plus/icons-vue'
 
 //实例
-const instance = getCurrentInstance()
+const instance = getCurrentInstance();
 //属性
 const props = defineProps({
     api: String,
@@ -20,7 +20,6 @@ const data = reactive({
     title: "__MODEL_NAME__",
     search: {},
     models: [],
-    errors: {},
     loading: false,
     keyword: "",
     sort: { prop: null, order: null},
