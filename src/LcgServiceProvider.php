@@ -32,6 +32,7 @@ class LcgServiceProvider extends ServiceProvider implements DeferrableProvider
             Console\InstallCommand::class,
             Console\CurdCommand::class,
             Console\SwaggerCommand::class,
+            Console\RbacCommand::class,
         ]);
     }
 
