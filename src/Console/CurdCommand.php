@@ -51,7 +51,7 @@ class CurdCommand extends Command
         $curd_util = new CurdUtil($table, $this->option('path'));
 
         //创建视图
-        $this->curdGeneratorViewStack($table_util, $curd_util, true);-
+        $this->curdGeneratorViewStack($table_util, $curd_util, true);
 
         //创建模型
         $this->curdGeneratorModelStack($table_util, $curd_util, true);
@@ -64,10 +64,10 @@ class CurdCommand extends Command
         $tips[] = "[ TIPS ] Please add routing configuration:";
         $tips[] = "``````````````````````````````````````````````````````````````````";
         $tips[] = "[*]routes/web.php:";
-        $tips[] = "Route::get('/{$curd_util->getUrl()}', [{$curd_util->getControllerClassname()}::class, 'page']);";
-        $tips[] = "//Route::prefix('/api')->group(function () {";
-        $tips[] = "//    Route::resource('/{$curd_util->getUrl()}', {$curd_util->getControllerClassname()}::class);";
-        $tips[] = "//});";
+        $tips[] = "Route::prefix('/{$curd_util->getUrl()}')->group(function () {";
+        $tips[] = "    Route::get('/', [{$curd_util->getControllerClassname()}::class, 'page']);";
+        $tips[] = "    Route::resource('/interface', {$curd_util->getControllerClassname()}::class);";
+        $tips[] = "});";
         $tips[] = "";
         $tips[] = "[*]routes/api.php:";
         $tips[] = "Route::resource('/{$curd_util->getUrl()}', {$curd_util->getControllerClassname()}::class);";
