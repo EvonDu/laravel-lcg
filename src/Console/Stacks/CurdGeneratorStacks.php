@@ -55,6 +55,7 @@ trait CurdGeneratorStacks
         $content = str_replace("__MODEL_NAME__", $mvc->getModelName(), $content);
         $content = str_replace("__MODEL_TABLE__", $mvc->getTableName(), $content);
         $content = str_replace("__MODEL_NAMESPACE__", $mvc->getModelNamespace(), $content);
+        $content = str_replace("/** MODEL_CASTS__ */", $this->getModelCastsContent($table), $content);
         $content = str_replace("/** MODEL_ANNOTATE */", $this->getModelAnnotateContent($table, $mvc), $content);
         $content = str_replace("/** MODEL_FIELDS */", $this->getModelFieldsContent($table), $content);
         $content = str_replace("/** MODEL_LABELS */", $this->getModelLabelsContent($table), $content);
@@ -250,6 +251,24 @@ trait CurdGeneratorStacks
         if(isset($contents[0]))
             $contents[0] = str_replace($this->getTabString(3), "", $contents[0]);
         return implode("\n", $contents);
+    }
+
+    /**
+     * 获取模型类型映射
+     *
+     * @param TableUtil $table
+     * @return string
+     */
+    private function getModelCastsContent(TableUtil $table){
+        $casts = [];
+        foreach ($table->fields as $field){
+            switch ($field->dbType){
+                case "json":
+                    $casts[] = "'{$field->name}' => 'array'";
+                    break;
+            }
+        }
+        return implode(", ", $casts);
     }
 
     /**

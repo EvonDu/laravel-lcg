@@ -51,6 +51,8 @@ class TableFieldUtil {
             case "int":
             case "bigint unsigned":
                 return "integer";
+            case "json":
+                return "array";
             default:
                 return $type;
         }
