@@ -1,0 +1,65 @@
+<script setup>
+//导入
+import axios from 'axios';
+import {reactive} from 'vue'
+import {ElMessage} from 'element-plus'
+
+//属性
+const props = defineProps({
+    api: String,
+    labels: Object,
+});
+
+//数据
+const data = reactive({
+    show: false,
+    callback: null,
+    model: {},
+    errors: {},
+});
+
+//接口
+defineExpose({
+    open : function(model, callback){
+        data.model = JSON.parse(JSON.stringify(model));
+        data.show = true;
+        data.callback = callback;
+    },
+    close : function(){
+        data.show = false;
+    },
+});
+
+//函数
+const handleEditSubmit = function(){
+    axios.put(`${props.api}/${data.model.id}`, data.model).then(function (response) {
+        //提示信息
+        ElMessage({ type: 'success', grouping: true, message: '修改成功' });
+        //关闭窗口
+        data.show = false;
+        //执行回调
+        if(typeof(data.callback) === "function")
+            data.callback(response.data?.data);
+    }).catch(function(response) {
+        //设置错误
+        data.errors = {};
+        for (var key in response?.response?.data?.errors){
+            data.errors[key] = response.response.data.errors[key][0];
+        }
+        //显示信息
+        ElMessage({ type: 'error', grouping: true, message: response?.response?.data?.message })
+    });
+};
+</script>
+
+<template>
+    <lte-modal v-model="data.show" title="编辑" size="lg">
+        <el-form label-width="100px">
+            <el-form-item :label='labels["name"]' :error='data.errors.name'><el-input v-model='data.model.name'></el-input></el-form-item>
+        </el-form>
+        <template #footer>
+            <el-button type="default" @click="data.show = false">取消</el-button>
+            <el-button type="primary" @click="handleEditSubmit">确认</el-button>
+        </template>
+    </lte-modal>
+</template>

@@ -42,6 +42,15 @@ class Role extends Model
     protected $casts = ['permissions' => 'array'];
 
     /**
+     * Default
+     *
+     * @var array[]
+     */
+    protected $attributes = [
+        'permissions' => "[]",
+    ];
+
+    /**
      * Fields
      *
      * @return string[]

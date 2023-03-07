@@ -13,7 +13,7 @@ class RbacCommand extends Command
      * @var string
      */
     protected $signature = 'lcg:rbac
-                            {--style=1 : [0] is multiple files, [1] is single file}';
+                            {--style=2 : [1] is single file, [2] is multiple files}';
 
     /**
      * The console command description.
@@ -31,7 +31,11 @@ class RbacCommand extends Command
     public function handle()
     {
         //安装相关文件
-        $this->installFiles();
+        if($this->option('style') == "2"){
+            $this->installStyle2();
+        } else {
+            $this->installStyle1();
+        }
 
         //组合提示信息
         $tips = [];
@@ -68,15 +72,15 @@ class RbacCommand extends Command
     }
 
     /**
-     * Install Files
+     * Install Style1 Files
      *
      * @return void
      */
-    protected function installFiles()
+    protected function installStyle1()
     {
         //Controller
         (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Controllers/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/app/Http/Controllers/Rbac', base_path('app/Http/Controllers/Rbac'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style1/app/Http/Controllers/Rbac', base_path('app/Http/Controllers/Rbac'));
 
         //Model
         (new Filesystem)->ensureDirectoryExists(base_path('app/Models/Rbac'));
@@ -92,6 +96,34 @@ class RbacCommand extends Command
 
         //View
         (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/resources/js/Pages/Rbac', base_path('resources/js/Pages/Rbac'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style1/resources/js/Pages/Rbac', base_path('resources/js/Pages/Rbac'));
+    }
+
+    /**
+     * Install Style2 Files
+     *
+     * @return void
+     */
+    protected function installStyle2()
+    {
+        //Controller
+        (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Controllers/Rbac'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style2/app/Http/Controllers/Rbac', base_path('app/Http/Controllers/Rbac'));
+
+        //Model
+        (new Filesystem)->ensureDirectoryExists(base_path('app/Models/Rbac'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/app/Models/Rbac', base_path('app/Models/Rbac'));
+
+        //Config
+        (new Filesystem)->ensureDirectoryExists(base_path('config'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/config', base_path('config'));
+
+        //Database
+        (new Filesystem)->ensureDirectoryExists(base_path('database/migrations'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/database/migrations', base_path('database/migrations'));
+
+        //View
+        (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style2/resources/js/Pages/Rbac', base_path('resources/js/Pages/Rbac'));
     }
 }
