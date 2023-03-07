@@ -1,10 +1,11 @@
 <?php
 
-namespace Lcg\Utils;
+namespace Lcg\Models;
 
 use Illuminate\Support\Str;
+use Lcg\Utils\PathUtil;
 
-class CurdUtil{
+class Curd{
     /**
      * @var String $table
      */

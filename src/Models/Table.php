@@ -1,6 +1,6 @@
 <?php
 
-namespace Lcg\Utils;
+namespace Lcg\Models;
 
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
  *  路由名：复数
  *  数据库表：复数
  */
-class TableUtil {
+class Table {
     /**
      * 成员属性
      */
@@ -44,7 +44,7 @@ class TableUtil {
         $fieldsData = DB::select("SHOW FULL COLUMNS FROM $table");
         foreach ($fieldsData as $fieldData){
             //构建字段模型
-            $fieldModel = new TableFieldUtil($fieldData);
+            $fieldModel = new TableField($fieldData);
             //判断是否为主键
             if($fieldModel->isPk)
                 $this->primary_key = $fieldModel;

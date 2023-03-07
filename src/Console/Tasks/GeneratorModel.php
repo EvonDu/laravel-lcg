@@ -4,35 +4,35 @@ namespace Lcg\Console\Tasks;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Lcg\Models\Curd;
+use Lcg\Models\Table;
 use Lcg\Utils\CodeUtil;
-use Lcg\Utils\CurdUtil;
-use Lcg\Utils\TableUtil;
 
 class GeneratorModel{
     /**
      * 执行生成
      *
      * @param Command $command
-     * @param TableUtil $table
-     * @param CurdUtil $mvc
+     * @param Table $table
+     * @param Curd $curd
      * @param bool $isCover
      * @return void
      */
-    public static function run(Command $command, TableUtil $table, CurdUtil $mvc, bool $isCover=false){
+    public static function run(Command $command, Table $table, Curd $curd, bool $isCover=false){
         //读取模板
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Model.php");
-        $content = str_replace("__MODEL_NAME__", $mvc->getModelName(), $content);
-        $content = str_replace("__MODEL_TABLE__", $mvc->getTableName(), $content);
-        $content = str_replace("__MODEL_NAMESPACE__", $mvc->getModelNamespace(), $content);
+        $content = str_replace("__MODEL_NAME__", $curd->getModelName(), $content);
+        $content = str_replace("__MODEL_TABLE__", $curd->getTableName(), $content);
+        $content = str_replace("__MODEL_NAMESPACE__", $curd->getModelNamespace(), $content);
         $content = str_replace("/** MODEL_CASTS__ */", self::getModelCastsContent($table), $content);
-        $content = str_replace("/** MODEL_ANNOTATE */", self::getModelAnnotateContent($table, $mvc), $content);
+        $content = str_replace("/** MODEL_ANNOTATE */", self::getModelAnnotateContent($table, $curd), $content);
         $content = str_replace("/** MODEL_FIELDS */", self::getModelFieldsContent($table), $content);
         $content = str_replace("/** MODEL_LABELS */", self::getModelLabelsContent($table), $content);
         $content = str_replace("/** MODEL_RULES */", self::getModelRulesContent($table), $content);
         $content = str_replace("/** MODEL_FK_RELEVANCE */", self::getModelRelevanceContent($table), $content);
 
         //生成文件
-        self::addFile($command, base_path("app/Models/{$mvc->getPath()}/{$mvc->getModelName()}.php"), $content, $isCover);
+        self::addFile($command, base_path("app/Models/{$curd->getPath()}/{$curd->getModelName()}.php"), $content, $isCover);
     }
 
     /**
@@ -61,12 +61,11 @@ class GeneratorModel{
     /**
      * 获取模型注解内容
      *
-     * @param TableUtil $table
-     * @param CurdUtil $name
-     * @param string $prefix
+     * @param Table $table
+     * @param Curd $curd
      * @return string
      */
-    private static function getModelAnnotateContent(TableUtil $table, CurdUtil $curd){
+    private static function getModelAnnotateContent(Table $table, Curd $curd){
         //注解开始
         $contents = [];
         $contents[] = "/**";
@@ -107,11 +106,10 @@ class GeneratorModel{
     /**
      * 获取模型字段映射
      *
-     * @param TableUtil $table
-     * @param string $prefix
+     * @param Table $table
      * @return string
      */
-    private static function getModelFieldsContent(TableUtil $table){
+    private static function getModelFieldsContent(Table $table){
         $contents = [];
         foreach ($table->fields as $field){
             $contents[] = "'{$field->name}' => '{$field->type}',";
@@ -123,11 +121,10 @@ class GeneratorModel{
     /**
      * 获取模型外键映射
      *
-     * @param TableUtil $table
-     * @param string $prefix
+     * @param Table $table
      * @return string
      */
-    private static function getModelRelevanceContent(TableUtil $table){
+    private static function getModelRelevanceContent(Table $table){
         $contents = [];
         foreach ($table->foreign_keys as $foreign_key){
             //添加分割空行
@@ -135,7 +132,7 @@ class GeneratorModel{
                 $contents[] = "";
             //根据类型生成
             if($foreign_key["type"] === "one"){
-                $fk_mvc = new CurdUtil($foreign_key["referenced_table"]);
+                $fk_mvc = new Curd($foreign_key["referenced_table"]);
                 $fk_var = Str::singular($fk_mvc->getModelName());
                 $contents[] = "/**";
                 $contents[] = " * Property - {$fk_mvc->getModelName()}";
@@ -145,7 +142,7 @@ class GeneratorModel{
                 $contents[] = "    return \$this->belongsTo({$fk_mvc->getModelName()}::class, '{$foreign_key["column"]}', '{$foreign_key["referenced_column"]}');";
                 $contents[] = "}";
             }else{
-                $fk_mvc = new CurdUtil($foreign_key["table"]);
+                $fk_mvc = new Curd($foreign_key["table"]);
                 $fk_var = Str::plural($fk_mvc->getModelName());
                 $contents[] = "/**";
                 $contents[] = " * Property - {$fk_mvc->getModelName()}";
@@ -163,11 +160,10 @@ class GeneratorModel{
     /**
      * 获取模型标签映射
      *
-     * @param TableUtil $table
-     * @param string $prefix
+     * @param Table $table
      * @return string
      */
-    private static function getModelLabelsContent(TableUtil $table){
+    private static function getModelLabelsContent(Table $table){
         $contents = [];
         foreach ($table->fields as $field){
             $contents[] = "'{$field->name}' => '{$field->label}',";
@@ -179,10 +175,10 @@ class GeneratorModel{
     /**
      * 获取模型类型映射
      *
-     * @param TableUtil $table
+     * @param Table $table
      * @return string
      */
-    private static function getModelCastsContent(TableUtil $table){
+    private static function getModelCastsContent(Table $table){
         $casts = [];
         foreach ($table->fields as $field){
             switch ($field->dbType){
@@ -197,11 +193,10 @@ class GeneratorModel{
     /**
      * 获取模型验证规则
      *
-     * @param TableUtil $table
-     * @param string $prefix
+     * @param Table $table
      * @return string
      */
-    private static function getModelRulesContent(TableUtil $table){
+    private static function getModelRulesContent(Table $table){
         $contents = [];
         foreach ($table->fields as $field){
             if(in_array($field->name, ["id", "created_at", "updated_at"]))

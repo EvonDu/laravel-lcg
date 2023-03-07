@@ -1,8 +1,8 @@
 <?php
 
-namespace Lcg\Utils;
+namespace Lcg\Models;
 
-class VarUtil{
+class Name{
     /**
      * 常量属性
      */

@@ -3,24 +3,24 @@ namespace Lcg\Console\Tasks;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Lcg\Utils\CurdUtil;
-use Lcg\Utils\TableUtil;
+use Lcg\Models\Curd;
+use Lcg\Models\Table;
 
 class GeneratorController{
     /**
      * 执行生成
      *
      * @param Command $command
-     * @param TableUtil $table
-     * @param CurdUtil $mvc
+     * @param Table $table
+     * @param Curd $curd
      * @param int $style
      * @param bool $isCover
      * @return void
      */
-    public static function run(Command $command, TableUtil $table, CurdUtil $mvc, int $style, bool $isCover=false){
+    public static function run(Command $command, Table $table, Curd $curd, int $style, bool $isCover=false){
         //引入列表
-        $use_list = [ "use {$mvc->getModelClassname()};" ];
-        if($mvc->getPath()){
+        $use_list = [ "use {$curd->getModelClassname()};" ];
+        if($curd->getPath()){
             $use_list[] = "use App\\Http\\Controllers\\Controller;";
         }
         $controller_uses = implode("\n", $use_list);
@@ -39,18 +39,18 @@ class GeneratorController{
         }
 
         //组装模板
-        $content = str_replace("__CONTROLLER_NAME__", $mvc->getControllerName(), $content);
-        $content = str_replace("__CONTROLLER_NAMESPACE__", $mvc->getControllerNamespace(), $content);
+        $content = str_replace("__CONTROLLER_NAME__", $curd->getControllerName(), $content);
+        $content = str_replace("__CONTROLLER_NAMESPACE__", $curd->getControllerNamespace(), $content);
         $content = str_replace("/** CONTROLLER_USES */", $controller_uses, $content);
-        $content = str_replace("__MODEL_NAME__", $mvc->getModelName(), $content);
+        $content = str_replace("__MODEL_NAME__", $curd->getModelName(), $content);
         $content = str_replace("__MODEL_PK__", $table->primary_key->name, $content);
         $content = str_replace("__MODEL_PK_TYPE__", $table->primary_key->type, $content);
         $content = str_replace("__MODEL_SWAGGER_FIELDS__", self::getSwaggerFieldsContent($table), $content);
-        $content = str_replace("__BASE_URL__", $mvc->getUrl(), $content);
-        $content = str_replace("__VIEW_PATH__", $mvc->getViewPath(), $content);
+        $content = str_replace("__BASE_URL__", $curd->getUrl(), $content);
+        $content = str_replace("__VIEW_PATH__", $curd->getViewPath(), $content);
 
         //生成文件
-        self::addFile($command, base_path("app/Http/Controllers/{$mvc->getPath()}/{$mvc->getControllerName()}.php"), $content, $isCover);
+        self::addFile($command, base_path("app/Http/Controllers/{$curd->getPath()}/{$curd->getControllerName()}.php"), $content, $isCover);
     }
 
     /**
@@ -79,10 +79,10 @@ class GeneratorController{
     /**
      * 获取Swagger字段描述
      *
-     * @param TableUtil $table
+     * @param Table $table
      * @return string
      */
-    private static function getSwaggerFieldsContent(TableUtil $table){
+    private static function getSwaggerFieldsContent(Table $table){
         $contents = [];
         $examples = [];
         foreach ($table->fields as $field){

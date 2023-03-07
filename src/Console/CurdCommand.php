@@ -3,17 +3,14 @@
 namespace Lcg\Console;
 
 use Illuminate\Console\Command;
-use Lcg\Console\Stacks\CurdGeneratorStacks;
 use Lcg\Console\Tasks\GeneratorController;
 use Lcg\Console\Tasks\GeneratorModel;
 use Lcg\Console\Tasks\GeneratorView;
-use Lcg\Utils\CurdUtil;
-use Lcg\Utils\TableUtil;
+use Lcg\Models\Curd;
+use Lcg\Models\Table;
 
 class CurdCommand extends Command
 {
-    //use CurdGeneratorStacks;
-
     /**
      * The name and signature of the console command.
      *
@@ -40,35 +37,35 @@ class CurdCommand extends Command
     public function handle()
     {
         //获取表名
-        $table = $this->argument("table");
+        $table_name = $this->argument("table");
 
         //模型工具
-        $table_util = null;
+        $table_model = null;
         try{
-            $table_util = new TableUtil($table);
+            $table_model = new Table($table_name);
         }
         catch (\Exception $e){
             $this->error("[ERROR] ".$e->getMessage());
         }
 
         //构建工具
-        $curd_util = new CurdUtil($table, $this->option('path'));
+        $curd_util = new Curd($table_name, $this->option('path'));
 
         //判断风格
         if($this->option('style') == "2"){
             //创建模型
-            GeneratorModel::run($this, $table_util, $curd_util, true);
+            GeneratorModel::run($this, $table_model, $curd_util, true);
             //创建视图
-            GeneratorView::run($this, $table_util, $curd_util, 2,true);
+            GeneratorView::run($this, $table_model, $curd_util, 2,true);
             //创建控制器
-            GeneratorController::run($this, $table_util, $curd_util, 2,true);
+            GeneratorController::run($this, $table_model, $curd_util, 2,true);
         } else {
             //创建模型
-            GeneratorModel::run($this, $table_util, $curd_util, true);
+            GeneratorModel::run($this, $table_model, $curd_util, true);
             //创建视图
-            GeneratorView::run($this, $table_util, $curd_util, 1,true);
+            GeneratorView::run($this, $table_model, $curd_util, 1,true);
             //创建控制器
-            GeneratorController::run($this, $table_util, $curd_util, 1,true);
+            GeneratorController::run($this, $table_model, $curd_util, 1,true);
         }
 
         //输出提示
@@ -81,7 +78,7 @@ class CurdCommand extends Command
      * @param CurdUtil $curd_util
      * @return void
      */
-    protected function showTips(CurdUtil $curd_util){
+    protected function showTips(Curd $curd_util){
         //组合路由信息
         $tips = [];
         $tips[] = "[ TIPS ] Please add routing configuration:";

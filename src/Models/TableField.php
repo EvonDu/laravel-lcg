@@ -1,8 +1,8 @@
 <?php
 
-namespace Lcg\Utils;
+namespace Lcg\Models;
 
-class TableFieldUtil {
+class TableField {
     public $name;
     public $type;
     public $length;
