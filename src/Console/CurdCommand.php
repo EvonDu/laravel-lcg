@@ -4,12 +4,15 @@ namespace Lcg\Console;
 
 use Illuminate\Console\Command;
 use Lcg\Console\Stacks\CurdGeneratorStacks;
+use Lcg\Console\Tasks\GeneratorController;
+use Lcg\Console\Tasks\GeneratorModel;
+use Lcg\Console\Tasks\GeneratorView;
 use Lcg\Utils\CurdUtil;
 use Lcg\Utils\TableUtil;
 
 class CurdCommand extends Command
 {
-    use CurdGeneratorStacks;
+    //use CurdGeneratorStacks;
 
     /**
      * The name and signature of the console command.
@@ -18,7 +21,8 @@ class CurdCommand extends Command
      */
     protected $signature = 'lcg:curd {table : Table name}
                             {--path= : Generate path}
-                            {--cover=n : Overwrite existing file}';
+                            {--cover=n : Overwrite existing file}
+                            {--style=2 : [1] is single file, [2] is multiple files}';
 
     /**
      * The console command description.
@@ -50,15 +54,34 @@ class CurdCommand extends Command
         //构建工具
         $curd_util = new CurdUtil($table, $this->option('path'));
 
-        //创建视图
-        $this->curdGeneratorViewStack($table_util, $curd_util, true);
+        //判断风格
+        if($this->option('style') == "2"){
+            //创建模型
+            GeneratorModel::run($this, $table_util, $curd_util, true);
+            //创建视图
+            GeneratorView::run($this, $table_util, $curd_util, 2,true);
+            //创建控制器
+            GeneratorController::run($this, $table_util, $curd_util, 2,true);
+        } else {
+            //创建模型
+            GeneratorModel::run($this, $table_util, $curd_util, true);
+            //创建视图
+            GeneratorView::run($this, $table_util, $curd_util, 1,true);
+            //创建控制器
+            GeneratorController::run($this, $table_util, $curd_util, 1,true);
+        }
 
-        //创建模型
-        $this->curdGeneratorModelStack($table_util, $curd_util, true);
+        //输出提示
+        $this->showTips($curd_util);
+    }
 
-        //创建控制器
-        $this->curdGeneratorControllerStack($table_util, $curd_util, true);
-
+    /**
+     * 输出提示信息
+     *
+     * @param CurdUtil $curd_util
+     * @return void
+     */
+    protected function showTips(CurdUtil $curd_util){
         //组合路由信息
         $tips = [];
         $tips[] = "[ TIPS ] Please add routing configuration:";

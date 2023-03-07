@@ -4,15 +4,9 @@ namespace Lcg\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Lcg\Console\Stacks\CurdGeneratorStacks;
-use Lcg\Utils\CurdUtil;
-use Lcg\Utils\PathUtil;
-use Lcg\Utils\TableUtil;
 
 class RbacCommand extends Command
 {
-    use CurdGeneratorStacks;
-
     /**
      * The name and signature of the console command.
      *
