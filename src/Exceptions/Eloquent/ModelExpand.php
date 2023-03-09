@@ -103,22 +103,13 @@ trait ModelExpand{
     }
 
     /**
-     * 查询主键
+     * 查询方法
      *
-     * @param  mixed  $id
-     * @return \Illuminate\Database\Eloquent\Model|static|null
+     * @param $condition
+     * @return Builder
+     * @throws \Exception
      */
-    public static function findOne($id){
-        return self::find($id);
-    }
-
-    /**
-     * 查询全部
-     *
-     * @param array $condition
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
-     */
-    public static function findAll($condition = []){
+    public static function getFindQuery($condition = []){
         $find = self::query();
         foreach ($condition as $key => $value){
             if(is_array($value)){
@@ -132,7 +123,42 @@ trait ModelExpand{
                 $find->where($key, '=', $value);
             }
         }
-        return $find->get();
+        return $find;
+    }
+
+    /**
+     * 查询主键
+     *
+     * @param  mixed  $id
+     * @return \Illuminate\Database\Eloquent\Model|static|null
+     */
+    public static function findByPK($id){
+        return self::find($id);
+    }
+
+    /**
+     * 查询单个
+     *
+     * @param $condition
+     * @return Builder[]|\Illuminate\Database\Eloquent\Collection|void
+     * @throws \Exception
+     */
+    public static function findOne($condition){
+        if(is_array($condition)){
+            return self::getFindQuery($condition)->first();
+        } else {
+            return self::findByPK($condition);
+        }
+    }
+
+    /**
+     * 查询全部
+     *
+     * @param array $condition
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public static function findAll($condition = []){
+        return self::getFindQuery($condition)->get();
     }
 
     /**
