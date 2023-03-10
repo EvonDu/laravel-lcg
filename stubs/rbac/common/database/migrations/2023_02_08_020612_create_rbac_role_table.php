@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('rbac_roles', function (Blueprint $table) {
+        Schema::create('rbac_role', function (Blueprint $table) {
             $table->id()->comment('ID');
             $table->string('name', 128)->comment('角色');
             $table->json('permissions')->comment('权限');
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rbac_roles');
+        Schema::dropIfExists('rbac_role');
     }
 };

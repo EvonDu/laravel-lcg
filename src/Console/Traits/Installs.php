@@ -57,6 +57,39 @@ trait Installs
     }
 
     /**
+     * Install the route middleware to a group in the application Http Kernel.
+     *
+     * @param  string  $after
+     * @param  string  $name
+     * @param  string  $group
+     * @return void
+     */
+    protected function installRouteMiddlewareAfter($after, $name, $class)
+    {
+        $httpKernel = file_get_contents(app_path('Http/Kernel.php'));
+
+        $routeMiddleware = Str::before(Str::after($httpKernel, '$routeMiddleware = ['), '];');
+
+        $afterValue = Str::before(Str::after($routeMiddleware, "'$after' => "), ',');
+        $afterContent = "'$after' => $afterValue";
+
+        if (! Str::contains($routeMiddleware, $name)) {
+            $new = "'$name' => $class";
+            $modifiedRouteMiddleware = str_replace(
+                $afterContent.',',
+                $afterContent.','.PHP_EOL.'        '.$new.',',
+                $routeMiddleware,
+            );
+
+            file_put_contents(app_path('Http/Kernel.php'), str_replace(
+                $routeMiddleware,
+                $modifiedRouteMiddleware,
+                $httpKernel
+            ));
+        }
+    }
+
+    /**
      * Installs the given Composer Packages into the application.
      *
      * @param  mixed  $packages

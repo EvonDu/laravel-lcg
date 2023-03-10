@@ -2,6 +2,7 @@
 
 namespace App\Models\Rbac;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -32,7 +33,7 @@ class Role extends Model
      *
      * @var string
      */
-    protected $table = 'rbac_roles';
+    protected $table = 'rbac_role';
 
     /**
      * Casts
@@ -91,5 +92,21 @@ class Role extends Model
             'name' => 'string|required|between:0,128',
             'permissions' => 'array',
         ]);
+    }
+
+    /**
+     * Property - roleUsers
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function roleUsers(){
+        return $this->hasManyThrough(
+            User::class,
+            RoleUser::class,
+            "role_id",
+            "id",
+            "id",
+            "user_id",
+        );
     }
 }

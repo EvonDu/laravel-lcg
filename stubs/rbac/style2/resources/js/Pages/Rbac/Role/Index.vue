@@ -9,6 +9,7 @@ import ModelSearch from './Search.vue';
 import ModelCreate from './Create.vue';
 import ModelUpdate from './Update.vue';
 import ModelDetail from './Detail.vue';
+import ModelAssigns from './Assigns.vue';
 import ModelPermissions from './Permissions.vue';
 
 //实例
@@ -58,6 +59,9 @@ const handleDelete = function(model){
         .catch(() => {
 
         });
+};
+const handleAssigns = function(model){
+    instance.refs.refAssigns.open(model);
 };
 const handlePermissions = function(model){
     instance.refs.refPermissions.open(model, function(model){
@@ -116,12 +120,13 @@ onMounted(() => {
                 <el-table-column prop='name' :label='labels["name"]' sortable='custom' show-overflow-tooltip></el-table-column>
                 <el-table-column prop='created_at' :label='labels["created_at"]' sortable='custom' show-overflow-tooltip></el-table-column>
                 <el-table-column prop='updated_at' :label='labels["updated_at"]' sortable='custom' show-overflow-tooltip></el-table-column>
-                <el-table-column label="操作" width="215px">
+                <el-table-column label="操作" width="260px">
                     <template #default="scope">
                         <el-button-group size="small">
                             <el-button type="info" @click="handleDetail(scope.row)">详情</el-button>
                             <el-button type="success" @click="handleUpdate(scope.row)">编辑</el-button>
-                            <el-button type="primary" @click="handlePermissions(scope.row)">权限</el-button>
+                            <el-button type="primary" @click="handleAssigns(scope.row)">委派</el-button>
+                            <el-button type="warning" @click="handlePermissions(scope.row)">权限</el-button>
                             <el-button type="danger" @click="handleDelete(scope.row)">删除</el-button>
                         </el-button-group>
                     </template>
@@ -133,6 +138,7 @@ onMounted(() => {
         <ModelCreate ref="refCreate" :labels="props.labels" :api="props.api"></ModelCreate>
         <ModelUpdate ref="refUpdate" :labels="props.labels" :api="props.api"></ModelUpdate>
         <ModelDetail ref="refDetail" :labels="props.labels" :api="props.api"></ModelDetail>
-        <ModelPermissions ref="refPermissions" :labels="props.labels" :permissions="permissions" :api="props.api"></ModelPermissions>
+        <ModelAssigns ref="refAssigns" :api="props.api"></ModelAssigns>
+        <ModelPermissions ref="refPermissions" :api="props.api" :permissions="permissions"></ModelPermissions>
     </lte-layout>
 </template>

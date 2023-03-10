@@ -16,9 +16,9 @@ class RbacSeeder extends Seeder
     public function run()
     {
         for($i=1; $i<=50; $i++){
-            DB::table('rbac_roles')->insert([
+            DB::table('rbac_role')->insert([
                 'name' => "角色$i",
-                'permissions' => json_encode(["ROLES_ALL"]),
+                'permissions' => json_encode(["ROLE_ALL"]),
                 'created_at' => date('Y-m-d h:i:s', time()),
                 'updated_at' => date('Y-m-d h:i:s', time()),
             ]);

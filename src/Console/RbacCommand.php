@@ -4,9 +4,12 @@ namespace Lcg\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Lcg\Console\Traits\Installs;
 
 class RbacCommand extends Command
 {
+    use Installs;
+
     /**
      * The name and signature of the console command.
      *
@@ -31,11 +34,15 @@ class RbacCommand extends Command
     public function handle()
     {
         //安装相关文件
+        $this->installCommon();
         if($this->option('style') == "2"){
             $this->installStyle2();
         } else {
             $this->installStyle1();
         }
+
+        //设置相关中间件
+        $this->installRouteMiddlewareAfter('auth.session', 'auth.permission', '\App\Http\Middleware\AuthenticatePermission::class');
 
         //组合提示信息
         $tips = [];
@@ -43,9 +50,13 @@ class RbacCommand extends Command
         $tips[] = "``````````````````````````````````````````````````````````````````";
         $tips[] = "[*]routes/web.php:";
         $tips[] = "//Roles";
-        $tips[] = "Route::prefix('/rbac/roles')->group(function () {";
+        $tips[] = "Route::prefix('/rbac/roles')->middleware(['auth.permission:ROLE_ALL'])->group(function () {";
         $tips[] = "    Route::get('/', [App\Http\Controllers\Rbac\RoleController::class, 'page']);";
         $tips[] = "    Route::resource('/interface', App\Http\Controllers\Rbac\RoleController::class);";
+        $tips[] = "    Route::get('/interface/{id}/search', [App\Http\Controllers\Rbac\RoleController::class, 'userSearch']);";
+        $tips[] = "    Route::get('/interface/{id}/users', [App\Http\Controllers\Rbac\RoleController::class, 'userList']);";
+        $tips[] = "    Route::post('/interface/{id}/users', [App\Http\Controllers\Rbac\RoleController::class, 'userPush']);";
+        $tips[] = "    Route::delete('/interface/{id}/users/{user_id}', [App\Http\Controllers\Rbac\RoleController::class, 'userRemove']);";
         $tips[] = "});";
         $tips[] = "``````````````````````````````````````````````````````````````````";
         $tips[] = "";
@@ -58,7 +69,7 @@ class RbacCommand extends Command
         $tips[] = '    "url" => "#",';
         $tips[] = '    "badge" => "System",';
         $tips[] = '    "childList" => [';
-        $tips[] = '        ["title" => "角色", "url" => url("/rbac/rbac_roles")],';
+        $tips[] = '        ["title" => "角色", "url" => url("/rbac/roles")],';
         $tips[] = '    ],';
         $tips[] = '],';
         $tips[] = "``````````````````````````````````````````````````````````````````";
@@ -72,6 +83,30 @@ class RbacCommand extends Command
     }
 
     /**
+     * Install Common Files
+     *
+     * @return void
+     */
+    protected function installCommon(){
+        //Model
+        (new Filesystem)->ensureDirectoryExists(base_path('app/Models/Rbac'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/app/Models/Rbac', base_path('app/Models/Rbac'));
+
+        //MiddlewareAfter
+        (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Middleware'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/app/Http/Middleware', base_path('app/Http/Middleware'));
+
+        //Config
+        (new Filesystem)->ensureDirectoryExists(base_path('config'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/config', base_path('config'));
+
+        //Database
+        (new Filesystem)->ensureDirectoryExists(base_path('database/migrations'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/database/migrations', base_path('database/migrations'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/database/seeders', base_path('database/seeders'));
+    }
+
+    /**
      * Install Style1 Files
      *
      * @return void
@@ -81,18 +116,6 @@ class RbacCommand extends Command
         //Controller
         (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Controllers/Rbac'));
         (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style1/app/Http/Controllers/Rbac', base_path('app/Http/Controllers/Rbac'));
-
-        //Model
-        (new Filesystem)->ensureDirectoryExists(base_path('app/Models/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/app/Models/Rbac', base_path('app/Models/Rbac'));
-
-        //Config
-        (new Filesystem)->ensureDirectoryExists(base_path('config'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/config', base_path('config'));
-
-        //Database
-        (new Filesystem)->ensureDirectoryExists(base_path('database/migrations'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/database/migrations', base_path('database/migrations'));
 
         //View
         (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac'));
@@ -109,18 +132,6 @@ class RbacCommand extends Command
         //Controller
         (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Controllers/Rbac'));
         (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style2/app/Http/Controllers/Rbac', base_path('app/Http/Controllers/Rbac'));
-
-        //Model
-        (new Filesystem)->ensureDirectoryExists(base_path('app/Models/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/app/Models/Rbac', base_path('app/Models/Rbac'));
-
-        //Config
-        (new Filesystem)->ensureDirectoryExists(base_path('config'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/config', base_path('config'));
-
-        //Database
-        (new Filesystem)->ensureDirectoryExists(base_path('database/migrations'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/database/migrations', base_path('database/migrations'));
 
         //View
         (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac'));

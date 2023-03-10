@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('rbac_users_roles', function (Blueprint $table) {
+        Schema::create('rbac_role_user', function (Blueprint $table) {
             $table->id()->comment('ID');
-            $table->bigInteger('user_id')->comment('用户ID');
             $table->bigInteger('role_id')->comment('角色ID');
-            $table->unique(['user_id', 'role_id']);
+            $table->bigInteger('user_id')->comment('用户ID');
+            $table->unique(['role_id', 'user_id']);
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rbac_users_roles');
+        Schema::dropIfExists('rbac_role_user');
     }
 };
