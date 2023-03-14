@@ -66,22 +66,7 @@ class HandleInertiaRequests extends Middleware
                 "footer" => [
                     "text" => "Copyright ©2022 Laravel."
                 ],
-                "navs" => [
-                    [
-                        "title" => "Dashboard",
-                        "icon" => "fas fa-tachometer-alt",
-                        "url" => url('/dashboard'),
-                    ],
-                    [
-                        "title" => "Example",
-                        "icon" => "fas fa-anchor",
-                        "url" => "#",
-                        "badge" => "Example",
-                        "childList" => [
-                            ["title" => "Example", "url" => url('/')],
-                        ],
-                    ],
-                ],
+                "navs" => include(base_path("routes/navigations.php")),
             ]
         ]);
     }

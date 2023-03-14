@@ -128,6 +128,9 @@ class InstallCommand extends Command
             copy(__DIR__.'/../../stubs/inertia-common/routes/web_ref.php', base_path('routes/web.php'));
         }
 
+        // Navigations...
+        copy(__DIR__ . '/../../stubs/inertia-common/routes/navigations.php', base_path('routes/navigations.php'));
+
         // Middleware...
         $this->installMiddlewareAfter('SubstituteBindings::class', '\App\Http\Middleware\HandleInertiaRequests::class');
         copy(__DIR__ . '/../../stubs/inertia-common/app/Http/Middleware/HandleInertiaRequests.php', app_path('Http/Middleware/HandleInertiaRequests.php'));
@@ -225,6 +228,9 @@ class InstallCommand extends Command
             // Routes...
             copy(__DIR__.'/../../stubs/inertia-common/routes/web_ref.php', base_path('routes/web.php'));
         }
+
+        // Navigations...
+        copy(__DIR__ . '/../../stubs/inertia-common/routes/navigations.php', base_path('routes/navigations.php'));
 
         // Middleware...
         $this->installMiddlewareAfter('SubstituteBindings::class', '\App\Http\Middleware\HandleInertiaRequests::class');
