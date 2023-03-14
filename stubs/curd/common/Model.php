@@ -20,12 +20,7 @@ class __MODEL_NAME__ extends Model
      */
     protected $table = '__MODEL_TABLE__';
 
-    /**
-     * Casts
-     *
-     * @var string[]
-     */
-    protected $casts = [/** MODEL_CASTS__ */];
+    /** MODEL_SETTINGS */
 
     /**
      * Fields

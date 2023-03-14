@@ -24,12 +24,15 @@ class GeneratorModel{
         $content = str_replace("__MODEL_NAME__", $curd->getModelName(), $content);
         $content = str_replace("__MODEL_TABLE__", $curd->getTableName(), $content);
         $content = str_replace("__MODEL_NAMESPACE__", $curd->getModelNamespace(), $content);
-        $content = str_replace("/** MODEL_CASTS__ */", self::getModelCastsContent($table), $content);
+        $content = str_replace("/** MODEL_SETTINGS */", self::getModelSettingsContent($table), $content);
         $content = str_replace("/** MODEL_ANNOTATE */", self::getModelAnnotateContent($table, $curd), $content);
         $content = str_replace("/** MODEL_FIELDS */", self::getModelFieldsContent($table), $content);
         $content = str_replace("/** MODEL_LABELS */", self::getModelLabelsContent($table), $content);
         $content = str_replace("/** MODEL_RULES */", self::getModelRulesContent($table), $content);
         $content = str_replace("/** MODEL_FK_RELEVANCE */", self::getModelRelevanceContent($table), $content);
+
+        //清理空白
+        $content = self::clearEmptyContent($content);
 
         //生成文件
         self::addFile($command, base_path("app/Models/{$curd->getPath()}/{$curd->getModelName()}.php"), $content, $isCover);
@@ -56,6 +59,16 @@ class GeneratorModel{
             //显示记录
             $command->warn("[WARRING] Exist: $filename");
         }
+    }
+
+    /**
+     * 清理模型空白内容
+     *
+     * @param string $content
+     * @return array|string|string[]|null
+     */
+    private static function clearEmptyContent(string $content){
+        return preg_replace('/\n\n +\n/', "\n", $content);
     }
 
     /**
@@ -173,24 +186,6 @@ class GeneratorModel{
     }
 
     /**
-     * 获取模型类型映射
-     *
-     * @param Table $table
-     * @return string
-     */
-    private static function getModelCastsContent(Table $table){
-        $casts = [];
-        foreach ($table->fields as $field){
-            switch ($field->dbType){
-                case "json":
-                    $casts[] = "'{$field->name}' => 'array'";
-                    break;
-            }
-        }
-        return implode(", ", $casts);
-    }
-
-    /**
      * 获取模型验证规则
      *
      * @param Table $table
@@ -205,5 +200,88 @@ class GeneratorModel{
         }
         CodeUtil::Format($contents, 3);
         return implode("\n", $contents);
+    }
+
+    /**
+     * 获取模型相关设置
+     *
+     * @param Table $table
+     * @return string
+     */
+    private static function getModelSettingsContent(Table $table){
+        //代码行
+        $codes = [];
+
+        //字段映射
+        $codes_casts = self::getModelCastCodes($table);
+        if($codes_casts)
+            $codes = array_merge($codes, $codes_casts, [""]);
+
+        //时间字段
+        $codes_timestamps = self::getModelTimestampsCodes($table);
+        if($codes_timestamps)
+            $codes = array_merge($codes, $codes_timestamps, [""]);
+
+        //删除末尾
+        if(count($codes) > 0)
+            array_pop($codes);
+
+        //格式化输出
+        CodeUtil::Format($codes, 1);
+        return implode("\n", $codes);
+    }
+
+    /**
+     * 获取模型相关设置-类型映射
+     *
+     * @param Table $table
+     * @return array
+     */
+    private static function getModelCastCodes(Table $table){
+        $casts = [];
+        foreach ($table->fields as $field){
+            switch ($field->dbType){
+                case "json":
+                    $casts[] = "'{$field->name}' => 'array'";
+                    break;
+            }
+        }
+
+        $codes = [];
+        if($casts){
+            $codes[] = '/**';
+            $codes[] = ' * Casts';
+            $codes[] = ' *';
+            $codes[] = ' * @var array';
+            $codes[] = ' */';
+            $codes[] = 'protected $casts = [' . implode(", ", $casts) . '];';
+        }
+
+        return $codes;
+    }
+
+    /**
+     * 获取模型相关设置-时间字段
+     *
+     * @param Table $table
+     * @return array
+     */
+    private static function getModelTimestampsCodes(Table $table){
+        $fields = [];
+        foreach ($table->fields as $field){
+            $fields[] = $field->name;
+        }
+
+        $codes = [];
+        if(!(in_array("created_at", $fields) && in_array("updated_at", $fields))){
+            $codes[] = '/**';
+            $codes[] = ' * Timestamps';
+            $codes[] = ' *';
+            $codes[] = ' * @var bool';
+            $codes[] = ' */';
+            $codes[] = 'public $timestamps = true;';
+        }
+
+        return $codes;
     }
 }
