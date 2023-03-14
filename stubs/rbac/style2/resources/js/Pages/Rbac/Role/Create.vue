@@ -42,10 +42,8 @@ const handleAddSubmit = function(){
             data.callback(response.data?.data);
     }).catch(function(response) {
         //设置错误
-        data.errors = {};
-        for (var key in response?.response?.data?.errors){
-            data.errors[key] = response.response.data.errors[key][0];
-        }
+        if(response.response.data.errors)
+            data.errors = response.response.data.errors;
         //显示信息
         ElMessage({ type: 'error', grouping: true, message: response?.response?.data?.message })
     });
@@ -55,7 +53,7 @@ const handleAddSubmit = function(){
 <template>
     <lte-modal v-model="data.show" title="添加" size="lg">
         <el-form label-width="100px">
-            <el-form-item :label='labels["name"]' :error='data.errors.name'><el-input v-model='data.model.name'></el-input></el-form-item>
+            <el-form-item :label='labels["name"]' :error='data?.errors?.name?.[0]'><el-input v-model='data.model.name'></el-input></el-form-item>
         </el-form>
         <template #footer>
             <el-button type="default" @click="data.show = false">取消</el-button>

@@ -25,7 +25,7 @@ const props = defineProps({
 });
 //数据
 const data = reactive({
-    title: "Role",
+    title: "角色",
     models: [],
     keyword: "",
     loading: false,
@@ -103,7 +103,7 @@ onMounted(() => {
                         </el-button-group>
                     </el-col>
                     <el-col :xs="0" :sm="12">
-                        <el-input placeholder="Please input" class="input-with-select" v-model="data.keyword" @keydown.enter="handleSearch({search: {name: data.keyword}})">
+                        <el-input placeholder="请输入角色名" class="input-with-select" v-model="data.keyword" @keydown.enter="handleSearch({search: {name: data.keyword}})">
                             <template #append>
                                 <el-button type="primary" :icon="Search" @click="handleSearch({search: {name: data.keyword}})"/>
                             </template>
