@@ -69,13 +69,16 @@ class CurdCommand extends Command
         }
 
         //输出提示
-        $this->showTips($curd_util);
+        //$this->showTips($curd_util);
+
+        //添加路由
+        $this->addRoute($curd_util);
     }
 
     /**
-     * 输出提示信息
+     * 配置提示
      *
-     * @param CurdUtil $curd_util
+     * @param Curd $curd_util
      * @return void
      */
     protected function showTips(Curd $curd_util){
@@ -96,5 +99,46 @@ class CurdCommand extends Command
 
         //输出路由信息
         $this->warn($message);
+    }
+
+    /**
+     * 添加路由
+     *
+     * @param Curd $curd_util
+     * @return void
+     */
+    protected function addRoute(Curd $curd_util){
+        //询问添加
+        $ask = $this->choice('[CHOICE] 是否添加路由配置', ['Yes', 'No']);
+        if($ask === 'No')
+            return;
+
+        //路由文件
+        $path = base_path("/routes/web.php");
+        $content = file_get_contents($path);
+
+        //判断存在
+        if(stripos($content, "//{$curd_util->getModelName()}") > 0){
+            $this->error("[ TIPS ] 路由已存在\n");
+            return;
+        }
+
+        //添加路由
+        $rows = [];
+        $rows[] = "//{$curd_util->getModelName()}";
+        $rows[] = "Route::prefix('/{$curd_util->getUrl()}')->group(function () {";
+        $rows[] = "    Route::get('/', [{$curd_util->getControllerClassname()}::class, 'page']);";
+        $rows[] = "    Route::resource('/interface', {$curd_util->getControllerClassname()}::class);";
+        $rows[] = "});";
+        $route = implode("\n", $rows);
+
+        //合并内容
+        $content = $content . "\n" . $route;
+
+        //保存文件
+        file_put_contents($path, $content);
+
+        //提示信息
+        $this->info("[ TIPS ] 路由已添加\n");
     }
 }
