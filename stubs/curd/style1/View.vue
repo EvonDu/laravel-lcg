@@ -27,54 +27,57 @@ const data = reactive({
 });
 //方法
 const handleAdd = function(){
-    instance.refs.refAdd.open({});
+    instance.refs.refAdd.open({model: {}});
 };
 const handleEdit = function(model){
-    instance.refs.refEdit.open(model);
+    instance.refs.refEdit.open({model: JSON.parse(JSON.stringify(model))});
 };
 const handleView = function(model){
-    instance.refs.refView.open(model);
+    instance.refs.refView.open({model: JSON.parse(JSON.stringify(model))});
 };
 const handleDelete = function(model){
     ElMessageBox.confirm('此操作将永久删除该数据, 是否继续?', '提示', {confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'})
         .then(() => {
-            handleDeleteSubmit(model);
+            handleDeleteSubmit({model: JSON.parse(JSON.stringify(model))});
         })
         .catch(() => {
 
         });
 };
 const handleSearch = function(){
-    instance.refs.refSearch.open(data.search);
+    instance.refs.refSearch.open({model: data.search});
 };
 const handleRefresh = function(){
     handleSearchSubmit({});
 };
-const handleAddSubmit = function(model){
+const handleAddSubmit = function(data){
+    let model = data.model;
     axios.post(`${props.api}`, model, {header : {'Content-Type': 'application/json'}}).then(function (response) {
         ElMessage({ type: 'success', grouping: true, message: '添加成功' });
         instance.refs.refAdd.close();
         handleSearchSubmit({});
     }).catch(function(response) {
         if(response.response.data.errors)
-            instance.refs.refAdd.setErrors(response.response.data.errors);
+            instance.refs.refAdd.data().errors = response.response.data.errors;
         if(response.response.data.message)
             ElMessage({ type: 'error', grouping: true, message: response.response.data.message })
     });
 };
-const handleEditSubmit = function(model){
+const handleEditSubmit = function(data){
+    let model = data.model;
     axios.put(`${props.api}/${model.__MODEL_PK__}`, model, {header : {'Content-Type': 'application/json'}}).then(function (response) {
         ElMessage({ type: 'success', grouping: true, message: '修改成功' });
         instance.refs.refEdit.close();
         handleSearchSubmit({});
     }).catch(function(response) {
         if(response.response.data.errors)
-            instance.refs.refEdit.setErrors(response.response.data.errors);
+            instance.refs.refEdit.data().errors = response.response.data.errors;
         if(response.response.data.message)
             ElMessage({ type: 'error', grouping: true, message: response.response.data.message })
     });
 };
-const handleDeleteSubmit = function(model){
+const handleDeleteSubmit = function(data){
+    let model = data.model;
     axios.delete(`${props.api}/${model.__MODEL_PK__}`).then(function (response) {
         ElMessage({ type: 'success', grouping: true, message: '删除成功' });
         handleSearchSubmit({});
@@ -84,27 +87,27 @@ const handleDeleteSubmit = function(model){
 };
 const handleSearchSubmit = function(options){
     //params
-    var params = {};
+    let params = {};
     //search
-    var search;
+    let search;
     if(options.keyword){
         search = {name : options.keyword};
     } else {
         search = options.search ? options.search : data.search;
     }
-    for (var key in search){
+    for (let key in search){
         params[key] = search[key];
     }
     //paginate
-    var paginatePage = options?.paginate?.page ? options?.paginate?.page : data.paginate.page;
-    var paginateSize = options?.paginate?.size ? options?.paginate?.size : data.paginate.size;
+    let paginatePage = options?.paginate?.page ? options?.paginate?.page : data.paginate.page;
+    let paginateSize = options?.paginate?.size ? options?.paginate?.size : data.paginate.size;
     if(paginatePage > 1)
         params["page"] = paginatePage;
     if(paginateSize !== 20)
         params["size"] = paginateSize;
     //sort
-    var sortProp = options?.sort?.prop !== undefined ? options?.sort?.prop : data.sort.prop;
-    var sortOrder = options?.sort?.order !== undefined ? options?.sort?.order : data.sort.order;
+    let sortProp = options?.sort?.prop !== undefined ? options?.sort?.prop : data.sort.prop;
+    let sortOrder = options?.sort?.order !== undefined ? options?.sort?.order : data.sort.order;
     if(sortProp)
         params["sort"] = sortProp;
     if(sortOrder)
@@ -154,9 +157,9 @@ handleSearchSubmit({});
             </div>
             <!-- 表格 -->
             <lte-grid :models="data.models" :loading="data.loading"
-                :paginatePage="data.paginate.page" :paginateSize="data.paginate.size" :paginateTotal="data.paginate.total"
-                @sort-change="handleSearchSubmit({sort: $event})"
-                @page-change="handleSearchSubmit({paginate: $event})">
+                      :paginatePage="data.paginate.page" :paginateSize="data.paginate.size" :paginateTotal="data.paginate.total"
+                      @sort-change="handleSearchSubmit({sort: $event})"
+                      @page-change="handleSearchSubmit({paginate: $event})">
                 __TABLE_ITEMS__
                 <el-table-column label="操作" width="167px">
                     <template #default="scope">
@@ -169,26 +172,26 @@ handleSearchSubmit({});
                 </el-table-column>
             </lte-grid>
             <!-- 查看 -->
-            <lte-window ref="refView" title="详情" v-slot="slot">
-                <el-descriptions size="large" :column="2" border>
+            <lte-window ref="refView" title="详情" v-slot="window">
+                <el-descriptions size="large" :column="2" border v-if="window.data.model">
                     __DETAIL_ITEMS__
                 </el-descriptions>
             </lte-window>
             <!-- 添加 -->
-            <lte-window ref="refAdd" title="添加" v-slot="slot" :existSubmit="true" @submit="handleAddSubmit">
-                <el-form label-width="100px">
+            <lte-window ref="refAdd" title="添加" v-slot="window" :existSubmit="true" @submit="handleAddSubmit">
+                <el-form label-width="100px" v-if="window.data.model">
                     __FORM_ITEMS__
                 </el-form>
             </lte-window>
             <!-- 编辑 -->
-            <lte-window ref="refEdit" title="编辑" v-slot="slot" :existSubmit="true" @submit="handleEditSubmit">
-                <el-form label-width="100px">
+            <lte-window ref="refEdit" title="编辑" v-slot="window" :existSubmit="true" @submit="handleEditSubmit">
+                <el-form label-width="100px" v-if="window.data.model">
                     __FORM_ITEMS__
                 </el-form>
             </lte-window>
             <!-- 搜索 -->
-            <lte-window ref="refSearch" title="搜索" v-slot="slot" :existSubmit="true" @submit="handleSearchSubmit({search:$event})">
-                <el-form label-width="100px">
+            <lte-window ref="refSearch" title="搜索" v-slot="window" :existSubmit="true" @submit="handleSearchSubmit({search:$event})">
+                <el-form label-width="100px" v-if="window.data.model">
                     __SEARCH_ITEMS__
                 </el-form>
             </lte-window>

@@ -20,7 +20,7 @@ class GeneratorModel{
      */
     public static function run(Command $command, Table $table, Curd $curd, bool $isCover=false){
         //读取模板
-        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Model.php");
+        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/common/Model.php");
         $content = str_replace("__MODEL_NAME__", $curd->getModelName(), $content);
         $content = str_replace("__MODEL_TABLE__", $curd->getTableName(), $content);
         $content = str_replace("__MODEL_NAMESPACE__", $curd->getModelNamespace(), $content);

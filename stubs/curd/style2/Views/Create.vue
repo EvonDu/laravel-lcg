@@ -22,6 +22,7 @@ const data = reactive({
 defineExpose({
     open : function(model, callback){
         data.model = JSON.parse(JSON.stringify(model));
+        data.errors = [];
         data.show = true;
         data.callback = callback;
     },
@@ -42,10 +43,8 @@ const handleAddSubmit = function(){
             data.callback(response.data?.data);
     }).catch(function(response) {
         //设置错误
-        data.errors = {};
-        for (var key in response?.response?.data?.errors){
-            data.errors[key] = response.response.data.errors[key][0];
-        }
+        if(response.response.data.errors)
+            data.errors = response.response.data.errors;
         //显示信息
         ElMessage({ type: 'error', grouping: true, message: response?.response?.data?.message })
     });
