@@ -2,13 +2,18 @@
 namespace Lcg\Console\Tasks;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Lcg\Console\Traits\Codes;
 use Lcg\Models\Curd;
 use Lcg\Models\Table;
 use Lcg\Utils\CodeUtil;
 
 class GeneratorModel{
+    /**
+     * 引入特征
+     */
+    Use Codes;
+
     /**
      * 执行生成
      *
@@ -35,30 +40,7 @@ class GeneratorModel{
         $content = self::clearEmptyContent($content);
 
         //生成文件
-        self::addFile($command, base_path("app/Models/{$curd->getPath()}/{$curd->getModelName()}.php"), $content, $isCover);
-    }
-
-    /**
-     * 添加生成文件
-     *
-     * @param Command $command
-     * @param string $filename
-     * @param string $content
-     * @param bool $isCover
-     * @return void
-     */
-    private static function addFile(Command $command, string $filename, string $content, bool $isCover){
-        if(!is_file($filename) || $isCover){
-            //保存文件
-            (new Filesystem)->ensureDirectoryExists(dirname($filename));
-            file_put_contents($filename, $content);
-            //显示记录
-            $command->info("[APPEND] $filename");
-        }
-        else {
-            //显示记录
-            $command->warn("[WARRING] Exist: $filename");
-        }
+        self::put($command, base_path("app/Models/{$curd->getPath()}/{$curd->getModelName()}.php"), $content, $isCover);
     }
 
     /**

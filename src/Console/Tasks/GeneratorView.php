@@ -2,12 +2,17 @@
 namespace Lcg\Console\Tasks;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
+use Lcg\Console\Traits\Codes;
 use Lcg\Models\Curd;
 use Lcg\Models\Table;
 use Lcg\Utils\CodeUtil;
 
 class GeneratorView{
+    /**
+     * 引入特征
+     */
+    Use Codes;
+
     /**
      * 执行生成
      *
@@ -49,7 +54,7 @@ class GeneratorView{
         $content = str_replace("__SEARCH_ITEMS__", self::getViewSearchContent($table, "window.data.model", 5), $content);
 
         //生成文件
-        self::addFile($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}.vue"), $content, $isCover);
+        self::put($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}.vue"), $content, $isCover);
     }
 
     /**
@@ -67,51 +72,28 @@ class GeneratorView{
         $content = str_replace("__MODEL_NAME__", $curd->getModelName(), $content);
         $content = str_replace("__MODEL_PK__", $table->primary_key->name, $content);
         $content = str_replace("__TABLE_ITEMS__", self::getViewTableContent($table), $content);
-        self::addFile($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Index.vue"), $content, $isCover);
+        self::put($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Index.vue"), $content, $isCover);
 
         //Search
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Search.vue");
         $content = str_replace("__SEARCH_ITEMS__", self::getViewSearchContent($table, "data.model", 3), $content);
-        self::addFile($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Search.vue"), $content, $isCover);
+        self::put($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Search.vue"), $content, $isCover);
 
         //Create
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Create.vue");
         $content = str_replace("__FORM_ITEMS__", self::getViewFormContent($table, "data.model", "data?.errors", 3), $content);
-        self::addFile($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Create.vue"), $content, $isCover);
+        self::put($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Create.vue"), $content, $isCover);
 
         //Update
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Update.vue");
         $content = str_replace("__MODEL_PK__", $table->primary_key->name, $content);
         $content = str_replace("__FORM_ITEMS__", self::getViewFormContent($table, "data.model", "data?.errors", 3), $content);
-        self::addFile($command,base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Update.vue"), $content, $isCover);
+        self::put($command,base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Update.vue"), $content, $isCover);
 
         //Detail
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Detail.vue");
         $content = str_replace("__DETAIL_ITEMS__", self::getViewDetailContent($table, "data.model", 3), $content);
-        self::addFile($command,base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Detail.vue"), $content, $isCover);
-    }
-
-    /**
-     * 添加生成文件
-     *
-     * @param Command $command
-     * @param string $filename
-     * @param string $content
-     * @param bool $isCover
-     * @return void
-     */
-    private static function addFile(Command $command, string $filename, string $content, bool $isCover){
-        if(!is_file($filename) || $isCover){
-            //保存文件
-            (new Filesystem)->ensureDirectoryExists(dirname($filename));
-            file_put_contents($filename, $content);
-            //显示记录
-            $command->info("[APPEND] $filename");
-        }
-        else {
-            //显示记录
-            $command->warn("[WARRING] Exist: $filename");
-        }
+        self::put($command,base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Detail.vue"), $content, $isCover);
     }
 
     /**
