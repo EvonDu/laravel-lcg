@@ -261,7 +261,7 @@ class GeneratorModel{
             $codes[] = ' *';
             $codes[] = ' * @var bool';
             $codes[] = ' */';
-            $codes[] = 'public $timestamps = true;';
+            $codes[] = 'public $timestamps = false;';
         }
 
         return $codes;
