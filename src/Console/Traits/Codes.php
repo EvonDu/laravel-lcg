@@ -13,11 +13,11 @@ trait Codes
      * @param Command $command
      * @param string $filename
      * @param string $content
-     * @param bool $isCover
+     * @param bool $cover
      * @return void
      */
-    private static function put(Command $command, string $filename, string $content, bool $isCover){
-        if(!is_file($filename) || $isCover){
+    private static function put(Command $command, string $filename, string $content, bool $cover){
+        if(!is_file($filename) || $cover){
             //保存文件
             (new Filesystem)->ensureDirectoryExists(dirname($filename));
             file_put_contents($filename, $content);

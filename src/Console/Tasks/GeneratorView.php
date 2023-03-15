@@ -20,16 +20,16 @@ class GeneratorView{
      * @param Table $table
      * @param Curd $curd
      * @param int $style
-     * @param bool $isCover
+     * @param bool $cover
      * @return void
      */
-    public static function run(Command $command, Table $table, Curd $curd, int $style, bool $isCover=false){
+    public static function run(Command $command, Table $table, Curd $curd, int $style, bool $cover=false){
         switch ($style){
             case 2:
-                self::generatorStyle2($command, $table, $curd, $isCover);
+                self::generatorStyle2($command, $table, $curd, $cover);
                 break;
             case 1:
-                self::generatorStyle1($command, $table, $curd, $isCover);
+                self::generatorStyle1($command, $table, $curd, $cover);
                 break;
         }
     }
@@ -40,10 +40,10 @@ class GeneratorView{
      * @param Command $command
      * @param Table $table
      * @param Curd $curd
-     * @param bool $isCover
+     * @param bool $cover
      * @return void
      */
-    private static function generatorStyle1(Command $command, Table $table, Curd $curd, bool $isCover=false){
+    private static function generatorStyle1(Command $command, Table $table, Curd $curd, bool $cover=false){
         //读取模板
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style1/View.vue");
         $content = str_replace("__MODEL_PK__", $table->primary_key->name, $content);
@@ -54,7 +54,7 @@ class GeneratorView{
         $content = str_replace("__SEARCH_ITEMS__", self::getViewSearchContent($table, "window.data.model", 5), $content);
 
         //生成文件
-        self::put($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}.vue"), $content, $isCover);
+        self::put($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}.vue"), $content, $cover);
     }
 
     /**
@@ -63,37 +63,37 @@ class GeneratorView{
      * @param Command $command
      * @param Table $table
      * @param Curd $curd
-     * @param bool $isCover
+     * @param bool $cover
      * @return void
      */
-    private static function generatorStyle2(Command $command, Table $table, Curd $curd, bool $isCover=false){
+    private static function generatorStyle2(Command $command, Table $table, Curd $curd, bool $cover=false){
         //Index
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Index.vue");
         $content = str_replace("__MODEL_NAME__", $curd->getModelName(), $content);
         $content = str_replace("__MODEL_PK__", $table->primary_key->name, $content);
         $content = str_replace("__TABLE_ITEMS__", self::getViewTableContent($table), $content);
-        self::put($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Index.vue"), $content, $isCover);
+        self::put($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Index.vue"), $content, $cover);
 
         //Search
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Search.vue");
         $content = str_replace("__SEARCH_ITEMS__", self::getViewSearchContent($table, "data.model", 3), $content);
-        self::put($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Search.vue"), $content, $isCover);
+        self::put($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Search.vue"), $content, $cover);
 
         //Create
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Create.vue");
         $content = str_replace("__FORM_ITEMS__", self::getViewFormContent($table, "data.model", "data?.errors", 3), $content);
-        self::put($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Create.vue"), $content, $isCover);
+        self::put($command, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Create.vue"), $content, $cover);
 
         //Update
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Update.vue");
         $content = str_replace("__MODEL_PK__", $table->primary_key->name, $content);
         $content = str_replace("__FORM_ITEMS__", self::getViewFormContent($table, "data.model", "data?.errors", 3), $content);
-        self::put($command,base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Update.vue"), $content, $isCover);
+        self::put($command,base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Update.vue"), $content, $cover);
 
         //Detail
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Detail.vue");
         $content = str_replace("__DETAIL_ITEMS__", self::getViewDetailContent($table, "data.model", 3), $content);
-        self::put($command,base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Detail.vue"), $content, $isCover);
+        self::put($command,base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Detail.vue"), $content, $cover);
     }
 
     /**

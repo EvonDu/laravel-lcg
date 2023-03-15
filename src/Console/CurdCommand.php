@@ -49,54 +49,48 @@ class CurdCommand extends Command
         }
 
         //构建工具
-        $curd_util = new Curd($table_name, $this->option('path'));
+        $curd_model = new Curd($table_name, $this->option('path'));
 
-        //判断风格
-        if($this->option('style') == "2"){
-            //创建模型
-            GeneratorModel::run($this, $table_model, $curd_util, true);
-            //创建视图
-            GeneratorView::run($this, $table_model, $curd_util, 2,true);
-            //创建控制器
-            GeneratorController::run($this, $table_model, $curd_util, 2,true);
-        } else {
-            //创建模型
-            GeneratorModel::run($this, $table_model, $curd_util, true);
-            //创建视图
-            GeneratorView::run($this, $table_model, $curd_util, 1,true);
-            //创建控制器
-            GeneratorController::run($this, $table_model, $curd_util, 1,true);
-        }
+        //获取选项
+        $cover = $this->option('cover') == "y";
+        $style = $this->option('style') == "1" ? 1 : 2;
+
+        //创建模型
+        GeneratorModel::run($this, $table_model, $curd_model, $cover);
+        //创建视图
+        GeneratorView::run($this, $table_model, $curd_model, $style, $cover);
+        //创建控制器
+        GeneratorController::run($this, $table_model, $curd_model, $style, $cover);
 
         //输出提示
         //$this->showTips($curd_util);
 
         //添加路由
-        $this->addRoute($curd_util);
+        $this->addRoute($curd_model);
 
         //添加导航
-        $this->addNavigation($curd_util);
+        $this->addNavigation($curd_model);
     }
 
     /**
      * 配置提示
      *
-     * @param Curd $curd_util
+     * @param Curd $curd
      * @return void
      */
-    protected function showTips(Curd $curd_util){
+    protected function showTips(Curd $curd){
         //组合路由信息/
         $tips = [];
         $tips[] = "[ TIPS ] Please add routing configuration:";
         $tips[] = "``````````````````````````````````````````````````````````````````";
         $tips[] = "[*]routes/web.php:";
-        $tips[] = "Route::prefix('{$curd_util->getUrl()}')->group(function () {";
-        $tips[] = "    Route::get('/', [{$curd_util->getControllerClassname()}::class, 'page']);";
-        $tips[] = "    Route::resource('/interface', {$curd_util->getControllerClassname()}::class);";
+        $tips[] = "Route::prefix('{$curd->getUrl()}')->group(function () {";
+        $tips[] = "    Route::get('/', [{$curd->getControllerClassname()}::class, 'page']);";
+        $tips[] = "    Route::resource('/interface', {$curd->getControllerClassname()}::class);";
         $tips[] = "});";
         $tips[] = "";
         $tips[] = "[*]routes/api.php:";
-        $tips[] = "Route::resource('{$curd_util->getUrl()}', {$curd_util->getControllerClassname()}::class);";
+        $tips[] = "Route::resource('{$curd->getUrl()}', {$curd->getControllerClassname()}::class);";
         $tips[] = "``````````````````````````````````````````````````````````````````";
         $message = implode("\n", $tips);
 
@@ -107,10 +101,10 @@ class CurdCommand extends Command
     /**
      * 添加路由
      *
-     * @param Curd $curd_util
+     * @param Curd $curd
      * @return void
      */
-    protected function addRoute(Curd $curd_util){
+    protected function addRoute(Curd $curd){
         //询问添加
         $ask = $this->choice('[CHOICE] 是否添加路由配置', ['Yes', 'No']);
         if($ask === 'No')
@@ -121,17 +115,17 @@ class CurdCommand extends Command
         $content = file_get_contents($path);
 
         //判断存在
-        if(stripos($content, "//{$curd_util->getModelName()}") > 0){
+        if(stripos($content, "//{$curd->getModelName()}") > 0){
             $this->warn("[ TIPS ] 路由已存在\n");
             return;
         }
 
         //添加路由
         $rows = [];
-        $rows[] = "//{$curd_util->getModelName()}";
-        $rows[] = "Route::prefix('{$curd_util->getUrl()}')->group(function () {";
-        $rows[] = "    Route::get('/', [{$curd_util->getControllerClassname()}::class, 'page']);";
-        $rows[] = "    Route::resource('/interface', {$curd_util->getControllerClassname()}::class);";
+        $rows[] = "//{$curd->getModelName()}";
+        $rows[] = "Route::prefix('{$curd->getUrl()}')->group(function () {";
+        $rows[] = "    Route::get('/', [{$curd->getControllerClassname()}::class, 'page']);";
+        $rows[] = "    Route::resource('/interface', {$curd->getControllerClassname()}::class);";
         $rows[] = "});";
         $route = implode("\n", $rows);
 
@@ -148,10 +142,10 @@ class CurdCommand extends Command
     /**
      * 添加导航
      *
-     * @param Curd $curd_util
+     * @param Curd $curd
      * @return void
      */
-    protected function addNavigation(Curd $curd_util){
+    protected function addNavigation(Curd $curd){
         //询问添加
         $ask = $this->choice('[CHOICE] 是否添加简易导航配置', ['Yes', 'No']);
         if($ask === 'No')
@@ -162,7 +156,7 @@ class CurdCommand extends Command
         $content = file_get_contents($path);
 
         //判断存在
-        $url_escape  = str_replace("/", "\\/", $curd_util->getUrl());
+        $url_escape  = str_replace("/", "\\/", $curd->getUrl());
         preg_match_all("/url\([\'|\"]{$url_escape}[\'|\"]\)/", $content, $match_exist);
         if(!empty($match_exist[0])) {
             $this->warn("[ TIPS ] 导航已存在\n");
@@ -180,11 +174,11 @@ class CurdCommand extends Command
         //添加导航
         $rows = [];
         $rows[] = "    [";
-        $rows[] = "        \"title\" => \"{$curd_util->getModelName()}\",";
+        $rows[] = "        \"title\" => \"{$curd->getModelName()}\",";
         $rows[] = "        \"icon\" => \"fa fa-cube\",";
         $rows[] = "        \"url\" => \"#\",";
         $rows[] = "        \"childList\" => [";
-        $rows[] = "            [\"title\" => \"{$curd_util->getModelName()}\", \"url\" => url(\"{$curd_util->getUrl()}\")],";
+        $rows[] = "            [\"title\" => \"{$curd->getModelName()}\", \"url\" => url(\"{$curd->getUrl()}\")],";
         $rows[] = "        ],";
         $rows[] = "    ],";
         $code = implode("\n", $rows);
