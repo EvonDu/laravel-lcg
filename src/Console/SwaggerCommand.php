@@ -40,7 +40,7 @@ class SwaggerCommand extends Command{
         (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/swagger/swagger-ui', public_path('swagger'));
 
         //输出结果
-        $this->info("Swagger installed successfully.");
+        $this->components->info('Swagger installed successfully.');
     }
 
     /**
