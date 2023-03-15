@@ -55,21 +55,20 @@ class CurdCommand extends Command
         $cover = $this->option('cover') == "y";
         $style = $this->option('style') == "1" ? 1 : 2;
 
-        //创建模型
-        GeneratorModel::run($this, $table_model, $curd_model, $cover);
-        //创建视图
-        GeneratorView::run($this, $table_model, $curd_model, $style, $cover);
-        //创建控制器
-        GeneratorController::run($this, $table_model, $curd_model, $style, $cover);
+        //生成代码
+        $this->generatorCodes($table_model, $curd_model, $style, $cover);
+
+        //生成路由
+        $this->generatorRoute($curd_model);
+
+        //生成导航
+        $this->generatorNavigation($curd_model);
 
         //输出提示
         //$this->showTips($curd_util);
 
-        //添加路由
-        $this->addRoute($curd_model);
-
-        //添加导航
-        $this->addNavigation($curd_model);
+        //输出空行
+        $this->line("");
     }
 
     /**
@@ -99,24 +98,47 @@ class CurdCommand extends Command
     }
 
     /**
-     * 添加路由
+     * 生成代码
+     *
+     * @param Table $table
+     * @param Curd $curd
+     * @param int $style
+     * @param bool $cover
+     * @return void
+     */
+    protected function generatorCodes(Table $table, Curd $curd, int $style, bool $cover=false){
+        //提示信息
+        $this->components->info('生成相关文件:');
+
+        //创建模型
+        GeneratorModel::run($this->components, $table, $curd, $cover);
+
+        //创建视图
+        GeneratorView::run($this->components, $table, $curd, $style, $cover);
+
+        //创建控制器
+        GeneratorController::run($this->components, $table, $curd, $style, $cover);
+    }
+
+    /**
+     * 生成路由
      *
      * @param Curd $curd
      * @return void
      */
-    protected function addRoute(Curd $curd){
+    protected function generatorRoute(Curd $curd){
         //询问添加
-        $ask = $this->choice('[CHOICE] 是否添加路由配置', ['Yes', 'No']);
+        $ask = $this->choice('<bg=blue> INFO </> <fg=default>是否添加路由配置</>', ['Yes', 'No']);
         if($ask === 'No')
             return;
 
         //路由文件
-        $path = base_path("/routes/web.php");
+        $path = base_path("routes/web.php");
         $content = file_get_contents($path);
 
         //判断存在
         if(stripos($content, "//{$curd->getModelName()}") > 0){
-            $this->warn("[ TIPS ] 路由已存在\n");
+            $this->components->twoColumnDetail("<fg=#FFC125>MODIFY</> $path", "<fg=yellow;options=bold>EXIST</>");
             return;
         }
 
@@ -136,18 +158,18 @@ class CurdCommand extends Command
         file_put_contents($path, $content);
 
         //提示信息
-        $this->info("[ TIPS ] 路由已添加\n");
+        $this->components->twoColumnDetail("<fg=#FFC125>MODIFY</> $path", "<fg=green;options=bold>DONE</>");
     }
 
     /**
-     * 添加导航
+     * 生成导航
      *
      * @param Curd $curd
      * @return void
      */
-    protected function addNavigation(Curd $curd){
+    protected function generatorNavigation(Curd $curd){
         //询问添加
-        $ask = $this->choice('[CHOICE] 是否添加简易导航配置', ['Yes', 'No']);
+        $ask = $this->choice('<bg=blue> INFO </> <fg=default>是否添加简易导航配置</>', ['Yes', 'No']);
         if($ask === 'No')
             return;
 
@@ -159,7 +181,7 @@ class CurdCommand extends Command
         $url_escape  = str_replace("/", "\\/", $curd->getUrl());
         preg_match_all("/url\([\'|\"]{$url_escape}[\'|\"]\)/", $content, $match_exist);
         if(!empty($match_exist[0])) {
-            $this->warn("[ TIPS ] 导航已存在\n");
+            $this->components->twoColumnDetail("<fg=#FFC125>MODIFY</> $path", "<fg=yellow;options=bold>EXIST</>");
             return;
         }
 
@@ -189,6 +211,6 @@ class CurdCommand extends Command
         file_put_contents($path, $content);
 
         //提示信息
-        $this->info("[ TIPS ] 简易导航已添加\n");
+        $this->components->twoColumnDetail("<fg=#FFC125>MODIFY</> $path", "<fg=green;options=bold>DONE</>");
     }
 }

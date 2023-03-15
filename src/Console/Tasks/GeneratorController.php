@@ -1,7 +1,7 @@
 <?php
 namespace Lcg\Console\Tasks;
 
-use Illuminate\Console\Command;
+use Illuminate\Console\View\Components\Factory;
 use Lcg\Console\Traits\Codes;
 use Lcg\Models\Curd;
 use Lcg\Models\Table;
@@ -15,14 +15,14 @@ class GeneratorController{
     /**
      * 执行生成
      *
-     * @param Command $command
+     * @param Factory $factory
      * @param Table $table
      * @param Curd $curd
      * @param int $style
      * @param bool $cover
      * @return void
      */
-    public static function run(Command $command, Table $table, Curd $curd, int $style, bool $cover=false){
+    public static function run(Factory $factory, Table $table, Curd $curd, int $style, bool $cover=false){
         //引入列表
         $use_list = [ "use {$curd->getModelClassname()};" ];
         if($curd->getPath()){
@@ -55,7 +55,7 @@ class GeneratorController{
         $content = str_replace("__VIEW_PATH__", $curd->getViewPath(), $content);
 
         //生成文件
-        self::put($command, base_path("app/Http/Controllers/{$curd->getPath()}/{$curd->getControllerName()}.php"), $content, $cover);
+        self::put($factory, base_path("app/Http/Controllers/{$curd->getPath()}/{$curd->getControllerName()}.php"), $content, $cover);
     }
 
     /**
