@@ -33,9 +33,12 @@ class RbacCommand extends Command
      */
     public function handle()
     {
+        //获取选项参数
+        $style = $this->option('style') == "1" ? 1 : 2;
+
         //安装相关文件
         $this->installCommon();
-        if($this->option('style') == "2"){
+        if($style == 2){
             $this->installStyle2();
         } else {
             $this->installStyle1();
@@ -44,6 +47,175 @@ class RbacCommand extends Command
         //设置相关中间件
         $this->installRouteMiddlewareAfter('auth.session', 'auth.permission', '\App\Http\Middleware\AuthenticatePermission::class');
 
+        //生成相关路由
+        $this->generatorRoute();
+
+        //生成相关导航
+        $this->generatorNavigation();
+
+        //输出占位空行
+        $this->line("");
+    }
+
+    /**
+     * 安装文件(通用)
+     *
+     * @return void
+     */
+    protected function installCommon(){
+        //Model
+        (new Filesystem)->ensureDirectoryExists(base_path('app/Models/Rbac'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/app/Models/Rbac', base_path('app/Models/Rbac'));
+
+        //MiddlewareAfter
+        (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Middleware'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/app/Http/Middleware', base_path('app/Http/Middleware'));
+
+        //Config
+        (new Filesystem)->ensureDirectoryExists(base_path('config'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/config', base_path('config'));
+
+        //Database
+        (new Filesystem)->ensureDirectoryExists(base_path('database/migrations'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/database/migrations', base_path('database/migrations'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/database/seeders', base_path('database/seeders'));
+    }
+
+    /**
+     * 安装文件(单文件风格)
+     *
+     * @return void
+     */
+    protected function installStyle1()
+    {
+        //Controller
+        (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Controllers/Rbac'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style1/app/Http/Controllers/Rbac', base_path('app/Http/Controllers/Rbac'));
+
+        //View
+        (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style1/resources/js/Pages/Rbac', base_path('resources/js/Pages/Rbac'));
+    }
+
+    /**
+     * 安装文件(多文件风格)
+     *
+     * @return void
+     */
+    protected function installStyle2()
+    {
+        //Controller
+        (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Controllers/Rbac'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style2/app/Http/Controllers/Rbac', base_path('app/Http/Controllers/Rbac'));
+
+        //View
+        (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style2/resources/js/Pages/Rbac', base_path('resources/js/Pages/Rbac'));
+    }
+
+    /**
+     * 生成路由
+     *
+     * @return void
+     */
+    protected function generatorRoute(){
+        //询问添加
+        $ask = $this->choice('<bg=blue> INFO </> <fg=default>是否添加路由配置</>', ['Yes', 'No']);
+        if($ask === 'No')
+            return;
+
+        //路由文件
+        $path = base_path("routes/web.php");
+        $content = file_get_contents($path);
+
+        //判断存在
+        if(stripos($content, "//RBAC") > 0){
+            $this->components->twoColumnDetail("<fg=#FFC125>MODIFY</> $path", "<fg=yellow;options=bold>EXIST</>");
+            return;
+        }
+
+        //添加路由
+        $rows = [];
+        $rows[] = "//RBAC";
+        $rows[] = "Route::prefix('/rbac/roles')->middleware(['auth.permission:ROLE_ALL'])->group(function () {";
+        $rows[] = "    Route::get('/', [App\Http\Controllers\Rbac\RoleController::class, 'page']);";
+        $rows[] = "    Route::resource('/interface', App\Http\Controllers\Rbac\RoleController::class);";
+        $rows[] = "    Route::get('/interface/{id}/search', [App\Http\Controllers\Rbac\RoleController::class, 'userSearch']);";
+        $rows[] = "    Route::get('/interface/{id}/users', [App\Http\Controllers\Rbac\RoleController::class, 'userList']);";
+        $rows[] = "    Route::post('/interface/{id}/users', [App\Http\Controllers\Rbac\RoleController::class, 'userPush']);";
+        $rows[] = "    Route::delete('/interface/{id}/users/{user_id}', [App\Http\Controllers\Rbac\RoleController::class, 'userRemove']);";
+        $rows[] = "});";
+        $route = implode("\n", $rows);
+
+        //合并内容
+        $content = $content . "\n" . $route;
+
+        //保存文件
+        file_put_contents($path, $content);
+
+        //提示信息
+        $this->components->twoColumnDetail("<fg=#FFC125>MODIFY</> $path", "<fg=green;options=bold>DONE</>");
+    }
+
+    /**
+     * 生成导航
+     *
+     * @return void
+     */
+    protected function generatorNavigation(){
+        //询问添加
+        $ask = $this->choice('<bg=blue> INFO </> <fg=default>是否添加导航配置</>', ['Yes', 'No']);
+        if($ask === 'No')
+            return;
+
+        //路由文件
+        $path = base_path("/routes/navigations.php");
+        $content = file_get_contents($path);
+
+        //判断存在
+        $url_escape  = "\/rbac\/roles";
+        preg_match_all("/url\([\'|\"]{$url_escape}[\'|\"]\)/", $content, $match_exist);
+        if(!empty($match_exist[0])) {
+            $this->components->twoColumnDetail("<fg=#FFC125>MODIFY</> $path", "<fg=yellow;options=bold>EXIST</>");
+            return;
+        }
+
+        //获取主体
+        preg_match_all('/return \[([\s\S]*?)\];/i', $content, $match_content);
+        $content_body = isset($match_content[1][0]) ? $match_content[1][0] : "";
+        if(empty($content_body)) {
+            $this->error("[ERRORS] 获取导航信息失败\n");
+            return;
+        }
+
+        //添加导航
+        $rows = [];
+        $rows[] = "    [";
+        $rows[] = "        \"title\" => \"权限认证\",";
+        $rows[] = "        \"icon\" => \"fas fa-lock\",";
+        $rows[] = "        \"url\" => \"#\",";
+        $rows[] = "        \"badge\" => \"System\",";
+        $rows[] = "        \"childList\" => [";
+        $rows[] = "            [\"title\" => \"角色\", \"url\" => url(\"/rbac/roles\")],";
+        $rows[] = "        ],";
+        $rows[] = "    ],";
+        $code = implode("\n", $rows);
+
+        //合并内容
+        $content_replace = $content_body . $code . "\n";
+        $content = str_replace($content_body, $content_replace, $content);
+        file_put_contents($path, $content);
+
+        //提示信息
+        $this->components->twoColumnDetail("<fg=#FFC125>MODIFY</> $path", "<fg=green;options=bold>DONE</>");
+    }
+
+    /**
+     * 配置提示
+     *
+     * @return void
+     */
+    protected function showTips(){
         //组合提示信息
         $tips = [];
         $tips[] = "[ TIPS ] Please add routing configuration:";
@@ -80,61 +252,5 @@ class RbacCommand extends Command
 
         //输出提示信息
         $this->warn($message);
-    }
-
-    /**
-     * Install Common Files
-     *
-     * @return void
-     */
-    protected function installCommon(){
-        //Model
-        (new Filesystem)->ensureDirectoryExists(base_path('app/Models/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/app/Models/Rbac', base_path('app/Models/Rbac'));
-
-        //MiddlewareAfter
-        (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Middleware'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/app/Http/Middleware', base_path('app/Http/Middleware'));
-
-        //Config
-        (new Filesystem)->ensureDirectoryExists(base_path('config'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/config', base_path('config'));
-
-        //Database
-        (new Filesystem)->ensureDirectoryExists(base_path('database/migrations'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/database/migrations', base_path('database/migrations'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/database/seeders', base_path('database/seeders'));
-    }
-
-    /**
-     * Install Style1 Files
-     *
-     * @return void
-     */
-    protected function installStyle1()
-    {
-        //Controller
-        (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Controllers/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style1/app/Http/Controllers/Rbac', base_path('app/Http/Controllers/Rbac'));
-
-        //View
-        (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style1/resources/js/Pages/Rbac', base_path('resources/js/Pages/Rbac'));
-    }
-
-    /**
-     * Install Style2 Files
-     *
-     * @return void
-     */
-    protected function installStyle2()
-    {
-        //Controller
-        (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Controllers/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style2/app/Http/Controllers/Rbac', base_path('app/Http/Controllers/Rbac'));
-
-        //View
-        (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style2/resources/js/Pages/Rbac', base_path('resources/js/Pages/Rbac'));
     }
 }
