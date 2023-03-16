@@ -65,20 +65,20 @@ class RbacCommand extends Command
     protected function installCommon(){
         //Model
         (new Filesystem)->ensureDirectoryExists(base_path('app/Models/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/app/Models/Rbac', base_path('app/Models/Rbac'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/app/Models/Rbac', base_path('app/Models/Rbac'));
 
         //MiddlewareAfter
         (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Middleware'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/app/Http/Middleware', base_path('app/Http/Middleware'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/app/Http/Middleware', base_path('app/Http/Middleware'));
 
         //Config
         (new Filesystem)->ensureDirectoryExists(base_path('config'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/config', base_path('config'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/config', base_path('config'));
 
         //Database
         (new Filesystem)->ensureDirectoryExists(base_path('database/migrations'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/database/migrations', base_path('database/migrations'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/common/database/seeders', base_path('database/seeders'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/database/migrations', base_path('database/migrations'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/database/seeders', base_path('database/seeders'));
     }
 
     /**
@@ -88,13 +88,18 @@ class RbacCommand extends Command
      */
     protected function installStyle1()
     {
+        //ViewPath
+        $view_path = 'Rbac/Role';
+
         //Controller
+        $content = file_get_contents(__DIR__ . '/../../stubs/rbac/app/Http/Controllers/Rbac/RoleController.php');
+        $content = str_replace("__VIEW_PATH__", $view_path, $content);
         (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Controllers/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style1/app/Http/Controllers/Rbac', base_path('app/Http/Controllers/Rbac'));
+        file_put_contents(base_path('app/Http/Controllers/Rbac/RoleController.php'), $content);
 
         //View
         (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style1/resources/js/Pages/Rbac', base_path('resources/js/Pages/Rbac'));
+        (new Filesystem)->copy(__DIR__ . '/../../stubs/rbac/resources/js/Pages/Rbac/Role.vue', base_path('resources/js/Pages/Rbac/Role.vue'));
     }
 
     /**
@@ -104,13 +109,18 @@ class RbacCommand extends Command
      */
     protected function installStyle2()
     {
+        //ViewPath
+        $view_path = 'Rbac/Role/Index';
+
         //Controller
+        $content = file_get_contents(__DIR__ . '/../../stubs/rbac/app/Http/Controllers/Rbac/RoleController.php');
+        $content = str_replace("__VIEW_PATH__", $view_path, $content);
         (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Controllers/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style2/app/Http/Controllers/Rbac', base_path('app/Http/Controllers/Rbac'));
+        file_put_contents(base_path('app/Http/Controllers/Rbac/RoleController.php'), $content);
 
         //View
-        (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/style2/resources/js/Pages/Rbac', base_path('resources/js/Pages/Rbac'));
+        (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac/Role'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/resources/js/Pages/Rbac/Role', base_path('resources/js/Pages/Rbac/Role'));
     }
 
     /**

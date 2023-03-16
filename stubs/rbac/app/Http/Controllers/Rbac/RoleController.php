@@ -21,7 +21,7 @@ class RoleController extends Controller
      */
     public function page(){
         $labels = Role::labels();
-        return Inertia::render('Rbac/Role', [
+        return Inertia::render('__VIEW_PATH__', [
             "api" => url("/rbac/roles/interface"),
             "labels" => $labels,
             "permissions" => config("permissions"),
