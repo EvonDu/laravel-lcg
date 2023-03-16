@@ -45,7 +45,8 @@ class CurdCommand extends Command
             $table_model = new Table($table_name);
         }
         catch (\Exception $e){
-            $this->error("[ERROR] ".$e->getMessage());
+            $this->components->error($e->getMessage());
+            return;
         }
 
         //构建工具
