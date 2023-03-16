@@ -4,9 +4,12 @@ namespace Lcg\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Lcg\Console\Traits\Installs;
 use Symfony\Component\Process\Process;
 
 class SwaggerCommand extends Command{
+    use Installs;
+
     /**
      * The name and signature of the console command.
      *
@@ -38,6 +41,10 @@ class SwaggerCommand extends Command{
 
         //拷贝swagger-ui
         (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/swagger/swagger-ui', public_path('swagger'));
+
+        //拷贝provider
+        $this->installServiceProviderAfter('RouteServiceProvider', 'SwaggerServiceProvider');
+        copy(__DIR__ . '/../../stubs/swagger/providers/SwaggerServiceProvider.php', app_path('Providers/SwaggerServiceProvider.php'));
 
         //输出结果
         $this->components->info('Swagger installed successfully.');
