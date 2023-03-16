@@ -45,7 +45,7 @@ class GeneratorView{
      */
     private static function generatorStyle1(Factory $factory, Table $table, Curd $curd, bool $cover=false){
         //读取模板
-        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style1/View.vue");
+        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/View.vue");
         $content = str_replace("__MODEL_PK__", $table->primary_key->name, $content);
         $content = str_replace("__MODEL_NAME__", $curd->getModelName(), $content);
         $content = str_replace("__TABLE_ITEMS__", self::getViewTableContent($table), $content);
@@ -68,30 +68,30 @@ class GeneratorView{
      */
     private static function generatorStyle2(Factory $factory, Table $table, Curd $curd, bool $cover=false){
         //Index
-        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Index.vue");
+        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Views/Index.vue");
         $content = str_replace("__MODEL_NAME__", $curd->getModelName(), $content);
         $content = str_replace("__MODEL_PK__", $table->primary_key->name, $content);
         $content = str_replace("__TABLE_ITEMS__", self::getViewTableContent($table), $content);
         self::put($factory, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Index.vue"), $content, $cover);
 
         //Search
-        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Search.vue");
+        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Views/Search.vue");
         $content = str_replace("__SEARCH_ITEMS__", self::getViewSearchContent($table, "data.model", 3), $content);
         self::put($factory, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Search.vue"), $content, $cover);
 
         //Create
-        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Create.vue");
+        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Views/Create.vue");
         $content = str_replace("__FORM_ITEMS__", self::getViewFormContent($table, "data.model", "data?.errors", 3), $content);
         self::put($factory, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Create.vue"), $content, $cover);
 
         //Update
-        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Update.vue");
+        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Views/Update.vue");
         $content = str_replace("__MODEL_PK__", $table->primary_key->name, $content);
         $content = str_replace("__FORM_ITEMS__", self::getViewFormContent($table, "data.model", "data?.errors", 3), $content);
         self::put($factory,base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Update.vue"), $content, $cover);
 
         //Detail
-        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Views/Detail.vue");
+        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Views/Detail.vue");
         $content = str_replace("__DETAIL_ITEMS__", self::getViewDetailContent($table, "data.model", 3), $content);
         self::put($factory,base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Detail.vue"), $content, $cover);
     }

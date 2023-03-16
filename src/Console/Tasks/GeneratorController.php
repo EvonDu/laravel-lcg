@@ -30,18 +30,11 @@ class GeneratorController{
         }
         $controller_uses = implode("\n", $use_list);
 
+        //视图路径
+        $view_path = $style == 1 ? "{$curd->getViewPath()}" : "{$curd->getViewPath()}/Index";
+
         //读取模板
-        $content = "";
-        switch ($style){
-            case 1:
-                $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style1/Controller.php");
-                break;
-            case 2:
-                $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/style2/Controller.php");
-                break;
-            default:
-                return;
-        }
+        $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Controller.php");
 
         //组装模板
         $content = str_replace("__CONTROLLER_NAME__", $curd->getControllerName(), $content);
@@ -52,7 +45,7 @@ class GeneratorController{
         $content = str_replace("__MODEL_PK_TYPE__", $table->primary_key->type, $content);
         $content = str_replace("__MODEL_SWAGGER_FIELDS__", self::getSwaggerFieldsContent($table), $content);
         $content = str_replace("__BASE_URL__", $curd->getUrl(), $content);
-        $content = str_replace("__VIEW_PATH__", $curd->getViewPath(), $content);
+        $content = str_replace("__VIEW_PATH__", $view_path, $content);
 
         //生成文件
         self::put($factory, base_path("app/Http/Controllers/{$curd->getPath()}/{$curd->getControllerName()}.php"), $content, $cover);
