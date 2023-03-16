@@ -194,15 +194,25 @@ class GeneratorModel{
         //代码行
         $codes = [];
 
-        //字段映射
-        $codes_casts = self::getModelCastCodes($table);
-        if($codes_casts)
-            $codes = array_merge($codes, $codes_casts, [""]);
+        //模型主键
+        $codes_pk = self::getModelPrimarykeyCodes($table);
+        if($codes_pk)
+            $codes = array_merge($codes, $codes_pk, [""]);
+
+        //主键自增
+        $codes_incrementing = self::getModelIncrementingCodes($table);
+        if($codes_incrementing)
+            $codes = array_merge($codes, $codes_incrementing, [""]);
 
         //时间字段
         $codes_timestamps = self::getModelTimestampsCodes($table);
         if($codes_timestamps)
             $codes = array_merge($codes, $codes_timestamps, [""]);
+
+        //字段映射
+        $codes_casts = self::getModelCastCodes($table);
+        if($codes_casts)
+            $codes = array_merge($codes, $codes_casts, [""]);
 
         //删除末尾
         if(count($codes) > 0)
@@ -214,29 +224,42 @@ class GeneratorModel{
     }
 
     /**
-     * 获取模型相关设置-类型映射
+     * 获取模型相关设置-模型主键
      *
      * @param Table $table
      * @return array
      */
-    private static function getModelCastCodes(Table $table){
-        $casts = [];
-        foreach ($table->fields as $field){
-            switch ($field->dbType){
-                case "json":
-                    $casts[] = "'{$field->name}' => 'array'";
-                    break;
-            }
+    private static function getModelPrimarykeyCodes(Table $table){
+        $codes = [];
+
+        if($table->primary_key->name != "id"){
+            $codes[] = '/**';
+            $codes[] = ' * PrimaryKey';
+            $codes[] = ' *';
+            $codes[] = ' * @var string';
+            $codes[] = ' */';
+            $codes[] = 'public $primaryKey = "' . $table->primary_key->name . '";';
         }
 
+        return $codes;
+    }
+
+    /**
+     * 获取模型相关设置-主键自增
+     *
+     * @param Table $table
+     * @return array
+     */
+    private static function getModelIncrementingCodes(Table $table){
         $codes = [];
-        if($casts){
+
+        if(!$table->primary_key->autoIncrement){
             $codes[] = '/**';
-            $codes[] = ' * Casts';
+            $codes[] = ' * Incrementing';
             $codes[] = ' *';
-            $codes[] = ' * @var array';
+            $codes[] = ' * @var bool';
             $codes[] = ' */';
-            $codes[] = 'protected $casts = [' . implode(", ", $casts) . '];';
+            $codes[] = 'public $incrementing = false;';
         }
 
         return $codes;
@@ -262,6 +285,37 @@ class GeneratorModel{
             $codes[] = ' * @var bool';
             $codes[] = ' */';
             $codes[] = 'public $timestamps = false;';
+        }
+
+        return $codes;
+    }
+
+    /**
+     * 获取模型相关设置-类型映射
+     *
+     * @param Table $table
+     * @return array
+     */
+    private static function getModelCastCodes(Table $table){
+        $casts = [];
+        foreach ($table->fields as $field){
+            switch ($field->dbType){
+                case "json":
+                    $casts[] = "    '{$field->name}' => 'array',";
+                    break;
+            }
+        }
+
+        $codes = [];
+        if($casts){
+            $codes[] = '/**';
+            $codes[] = ' * Casts';
+            $codes[] = ' *';
+            $codes[] = ' * @var array';
+            $codes[] = ' */';
+            $codes[] = 'protected $casts = [';
+            $codes = array_merge($codes, $casts);
+            $codes[] = '];';
         }
 
         return $codes;

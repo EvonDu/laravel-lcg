@@ -11,6 +11,7 @@ class TableField {
     public $dbType;
     public $isPk = false;
     public $allowNull = false;
+    public $autoIncrement = false;
     public $label = "";
     public $rules = "";
 
@@ -30,6 +31,8 @@ class TableField {
             $this->isPk = true;
         if($fieldData->Null === "YES")
             $this->allowNull = true;
+        if(stripos($fieldData->Extra, "auto_increment") !== false)
+            $this->autoIncrement = true;
 
         $this->label = $this->getLabel();
         $this->rules = $this->getRules();
