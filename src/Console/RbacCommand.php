@@ -55,6 +55,11 @@ class RbacCommand extends Command
 
         //输出占位空行
         $this->line("");
+
+        //输出辅助信息
+        $this->components->info("角色权限功能模块已安装成功");
+        $this->components->warn('请执行[php artisan migrate]命令进行数据库迁移');
+        $this->components->warn('可执行[php artisan db:seed --class=RbacSeeder]命令填充测试数据');
     }
 
     /**
