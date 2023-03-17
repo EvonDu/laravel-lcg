@@ -157,6 +157,10 @@ class RbacCommand extends Command
         $rows[] = "});";
         $route = implode("\n", $rows);
 
+        //添加空行
+        if(substr($content, -1) != "\n")
+            $content .= "\n";
+
         //合并内容
         $content = $content . "\n" . $route;
 

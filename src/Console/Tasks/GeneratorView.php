@@ -19,17 +19,19 @@ class GeneratorView{
      * @param Factory $factory
      * @param Table $table
      * @param Curd $curd
-     * @param int $style
-     * @param bool $cover
+     * @param array $options
      * @return void
      */
-    public static function run(Factory $factory, Table $table, Curd $curd, int $style, bool $cover=false){
+    public static function run(Factory $factory, Table $table, Curd $curd, array $options){
+        $style = isset($options["style"]) ? $options["style"] : 1;
+        $cover = isset($options["cover"]) ? $options["cover"] : false;
+
         switch ($style){
-            case 2:
-                self::generatorStyle2($factory, $table, $curd, $cover);
-                break;
             case 1:
                 self::generatorStyle1($factory, $table, $curd, $cover);
+                break;
+            case 2:
+                self::generatorStyle2($factory, $table, $curd, $cover);
                 break;
         }
     }

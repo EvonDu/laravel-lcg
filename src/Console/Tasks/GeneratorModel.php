@@ -20,10 +20,10 @@ class GeneratorModel{
      * @param Factory $factory
      * @param Table $table
      * @param Curd $curd
-     * @param bool $cover
+     * @param array $options
      * @return void
      */
-    public static function run(Factory $factory, Table $table, Curd $curd, bool $cover=false){
+    public static function run(Factory $factory, Table $table, Curd $curd, array $options = []){
         //读取模板
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Model.php");
         $content = str_replace("__MODEL_NAME__", $curd->getModelName(), $content);
@@ -40,6 +40,7 @@ class GeneratorModel{
         $content = self::clearEmptyContent($content);
 
         //生成文件
+        $cover = isset($options["cover"]) ? $options["cover"] : false;
         self::put($factory, base_path("app/Models/{$curd->getPath()}/{$curd->getModelName()}.php"), $content, $cover);
     }
 

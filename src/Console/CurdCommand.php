@@ -73,32 +73,6 @@ class CurdCommand extends Command
     }
 
     /**
-     * 配置提示
-     *
-     * @param Curd $curd
-     * @return void
-     */
-    protected function showTips(Curd $curd){
-        //组合路由信息/
-        $tips = [];
-        $tips[] = "[ TIPS ] Please add routing configuration:";
-        $tips[] = "``````````````````````````````````````````````````````````````````";
-        $tips[] = "[*]routes/web.php:";
-        $tips[] = "Route::prefix('{$curd->getUrl()}')->group(function () {";
-        $tips[] = "    Route::get('/', [{$curd->getControllerClassname()}::class, 'page']);";
-        $tips[] = "    Route::resource('/interface', {$curd->getControllerClassname()}::class);";
-        $tips[] = "});";
-        $tips[] = "";
-        $tips[] = "[*]routes/api.php:";
-        $tips[] = "Route::resource('{$curd->getUrl()}', {$curd->getControllerClassname()}::class);";
-        $tips[] = "``````````````````````````````````````````````````````````````````";
-        $message = implode("\n", $tips);
-
-        //输出路由信息
-        $this->warn($message);
-    }
-
-    /**
      * 生成代码
      *
      * @param Table $table
@@ -112,13 +86,21 @@ class CurdCommand extends Command
         $this->components->info('生成相关文件:');
 
         //创建模型
-        GeneratorModel::run($this->components, $table, $curd, $cover);
-
-        //创建视图
-        GeneratorView::run($this->components, $table, $curd, $style, $cover);
+        GeneratorModel::run($this->components, $table, $curd, [
+            "cover" => $cover
+        ]);
 
         //创建控制器
-        GeneratorController::run($this->components, $table, $curd, $style, $cover);
+        GeneratorController::run($this->components, $table, $curd, [
+            "style" => $style,
+            "cover" => $cover
+        ]);
+
+        //创建视图
+        GeneratorView::run($this->components, $table, $curd, [
+            "style" => $style,
+            "cover" => $cover
+        ]);
     }
 
     /**
@@ -151,6 +133,10 @@ class CurdCommand extends Command
         $rows[] = "    Route::resource('/interface', {$curd->getControllerClassname()}::class);";
         $rows[] = "});";
         $route = implode("\n", $rows);
+
+        //添加空行
+        if(substr($content, -1) != "\n")
+            $content .= "\n";
 
         //合并内容
         $content = $content . "\n" . $route;
@@ -213,5 +199,28 @@ class CurdCommand extends Command
 
         //提示信息
         $this->components->twoColumnDetail("<fg=#FFC125>MODIFY</> $path", "<fg=green;options=bold>DONE</>");
+    }
+
+    /**
+     * 配置提示
+     *
+     * @param Curd $curd
+     * @return void
+     */
+    protected function showTips(Curd $curd){
+        //组合路由信息/
+        $tips = [];
+        $tips[] = "[ TIPS ] Please add routing configuration:";
+        $tips[] = "``````````````````````````````````````````````````````````````````";
+        $tips[] = "[*]routes/web.php:";
+        $tips[] = "Route::prefix('{$curd->getUrl()}')->group(function () {";
+        $tips[] = "    Route::get('/', [{$curd->getControllerClassname()}::class, 'page']);";
+        $tips[] = "    Route::resource('/interface', {$curd->getControllerClassname()}::class);";
+        $tips[] = "});";
+        $tips[] = "``````````````````````````````````````````````````````````````````";
+        $message = implode("\n", $tips);
+
+        //输出路由信息
+        $this->warn($message);
     }
 }

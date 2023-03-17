@@ -17,6 +17,7 @@ trait Codes
      * @return void
      */
     private static function put(Factory $factory, string $filename, string $content, bool $cover){
+        $filename = preg_replace("/[\/|\\\]+/i", DIRECTORY_SEPARATOR, $filename);
         if(!is_file($filename) || $cover){
             //保存文件
             (new Filesystem)->ensureDirectoryExists(dirname($filename));

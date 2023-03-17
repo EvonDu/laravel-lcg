@@ -18,11 +18,10 @@ class GeneratorController{
      * @param Factory $factory
      * @param Table $table
      * @param Curd $curd
-     * @param int $style
-     * @param bool $cover
+     * @param array $options
      * @return void
      */
-    public static function run(Factory $factory, Table $table, Curd $curd, int $style, bool $cover=false){
+    public static function run(Factory $factory, Table $table, Curd $curd, array $options = []){
         //引入列表
         $use_list = [ "use {$curd->getModelClassname()};" ];
         if($curd->getPath()){
@@ -31,7 +30,9 @@ class GeneratorController{
         $controller_uses = implode("\n", $use_list);
 
         //视图路径
-        $view_path = $style == 1 ? "{$curd->getViewPath()}" : "{$curd->getViewPath()}/Index";
+        $view_path = "{$curd->getViewPath()}";
+        if(isset($options["style"]) && $options["style"] == 2)
+            $view_path = "$view_path/Index";
 
         //读取模板
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Controller.php");
@@ -47,7 +48,14 @@ class GeneratorController{
         $content = str_replace("__BASE_URL__", $curd->getUrl(), $content);
         $content = str_replace("__VIEW_PATH__", $view_path, $content);
 
+        //接口模式
+        if(isset($options["type"]) && $options["type"] == "api"){
+            //删除视图相关方法
+            $content = preg_replace("/\s*\/\*{2}\s*\* VIEW - ([\S|\s]*?)\}\s{2}/", "", $content);
+        }
+
         //生成文件
+        $cover = isset($options["cover"]) ? $options["cover"] : false;
         self::put($factory, base_path("app/Http/Controllers/{$curd->getPath()}/{$curd->getControllerName()}.php"), $content, $cover);
     }
 
