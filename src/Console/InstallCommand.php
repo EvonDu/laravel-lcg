@@ -125,7 +125,7 @@ class InstallCommand extends Command
             copy(__DIR__ . '/../../stubs/inertia-common/app/Providers/AuthRouteServiceProvider.php', app_path('Providers/AuthRouteServiceProvider.php'));
 
             // Routes...
-            copy(__DIR__.'/../../stubs/inertia-common/routes/web_ref.php', base_path('routes/web.php'));
+            copy(__DIR__.'/../../stubs/inertia-common/routes/web_lcg.php', base_path('routes/web.php'));
         }
 
         // Navigations...
@@ -226,7 +226,7 @@ class InstallCommand extends Command
             copy(__DIR__ . '/../../stubs/inertia-common/app/Providers/AuthRouteServiceProvider.php', app_path('Providers/AuthRouteServiceProvider.php'));
 
             // Routes...
-            copy(__DIR__.'/../../stubs/inertia-common/routes/web_ref.php', base_path('routes/web.php'));
+            copy(__DIR__.'/../../stubs/inertia-common/routes/web_lcg.php', base_path('routes/web.php'));
         }
 
         // Navigations...
