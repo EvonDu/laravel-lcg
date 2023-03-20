@@ -1,10 +1,12 @@
 <script setup>
 //导入
 import axios from 'axios';
-import {reactive, computed, getCurrentInstance} from 'vue'
+import {inject, reactive, computed, getCurrentInstance} from 'vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {Plus, Search, Refresh} from '@element-plus/icons-vue'
 
+//挂载
+const $lcg = inject('LCG');
 //实例
 const instance = getCurrentInstance();
 //属性
@@ -87,46 +89,17 @@ const handleDeleteSubmit = function(data){
     });
 };
 const handleSearchSubmit = function(options){
-    //params
-    let params = {};
-    //search
-    let search;
-    if(options.keyword){
-        search = {name : options.keyword};
-    } else {
-        search = options.search ? options.search : data.search;
-    }
-    for (let key in search){
-        params[key] = search[key];
-    }
-    //paginate
-    let paginatePage = options?.paginate?.page ? options?.paginate?.page : data.paginate.page;
-    let paginateSize = options?.paginate?.size ? options?.paginate?.size : data.paginate.size;
-    if(paginatePage > 1)
-        params["page"] = paginatePage;
-    if(paginateSize !== 20)
-        params["size"] = paginateSize;
-    //sort
-    let sortProp = options?.sort?.prop !== undefined ? options?.sort?.prop : data.sort.prop;
-    let sortOrder = options?.sort?.order !== undefined ? options?.sort?.order : data.sort.order;
-    if(sortProp)
-        params["sort"] = sortProp;
-    if(sortOrder)
-        params["order"] = (sortOrder === "descending") ? "desc" : "asc";
-    //request
+    let search = $lcg.getSearchOptions(options, {model:data.search, paginate:data.paginate, sort:data.sort});
     data.loading = true;
-    axios.get(props.api, {params: params}).then(function (response) {
+    axios.get(props.api, {params: search.params}).then(function (response) {
         data.models = response.data.data;
-        data.sort.prop = sortProp;
-        data.sort.order = sortOrder;
-        data.paginate.page = response.data.paginate.page;
-        data.paginate.size = response.data.paginate.size;
-        data.paginate.total = response.data.paginate.total;
+        data.sort = search.sort;
+        data.paginate = response.data.paginate;
     }).catch(function (error) {
         ElMessage({ type: 'error', grouping: true, message: error.message })
     }).finally(function (){
         data.loading = false;
-        data.search = search;
+        data.search = search.model;
         instance.refs.refSearch.close();
     });
 };
@@ -227,14 +200,14 @@ handleSearchSubmit({});
                     <el-col :xs="24" :sm="12">
                         <el-button-group>
                             <el-button color="#00a65a" @click="handleAdd" :icon="Plus">新增</el-button>
-                            <el-button color="#007bff" @click="handleSearch" :icon="Search">搜索</el-button>
                             <el-button color="#626aef" @click="handleRefresh" :icon="Refresh">刷新</el-button>
+                            <el-button color="#007bff" @click="handleSearch" :icon="Search">搜索</el-button>
                         </el-button-group>
                     </el-col>
                     <el-col :xs="0" :sm="12">
-                        <el-input placeholder="请输入角色名" class="input-with-select" v-model="data.keyword" @keydown.enter="handleSearchSubmit({keyword: data.keyword})">
+                        <el-input placeholder="请输入角色名" class="input-with-select" v-model="data.keyword" @keydown.enter="handleSearchSubmit({model:{name:data.keyword}})">
                             <template #append>
-                                <el-button type="primary" :icon="Search" @click="handleSearchSubmit({keyword: data.keyword})"/>
+                                <el-button type="primary" :icon="Search" @click="handleSearchSubmit({model:{name:data.keyword}})"/>
                             </template>
                         </el-input>
                     </el-col>
@@ -284,11 +257,10 @@ handleSearchSubmit({});
                 </el-form>
             </lte-window>
             <!-- 搜索 -->
-            <lte-window ref="refSearch" title="搜索" v-slot="window" :existSubmit="true" @submit="handleSearchSubmit({search:$event})">
+            <lte-window ref="refSearch" title="搜索" v-slot="window" :existSubmit="true" @submit="handleSearchSubmit({model:$event.model})">
                 <el-form label-width="100px" v-if="window.data.model">
                     <el-form-item :label='labels["id"]'><el-input v-model='window.data.model.id'></el-input></el-form-item>
                     <el-form-item :label='labels["name"]'><el-input v-model='window.data.model.name'></el-input></el-form-item>
-                    <el-form-item :label='labels["permissions"]'><el-input v-model='window.data.model.permissions'></el-input></el-form-item>
                 </el-form>
             </lte-window>
             <!-- 权限 -->

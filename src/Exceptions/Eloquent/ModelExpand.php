@@ -68,19 +68,12 @@ trait ModelExpand{
         }
 
         // 排序条件
-        $sort = $request->input('sort', null);
+        $sort = $request->input('_sort', null);
         if($sort !== null){
-            $order = $request->input('order', 'asc');
+            $order = $request->input('_order', 'asc');
             if(in_array($order, ["asc", "desc"]))
                 $find->orderBy($sort, $order);
         }
-
-        // 分页相关
-        $paginates = [
-            "page" => $request->input('page', 1),
-            "size" => $request->input('size', 20),
-        ];
-        $find->paginate($paginates['size']);
 
         // 返回查询
         return $find;
@@ -90,11 +83,11 @@ trait ModelExpand{
      * 设置分页
      * @param Builder $search
      * @param Request $request
-     * @param int $size
      * @return array
      */
-    public static function paginate(Builder $search, Request $request, int $size=20){
-        $paginate = $search->paginate($size);
+    public static function paginate(Builder $search, Request $request){
+        $size = $request->input('_size', 20);
+        $paginate = $search->paginate($size, ['*'], "_page");
         return [
             "size" => $size,
             "page" => $paginate->currentPage(),

@@ -9,8 +9,8 @@ import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 
+import LCG from 'admin-lte-vue/plugins/lcg';
 import AdminLTE from 'admin-lte-vue/plugins/admin-lte';
-import AdminLTETools from 'admin-lte-vue/plugins/tools';
 import ElementPlus from 'element-plus';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
@@ -21,8 +21,8 @@ createInertiaApp({
     setup({ el, app, props, plugin }) {
         return createApp({ render: () => h(app, props) })
             .use(plugin)
+            .use(LCG)
             .use(AdminLTE)
-            .use(AdminLTETools)
             .use(ElementPlus)
             .mixin({ methods: { route } })
             .mount(el);

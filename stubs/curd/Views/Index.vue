@@ -98,9 +98,9 @@ onMounted(() => {
                         </el-button-group>
                     </el-col>
                     <el-col :xs="0" :sm="12">
-                        <el-input placeholder="Please input" class="input-with-select" v-model="data.keyword" @keydown.enter="handleSearch({search: {name: data.keyword}})">
+                        <el-input placeholder="Please input" class="input-with-select" v-model="data.keyword" @keydown.enter="handleSearch({model: {name: data.keyword}})">
                             <template #append>
-                                <el-button type="primary" :icon="Search" @click="handleSearch({search: {name: data.keyword}})"/>
+                                <el-button type="primary" :icon="Search" @click="handleSearch({model: {name: data.keyword}})"/>
                             </template>
                         </el-input>
                     </el-col>

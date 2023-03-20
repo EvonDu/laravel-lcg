@@ -103,9 +103,9 @@ onMounted(() => {
                         </el-button-group>
                     </el-col>
                     <el-col :xs="0" :sm="12">
-                        <el-input placeholder="请输入角色名" class="input-with-select" v-model="data.keyword" @keydown.enter="handleSearch({search: {name: data.keyword}})">
+                        <el-input placeholder="请输入角色名" class="input-with-select" v-model="data.keyword" @keydown.enter="handleSearch({model: {name: data.keyword}})">
                             <template #append>
-                                <el-button type="primary" :icon="Search" @click="handleSearch({search: {name: data.keyword}})"/>
+                                <el-button type="primary" :icon="Search" @click="handleSearch({model: {name: data.keyword}})"/>
                             </template>
                         </el-input>
                     </el-col>
@@ -113,9 +113,9 @@ onMounted(() => {
             </div>
             <!-- 表格 -->
             <lte-grid :models="data.models" :loading="data.loading"
-                :paginatePage="data.paginate.page" :paginateSize="data.paginate.size" :paginateTotal="data.paginate.total"
-                @sort-change="handleSearch({sort: $event})"
-                @page-change="handleSearch({paginate: $event})">
+                      :paginatePage="data.paginate.page" :paginateSize="data.paginate.size" :paginateTotal="data.paginate.total"
+                      @sort-change="handleSearch({sort: $event})"
+                      @page-change="handleSearch({paginate: $event})">
                 <el-table-column prop='id' :label='labels["id"]' sortable='custom' show-overflow-tooltip></el-table-column>
                 <el-table-column prop='name' :label='labels["name"]' sortable='custom' show-overflow-tooltip></el-table-column>
                 <el-table-column prop='created_at' :label='labels["created_at"]' sortable='custom' show-overflow-tooltip></el-table-column>

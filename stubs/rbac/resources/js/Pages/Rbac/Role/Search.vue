@@ -1,8 +1,11 @@
 <script setup>
 //导入
 import axios from 'axios';
-import {reactive} from 'vue'
+import {inject, reactive} from 'vue'
 import {ElMessage} from 'element-plus'
+
+//挂载
+const $lcg = inject('LCG')
 
 //属性
 const props = defineProps({
@@ -20,9 +23,9 @@ const emit = defineEmits([
 const data = reactive({
     show: false,
     callback: null,
-    search: {},
+    model: {},
     sort: { prop: null, order: null},
-    paginate: { page: 1, size: 20, total: 0 },
+    paginate: { page: 1, size: 20 },
 });
 
 //接口
@@ -41,34 +44,15 @@ defineExpose({
 });
 
 //函数
-const handleSearchSubmit = function(option){
-    //参数定义
-    var params = {};
-
-    //字段参数
-    for (var key in option?.search){
-        params[key] = option.search[key];
-    }
-
-    //分页参数
-    var paginate = Object.assign({}, data.paginate, option?.paginate);
-    if(paginate?.page > 1)
-        params["page"] = paginate.page;
-    if(paginate?.size !== 20)
-        params["size"] = paginate.size;
-
-    //排序参数
-    var sort = Object.assign({}, data.sort, option?.sort);
-    if(option?.sort?.prop)
-        params["sort"] = sort?.prop;
-    if(option?.sort?.order)
-        params["order"] = (sort.order === "descending") ? "desc" : "asc";
+const handleSearchSubmit = function(options){
+    //查询参数
+    let search = $lcg.getSearchOptions(options, {model:data.model, paginate:data.paginate, sort:data.sort});
 
     //触发事件
     emit('searching');
 
     //执行请求
-    axios.get(props.api, {params: params}).then(function (response) {
+    axios.get(props.api, {params: search.params}).then(function (response) {
         //执行回调
         if(typeof(data.callback) === "function")
             data.callback(response.data?.data, response.data?.paginate);
@@ -77,8 +61,9 @@ const handleSearchSubmit = function(option){
         ElMessage({ type: 'error', grouping: true, message: error.message })
     }).finally(function (){
         //保存选项
-        data.sort = sort;
-        data.paginate = paginate;
+        data.model = search.model;
+        data.sort = search.sort;
+        data.paginate = search.paginate;
         //触发事件
         emit('searched');
         //关闭窗口
@@ -90,12 +75,12 @@ const handleSearchSubmit = function(option){
 <template>
     <lte-modal v-model="data.show" title="搜索" size="lg">
         <el-form label-width="100px">
-            <el-form-item :label='labels["id"]'><el-input v-model='data.search.id'></el-input></el-form-item>
-            <el-form-item :label='labels["name"]'><el-input v-model='data.search.name'></el-input></el-form-item>
+            <el-form-item :label='labels["id"]'><el-input v-model='data.model.id'></el-input></el-form-item>
+            <el-form-item :label='labels["name"]'><el-input v-model='data.model.name'></el-input></el-form-item>
         </el-form>
         <template #footer>
             <el-button type="default" @click="data.show = false">取消</el-button>
-            <el-button type="primary" @click="handleSearchSubmit({search:data.search})">确认</el-button>
+            <el-button type="primary" @click="handleSearchSubmit({model:data.model})">确认</el-button>
         </template>
     </lte-modal>
 </template>
