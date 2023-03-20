@@ -246,19 +246,19 @@ handleSearchSubmit({});
             </lte-window>
             <!-- 添加 -->
             <lte-window ref="refAdd" title="添加" v-slot="window" :existSubmit="true" @submit="handleAddSubmit">
-                <el-form label-width="100px" v-if="window.data.model">
+                <el-form label-width="100px" v-if="window.data.model" @keydown.enter="handleAddSubmit(window.data)" @submit.native.prevent>
                     <el-form-item :label='labels["name"]' :error='window?.data?.errors?.name?.[0]'><el-input v-model='window.data.model.name'></el-input></el-form-item>
                 </el-form>
             </lte-window>
             <!-- 编辑 -->
             <lte-window ref="refEdit" title="编辑" v-slot="window" :existSubmit="true" @submit="handleEditSubmit">
-                <el-form label-width="100px" v-if="window.data.model">
+                <el-form label-width="100px" v-if="window.data.model" @keydown.enter="handleEditSubmit(window.data)" @submit.native.prevent>
                     <el-form-item :label='labels["name"]' :error='window?.data?.errors?.name?.[0]'><el-input v-model='window.data.model.name'></el-input></el-form-item>
                 </el-form>
             </lte-window>
             <!-- 搜索 -->
             <lte-window ref="refSearch" title="搜索" v-slot="window" :existSubmit="true" @submit="handleSearchSubmit({model:$event.model})">
-                <el-form label-width="100px" v-if="window.data.model">
+                <el-form label-width="100px" v-if="window.data.model" @keydown.enter="handleSearchSubmit({model:$event.model})" @submit.native.prevent>
                     <el-form-item :label='labels["id"]'><el-input v-model='window.data.model.id'></el-input></el-form-item>
                     <el-form-item :label='labels["name"]'><el-input v-model='window.data.model.name'></el-input></el-form-item>
                 </el-form>

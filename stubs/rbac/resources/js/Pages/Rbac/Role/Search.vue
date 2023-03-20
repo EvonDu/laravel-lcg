@@ -74,7 +74,7 @@ const handleSearchSubmit = function(options){
 
 <template>
     <lte-modal v-model="data.show" title="搜索" size="lg">
-        <el-form label-width="100px">
+        <el-form label-width="100px" @keydown.enter="handleSearchSubmit({model:data.model})" @submit.native.prevent>
             <el-form-item :label='labels["id"]'><el-input v-model='data.model.id'></el-input></el-form-item>
             <el-form-item :label='labels["name"]'><el-input v-model='data.model.name'></el-input></el-form-item>
         </el-form>

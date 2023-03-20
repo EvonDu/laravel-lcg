@@ -52,7 +52,7 @@ const handleEditSubmit = function(){
 
 <template>
     <lte-modal v-model="data.show" title="编辑" size="lg">
-        <el-form label-width="100px">
+        <el-form label-width="100px" @keydown.enter="handleEditSubmit" @submit.native.prevent>
             <el-form-item :label='labels["name"]' :error='data?.errors?.name?.[0]'><el-input v-model='data.model.name'></el-input></el-form-item>
         </el-form>
         <template #footer>
