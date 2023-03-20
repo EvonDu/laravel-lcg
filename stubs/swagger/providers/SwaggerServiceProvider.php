@@ -39,16 +39,37 @@ class SwaggerServiceProvider extends ServiceProvider
             //获取应用routes
             $routes = $this->getApplicationRoutes();
 
-            //根据应用routes对openapi进行过滤
+            //遍历处理所有路径下的所有方法
+            $tags_exist = [];
             foreach ($openapi->paths as $item){
                 $none = "@OA\Generator::UNDEFINED🙈";
                 foreach (["get", "put", "post", "delete", "options", "head", "patch", "trace"] as $method){
                     $url = preg_replace("/\{.*?\}/", "{*}", $item->{$method}->path);
-                    if(!is_string($item->{$method}) && !in_array($url, $routes[strtoupper($method)])){
-                        $item->{$method} = $none;
+                    if(!is_string($item->{$method})){
+                        //过滤未配置路由的接口文档
+                        if(!in_array($url, $routes[strtoupper($method)])){
+                            //删除该路径方法的接口信息
+                            $item->{$method} = $none;
+                            continue;
+                        }
+
+                        //记录有效的标签
+                        foreach ($item->{$method}->tags as $tag){
+                            if(!in_array($tag, $tags_exist))
+                                $tags_exist[] = $tag;
+                        }
                     }
                 }
             }
+
+            //过滤没有相关接口的标签
+            $tags = [];
+            foreach ($openapi->tags as $tag) {
+                if(in_array($tag->name, $tags_exist)){
+                    $tags[] = $tag;
+                }
+            }
+            $openapi->tags = $tags;
 
             //返回结果(JSON形式)
             return response()->json($openapi->jsonSerialize());
