@@ -88,15 +88,15 @@ class InstallCommand extends Command
         $this->updateNodePackages(function ($packages) {
             return [
                     // Breeze
-                    '@inertiajs/inertia' => '^0.11.0',
+                    '@inertiajs/inertia' => '^0.11.1',
                     '@inertiajs/inertia-vue3' => '^0.6.0',
                     '@inertiajs/progress' => '^0.2.7',
-                    '@tailwindcss/forms' => '^0.5.2',
-                    '@vitejs/plugin-vue' => '^3.0.0',
-                    'autoprefixer' => '^10.4.2',
-                    'postcss' => '^8.4.6',
-                    'tailwindcss' => '^3.1.0',
-                    'vue' => '^3.2.31',
+                    '@tailwindcss/forms' => '^0.5.3',
+                    '@vitejs/plugin-vue' => '^4.1.0',
+                    'autoprefixer' => '^10.4.14',
+                    'postcss' => '^8.4.21',
+                    'tailwindcss' => '^3.2.7',
+                    'vue' => '^3.2.47',
                     // Expand
                     "sass" => "^1.54.4",
                     "bootstrap" => "^5.1.3",
