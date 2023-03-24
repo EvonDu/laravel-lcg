@@ -95,8 +95,10 @@ trait Installs
      * @param  mixed  $packages
      * @return void
      */
-    protected function requireComposerPackages($packages, $composer='global')
+    protected function requireComposerPackages($packages)
     {
+        $composer = $this->option('composer');
+
         if ($composer !== 'global') {
             $command = ['php', $composer, 'require'];
         }
