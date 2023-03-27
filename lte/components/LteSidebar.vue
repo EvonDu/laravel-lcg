@@ -2,7 +2,6 @@
 import $ from 'jquery'
 import defaultLogo from '../images/AdminLTELogo.png'
 import defaultProfile from '../images/user-128x128.jpg'
-//import Treeview from "admin-lte/build/js/Treeview"
 import { onMounted } from 'vue'
 
 const props = defineProps({
@@ -58,15 +57,10 @@ const props = defineProps({
 onMounted(() => {
     //重新触发AdminLTE中TreeView的加载事件
     $(window).trigger("load.lte.treeview");
-})
 
-//处理展开切换
-let handleExpandToggle = function(event){
-    //对火狐做兼容处理(原本问题可能是jQuery或者Bootstrap的版本导致的)
-    let li = $(event.currentTarget).parent();
-    li.removeClass("menu-is-opening");
-    li.removeClass("menu-open");
-}
+    //激活插件(不需用,已直接出发加载事件)
+    //$('[data-widget="treeview"]').Treeview();
+})
 
 //处理导航栏当前活跃
 let handleActive = function(list, url){
@@ -125,7 +119,7 @@ handleActive(props.navs, location.href);
                     <template  v-for="nav in navs">
                         <li class="nav-header" v-if="nav.type === 'header'">{{ nav.title }}</li>
                         <li class="nav-item" :class="{'has-treeview': nav.childList, 'menu-is-opening': nav.active, 'menu-open': nav.active}" v-else>
-                            <a :href="nav.url" class="nav-link" :class="{'active':nav.active}" @click="handleExpandToggle">
+                            <a :href="nav.url" class="nav-link" :class="{'active':nav.active}">
                                 <i class="nav-icon" :class="nav.icon"></i>
                                 <p>
                                     {{ nav.title }}
