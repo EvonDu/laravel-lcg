@@ -3,6 +3,7 @@ import { Modal } from "bootstrap";
 import { watch, onMounted, getCurrentInstance } from 'vue';
 
 let modal = null;
+let modal_object = null;
 
 const props = defineProps({
     modelValue : {
@@ -38,11 +39,11 @@ const close = function(){
 };
 
 const onShow = function(){
-    modal.show();
+    modal_object.show();
 };
 
 const onClose = function(){
-    modal.hide();
+    modal_object.hide();
 };
 
 watch(() => props.modelValue, (new_val) => {
@@ -57,7 +58,7 @@ onMounted(() => {
     //获取元素
     let currentInstance = getCurrentInstance();
     //创建模态框
-    modal = new Modal(currentInstance.ctx.$refs.modal, {});
+    modal_object = new Modal(currentInstance.ctx.$refs.modal, {});
 });
 </script>
 
