@@ -12,19 +12,26 @@ class Curd{
     public $table;
 
     /**
-     * @var String[] $prefixs
+     * @var string $name
      */
-    public $prefixs;
+    public $name;
+
+    /**
+     * @var String[] $prefixes
+     */
+    public $prefixes;
 
     /**
      * 构造函数
      */
-    public function __construct($table, $path = "")
+    public function __construct($table, $options=[])
     {
         //表名相关
         $this->table = $table;
+        //名称设置
+        $this->name = $options["name"] ?: $table;
         //路径前缀
-        $this->prefixs = PathUtil::explodePath($path ?: "");
+        $this->prefixes = PathUtil::explodePath($options["prefixes"] ?: "");
     }
 
     /**
@@ -40,7 +47,7 @@ class Curd{
      * @return string
      */
     public function getModelName(){
-        $result = Str::studly($this->table);
+        $result = Str::studly($this->name);
         return Str::singular($result);
     }
 
@@ -50,7 +57,7 @@ class Curd{
      */
     public function getModelNamespace(){
         $element = ["App", "Models"];
-        foreach ($this->prefixs as $prefix){
+        foreach ($this->prefixes as $prefix){
             $element[] = Str::studly($prefix);
         }
         $element = array_filter($element);
@@ -79,7 +86,7 @@ class Curd{
      */
     public function getControllerNamespace(){
         $element = ["App", "Http", "Controllers"];
-        foreach ($this->prefixs as $prefix){
+        foreach ($this->prefixes as $prefix){
             $element[] = Str::studly($prefix);
         }
         $element = array_filter($element);
@@ -100,7 +107,7 @@ class Curd{
      */
     public function getPath($separator = "/"){
         $element = [];
-        foreach ($this->prefixs as $prefix){
+        foreach ($this->prefixes as $prefix){
             $element[] = Str::studly($prefix);
         }
         $element = array_filter($element);
@@ -126,10 +133,10 @@ class Curd{
      */
     public function getUrl(){
         $element = [];
-        foreach ($this->prefixs as $prefix){
+        foreach ($this->prefixes as $prefix){
             $element[] = Str::snake($prefix);
         }
-        $element[] = Str::plural(Str::snake($this->table));
+        $element[] = Str::plural(Str::snake($this->name));
         $element = array_filter($element);
         return implode("/", $element);
     }

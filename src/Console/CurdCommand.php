@@ -17,6 +17,7 @@ class CurdCommand extends Command
      * @var string
      */
     protected $signature = 'lcg:curd {table : Table name}
+                            {--name= : Generate name}
                             {--path= : Generate path}
                             {--cover=n : Overwrite existing file}
                             {--style=2 : [1] is single file, [2] is multiple files}';
@@ -50,7 +51,10 @@ class CurdCommand extends Command
         }
 
         //构建工具
-        $curd_model = new Curd($table_name, $this->option('path'));
+        $curd_model = new Curd($table_name, [
+            "name" => $this->option('name'),
+            "prefixes" => $this->option('path')
+        ]);
 
         //获取选项
         $cover = $this->option('cover') == "y";
