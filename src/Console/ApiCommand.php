@@ -18,6 +18,7 @@ class ApiCommand extends Command
     protected $signature = 'lcg:api {table : Table name}
                             {--name= : Generate name}
                             {--path= : Generate path}
+                            {--fullname= : Generate prefix and name}
                             {--cover=n : Overwrite existing file}';
 
     /**
@@ -51,7 +52,8 @@ class ApiCommand extends Command
         //构建工具
         $curd_model = new Curd($table_name, [
             "name" => $this->option('name'),
-            "prefixes" => $this->option('path')
+            "prefixes" => $this->option('path'),
+            "fullname" => $this->option('fullname'),
         ]);
 
         //获取选项
