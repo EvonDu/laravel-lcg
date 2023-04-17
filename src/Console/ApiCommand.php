@@ -113,7 +113,7 @@ class ApiCommand extends Command
         $content = file_get_contents($path);
 
         //判断存在
-        if(stripos($content, "//{$curd->getModelName()}\n") > 0){
+        if(stripos($content, "Route::prefix('{$curd->getUrl()}')") > 0){
             $this->components->twoColumnDetail("<fg=#FFC125>MODIFY</> $path", "<fg=yellow;options=bold>EXIST</>");
             return;
         }
