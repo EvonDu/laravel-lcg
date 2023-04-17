@@ -31,7 +31,7 @@ class Curd{
         //名称设置
         $this->name = $options["name"] ?: $table;
         //路径前缀
-        $this->prefixes = PathUtil::explodePath($options["prefixes"] ?: "");
+        $this->prefixes = PathUtil::explodePath($options["prefix"] ?: "");
         //处理全称
         if($options["fullname"]){
             $info = pathinfo($options["fullname"]);
