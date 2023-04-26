@@ -50,6 +50,19 @@ class Curd{
     }
 
     /**
+     * 获取标题名
+     * @return string
+     */
+    public function getTitleName(){
+        $element = [];
+        foreach ($this->prefixes as $prefix){
+            $element[] = Str::studly($prefix);
+        }
+        $element[] = Str::studly($this->name);;
+        return implode("", $element);
+    }
+
+    /**
      * 获取模型名
      * @return string
      */

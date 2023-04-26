@@ -19,7 +19,7 @@ const props = defineProps({
 });
 //数据
 const data = reactive({
-    title: "__MODEL_NAME__",
+    title: "__TITLE__",
     search: {},
     models: [],
     loading: false,

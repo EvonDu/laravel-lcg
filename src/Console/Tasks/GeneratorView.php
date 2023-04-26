@@ -48,8 +48,8 @@ class GeneratorView{
     private static function generatorStyle1(Factory $factory, Table $table, Curd $curd, bool $cover=false){
         //读取模板
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/View.vue");
+        $content = str_replace("__TITLE__", $curd->getTitleName(), $content);
         $content = str_replace("__MODEL_PK__", $table->primary_key->name, $content);
-        $content = str_replace("__MODEL_NAME__", $curd->getModelName(), $content);
         $content = str_replace("__TABLE_ITEMS__", self::getViewTableContent($table), $content);
         $content = str_replace("__FORM_ITEMS__", self::getViewFormContent($table, "window.data.model", "window?.data?.errors", 5), $content);
         $content = str_replace("__DETAIL_ITEMS__", self::getViewDetailContent($table, "window.data.model", 5), $content);
@@ -71,7 +71,7 @@ class GeneratorView{
     private static function generatorStyle2(Factory $factory, Table $table, Curd $curd, bool $cover=false){
         //Index
         $content = file_get_contents(dirname(dirname(dirname(__DIR__))) . "/stubs/curd/Views/Index.vue");
-        $content = str_replace("__MODEL_NAME__", $curd->getModelName(), $content);
+        $content = str_replace("__TITLE__", $curd->getTitleName(), $content);
         $content = str_replace("__MODEL_PK__", $table->primary_key->name, $content);
         $content = str_replace("__TABLE_ITEMS__", self::getViewTableContent($table), $content);
         self::put($factory, base_path("resources/js/Pages/{$curd->getPath()}/{$curd->getModelName()}/Index.vue"), $content, $cover);

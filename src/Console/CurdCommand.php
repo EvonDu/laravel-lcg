@@ -133,7 +133,7 @@ class CurdCommand extends Command
 
         //添加路由
         $rows = [];
-        $rows[] = "//{$curd->getModelName()}";
+        $rows[] = "//{$curd->getTitleName()}";
         $rows[] = "Route::prefix('{$curd->getUrl()}')->group(function () {";
         $rows[] = "    Route::get('/', [{$curd->getControllerClassname()}::class, 'page']);";
         $rows[] = "    Route::resource('/interface', {$curd->getControllerClassname()}::class);";
@@ -189,11 +189,11 @@ class CurdCommand extends Command
         //添加导航
         $rows = [];
         $rows[] = "    [";
-        $rows[] = "        \"title\" => \"{$curd->getModelName()}\",";
+        $rows[] = "        \"title\" => \"{$curd->getTitleName()}\",";
         $rows[] = "        \"icon\" => \"fa fa-cube\",";
         $rows[] = "        \"url\" => \"#\",";
         $rows[] = "        \"childList\" => [";
-        $rows[] = "            [\"title\" => \"{$curd->getModelName()}\", \"url\" => url(\"{$curd->getUrl()}\")],";
+        $rows[] = "            [\"title\" => \"{$curd->getTitleName()}\", \"url\" => url(\"{$curd->getUrl()}\")],";
         $rows[] = "        ],";
         $rows[] = "    ],";
         $code = implode("\n", $rows);

@@ -66,7 +66,7 @@ class GeneratorModel{
         $contents = [];
         $contents[] = "/**";
         //属性注解
-        $contents[] = "/* " . $curd->getModelName();
+        $contents[] = "/* " . $curd->getTitleName();
         foreach ($table->fields as $field){
             $contents[] = " * @property {$field->type} \${$field->name} {$field->comment}";
         }
@@ -81,7 +81,7 @@ class GeneratorModel{
         }
         //文档注解
         $contents[] = "";
-        $contents[] = " * @OA\Schema(schema=\"{$curd->getModelName()}\", description=\"\")";
+        $contents[] = " * @OA\Schema(schema=\"{$curd->getTitleName()}\", description=\"\")";
         foreach ($table->fields as $field){
             $contents[] = " * @OA\Property(property=\"{$field->name}\", type=\"{$field->type}\", description=\"{$field->comment}\")";
         }

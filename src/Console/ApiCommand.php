@@ -120,7 +120,7 @@ class ApiCommand extends Command
 
         //添加路由
         $rows = [];
-        $rows[] = "//{$curd->getModelName()}";
+        $rows[] = "//{$curd->getTitleName()}";
         $rows[] = "Route::resource('{$curd->getUrl()}', {$curd->getControllerClassname()}::class);";
         $route = implode("\n", $rows);
 
