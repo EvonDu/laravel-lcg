@@ -58,11 +58,6 @@ const handleDelete = function(model){
 
         });
 };
-const handlePermissions = function(model){
-    instance.refs.refPermissions.open(model, function(model){
-        handleRefresh();
-    });
-};
 const handleSearch = function(option){
     instance.refs.refSearch.search(option, function(models, paginate){
         data.models = models;
@@ -98,7 +93,7 @@ onMounted(() => {
                         </el-button-group>
                     </el-col>
                     <el-col :xs="0" :sm="12">
-                        <el-input placeholder="Please input" class="input-with-select" v-model="data.keyword" @keydown.enter="handleSearch({model: {name: data.keyword}})">
+                        <el-input placeholder="Please input" class="input-with-select" v-model="data.keyword" @keydown.enter="handleSearch({model: {__MODEL_PK__: data.keyword}})">
                             <template #append>
                                 <el-button type="primary" :icon="Search" @click="handleSearch({model: {name: data.keyword}})"/>
                             </template>

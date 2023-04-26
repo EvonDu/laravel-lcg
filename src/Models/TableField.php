@@ -50,8 +50,10 @@ class TableField {
             case "char":
             case "varchar":
             case "datetime":
+            case "timestamp":
                 return "string";
             case "int":
+            case "bigint":
             case "bigint unsigned":
                 return "integer";
             case "json":
