@@ -95,7 +95,7 @@ onMounted(() => {
                     <el-col :xs="0" :sm="12">
                         <el-input placeholder="Please input" class="input-with-select" v-model="data.keyword" @keydown.enter="handleSearch({model: {__MODEL_PK__: data.keyword}})">
                             <template #append>
-                                <el-button type="primary" :icon="Search" @click="handleSearch({model: {name: data.keyword}})"/>
+                                <el-button type="primary" :icon="Search" @click="handleSearch({model: {__MODEL_PK__: data.keyword}})"/>
                             </template>
                         </el-input>
                     </el-col>
