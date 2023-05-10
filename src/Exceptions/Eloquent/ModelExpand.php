@@ -51,20 +51,27 @@ trait ModelExpand{
 
         // 查询条件
         foreach (self::fields() as $field => $type){
+            // 获取数据
             $value = $request->input($field, null);
+            // 判断数据
             if($value === null)
                 continue;
-            if($field === "id")
+            // 特殊处理
+            if($field === "id"){
                 $find->where($field, '=', $value);
-            else
-                $find->where($field, 'like', "%{$value}%");
-            /*switch ($type){
+                continue;
+            }
+            // 类型处理
+            switch ($type){
                 case "string":
                     $find->where($field, 'like', "%{$value}%");
                     break;
+                case "array":
+                    $find->whereJsonContains($field, $value);
+                    break;
                 default:
                     $find->where($field, '=', $value);
-            }*/
+            }
         }
 
         // 排序条件
