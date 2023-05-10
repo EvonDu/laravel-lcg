@@ -170,10 +170,14 @@ trait ModelExpand{
     /**
      * 加载属性值
      * @param $params
+     * @param $check
      * @return void
      */
-    public function loadParams($params){
+    public function loadParams($params, $check=true){
+        $fields = self::fields();
         foreach ($params as $key=>$value){
+            if($check && !array_key_exists($key, $fields))
+                continue;
             $this->$key = $value;
         }
     }
