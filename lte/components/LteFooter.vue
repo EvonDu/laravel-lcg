@@ -18,8 +18,8 @@ const props = defineProps({
 <template>
     <footer class="main-footer">
         <div class="float-right d-none d-sm-block">
-            <b>Version</b> {{ this.version }}
+            <b>Version</b> {{ version }}
         </div>
-        <strong>{{ this.content }}</strong>
+        <strong>{{ content }}</strong>
     </footer>
 </template>

@@ -1,9 +1,10 @@
 <script setup>
 import { Modal } from "bootstrap";
-import { watch, onMounted, getCurrentInstance } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 
 let modal = null;
-let modal_object = null;
+
+const refModal = ref();
 
 const props = defineProps({
     modelValue : {
@@ -39,11 +40,11 @@ const close = function(){
 };
 
 const onShow = function(){
-    modal_object.show();
+    modal.show();
 };
 
 const onClose = function(){
-    modal_object.hide();
+    modal.hide();
 };
 
 watch(() => props.modelValue, (new_val) => {
@@ -55,15 +56,13 @@ watch(() => props.modelValue, (new_val) => {
 });
 
 onMounted(() => {
-    //获取元素
-    let currentInstance = getCurrentInstance();
     //创建模态框
-    modal_object = new Modal(currentInstance.ctx.$refs.modal, {});
+    modal = new Modal(refModal.value, {});
 });
 </script>
 
 <template>
-    <div class="modal fade" @click.self="close" ref="modal">
+    <div class="modal fade" @click.self="close" ref="refModal">
         <div class="modal-dialog" :class="{
             'modal-dialog-scrollable': scrollable,
             'modal-sm': size === 'sm',
