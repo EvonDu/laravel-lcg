@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Expand\Lcg\Auth\Controllers;
 
+use App\Expand\Lcg\Auth\Contracts\RequestPasswordResetLinkViewResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
 
 class PasswordResetLinkController extends Controller
 {
@@ -17,9 +17,11 @@ class PasswordResetLinkController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Auth/ForgotPassword', [
+        return app(RequestPasswordResetLinkViewResponse::class);
+
+        /*return Inertia::render('Auth/ForgotPassword', [
             'status' => session('status'),
-        ]);
+        ]);*/
     }
 
     /**

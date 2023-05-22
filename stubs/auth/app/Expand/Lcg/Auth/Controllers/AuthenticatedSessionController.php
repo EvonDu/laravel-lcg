@@ -2,12 +2,12 @@
 
 namespace App\Expand\Lcg\Auth\Controllers;
 
+use App\Expand\Lcg\Auth\Contracts\LoginViewResponse;
+use App\Expand\Lcg\Auth\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Expand\Lcg\Auth\Contracts\LoginViewResponse;
-use App\Expand\Lcg\Auth\Requests\LoginRequest;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -15,7 +15,7 @@ class AuthenticatedSessionController extends Controller
      * Display the login view.
      *
      * @param  \Illuminate\Http\Request $request
-     * @return \Lcg\Contracts\LoginViewResponse
+     * @return \App\Expand\Lcg\Auth\Contracts\LoginViewResponse
      */
     public function create(Request $request)
     {
@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      *
-     * @param  \Lcg\Http\Requests\Auth\LoginRequest  $request
+     * @param  \App\Expand\Lcg\Auth\Requests\LoginRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(LoginRequest $request)

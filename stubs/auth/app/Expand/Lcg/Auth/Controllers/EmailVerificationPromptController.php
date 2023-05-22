@@ -2,10 +2,10 @@
 
 namespace App\Expand\Lcg\Auth\Controllers;
 
+use App\Expand\Lcg\Auth\Contracts\VerifyEmailViewResponse;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
-use App\Expand\Lcg\Auth\Contracts\VerifyEmailViewResponse;
 
 class EmailVerificationPromptController extends Controller
 {

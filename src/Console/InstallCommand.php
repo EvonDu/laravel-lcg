@@ -20,7 +20,6 @@ class InstallCommand extends Command
                             {--inertia : Indicate that the Vue Inertia stack should be installed (Deprecated)}
                             {--pest : Indicate that Pest should be installed}
                             {--ssr : Indicates if Inertia SSR support should be installed}
-                            {--auth=ref : Install the mode indicating the authentication (ref,create)}
                             {--composer=global : Absolute path to the Composer binary which should be used to install packages}';
 
     /**
@@ -106,28 +105,6 @@ class InstallCommand extends Command
                 ] + $packages;
         });
 
-        // Auth Mode...
-        if ($this->option('auth') == "create") {
-            // Controllers...
-            (new Filesystem)->ensureDirectoryExists(app_path('Http/Controllers/Auth'));
-            (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/inertia-common/app/Http/Controllers/Auth', app_path('Http/Controllers/Auth'));
-
-            // Requests...
-            (new Filesystem)->ensureDirectoryExists(app_path('Http/Requests/Auth'));
-            (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/inertia-common/app/Http/Requests/Auth', app_path('Http/Requests/Auth'));
-
-            // Routes...
-            copy(__DIR__ . '/../../stubs/inertia-common/routes/web.php', base_path('routes/web.php'));
-            copy(__DIR__ . '/../../stubs/inertia-common/routes/auth.php', base_path('routes/auth.php'));
-        } else {
-            // Providers...
-            $this->installServiceProviderAfter('RouteServiceProvider', 'AuthRouteServiceProvider');
-            copy(__DIR__ . '/../../stubs/inertia-common/app/Providers/AuthRouteServiceProvider.php', app_path('Providers/AuthRouteServiceProvider.php'));
-
-            // Routes...
-            copy(__DIR__.'/../../stubs/inertia-common/routes/web_lcg.php', base_path('routes/web.php'));
-        }
-
         // Navigations...
         copy(__DIR__ . '/../../stubs/inertia-common/routes/navigations.php', base_path('routes/navigations.php'));
 
@@ -139,12 +116,19 @@ class InstallCommand extends Command
         $this->installServiceProviderAfter('RouteServiceProvider', 'InertiaServiceProvider');
         copy(__DIR__ . '/../../stubs/inertia-common/app/Providers/InertiaServiceProvider.php', app_path('Providers/InertiaServiceProvider.php'));
 
-        // Expand...
-        (new Filesystem)->ensureDirectoryExists(app_path('Expand/Lcg'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/expand/Lcg', app_path('Expand/Lcg'));
-
         // Views...
         copy(__DIR__ . '/../../stubs/inertia-vite/resources/views/app.blade.php', resource_path('views/app.blade.php'));
+
+        // Expand...
+        (new Filesystem)->ensureDirectoryExists(app_path('Expand/Lcg'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/expand/app/Expand/Lcg', app_path('Expand/Lcg'));
+
+        // Auth Mode...
+        $this->installServiceProviderAfter('RouteServiceProvider', 'AuthRouteServiceProvider');
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/auth', base_path());
+
+        // Route...
+        copy(__DIR__.'/../../stubs/inertia-common/routes/web_lcg.php', base_path('routes/web.php'));
 
         // Components + Pages...
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Components'));
@@ -211,28 +195,6 @@ class InstallCommand extends Command
                 ] + $packages;
         });
 
-        // Auth Mode...
-        if ($this->option('auth') == "create") {
-            // Controllers...
-            (new Filesystem)->ensureDirectoryExists(app_path('Http/Controllers/Auth'));
-            (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/inertia-common/app/Http/Controllers/Auth', app_path('Http/Controllers/Auth'));
-
-            // Requests...
-            (new Filesystem)->ensureDirectoryExists(app_path('Http/Requests/Auth'));
-            (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/inertia-common/app/Http/Requests/Auth', app_path('Http/Requests/Auth'));
-
-            // Routes...
-            copy(__DIR__.'/../../stubs/inertia-common/routes/web.php', base_path('routes/web.php'));
-            copy(__DIR__.'/../../stubs/inertia-common/routes/auth.php', base_path('routes/auth.php'));
-        } else {
-            // Providers...
-            $this->installServiceProviderAfter('RouteServiceProvider', 'AuthRouteServiceProvider');
-            copy(__DIR__ . '/../../stubs/inertia-common/app/Providers/AuthRouteServiceProvider.php', app_path('Providers/AuthRouteServiceProvider.php'));
-
-            // Routes...
-            copy(__DIR__.'/../../stubs/inertia-common/routes/web_lcg.php', base_path('routes/web.php'));
-        }
-
         // Navigations...
         copy(__DIR__ . '/../../stubs/inertia-common/routes/navigations.php', base_path('routes/navigations.php'));
 
@@ -244,12 +206,19 @@ class InstallCommand extends Command
         $this->installServiceProviderAfter('RouteServiceProvider', 'InertiaServiceProvider');
         copy(__DIR__ . '/../../stubs/inertia-common/app/Providers/InertiaServiceProvider.php', app_path('Providers/InertiaServiceProvider.php'));
 
-        // Expand...
-        (new Filesystem)->ensureDirectoryExists(app_path('Expand/Lcg'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/expand/Lcg', app_path('Expand/Lcg'));
-
         // Views...
         copy(__DIR__.'/../../stubs/inertia-webpack/resources/views/app.blade.php', resource_path('views/app.blade.php'));
+
+        // Expand...
+        (new Filesystem)->ensureDirectoryExists(app_path('Expand/Lcg'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/expand/app/Expand/Lcg', app_path('Expand/Lcg'));
+
+        // Auth Mode...
+        $this->installServiceProviderAfter('RouteServiceProvider', 'AuthRouteServiceProvider');
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/auth', base_path());
+
+        // Route...
+        copy(__DIR__.'/../../stubs/inertia-common/routes/web_lcg.php', base_path('routes/web.php'));
 
         // Components + Pages...
         (new Filesystem)->ensureDirectoryExists(resource_path('js/Components'));

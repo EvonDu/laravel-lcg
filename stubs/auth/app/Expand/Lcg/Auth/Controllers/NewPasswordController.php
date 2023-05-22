@@ -2,6 +2,7 @@
 
 namespace App\Expand\Lcg\Auth\Controllers;
 
+use App\Expand\Lcg\Auth\Contracts\ResetPasswordViewResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
@@ -10,7 +11,6 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
-use App\Expand\Lcg\Auth\Contracts\ResetPasswordViewResponse;
 
 class NewPasswordController extends Controller
 {
