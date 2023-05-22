@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Rbac;
+namespace App\Expand\Lcg\Rbac\Models;
 
+use App\Expand\Lcg\Eloquent\ModelExpand;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Lcg\Exceptions\Eloquent\ModelExpand;
 
 /**
 /* RoleUser

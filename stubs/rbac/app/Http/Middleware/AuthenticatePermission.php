@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Rbac\RoleUser;
+use App\Expand\Lcg\Rbac\Models\RoleUser;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

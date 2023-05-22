@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Rbac;
+namespace App\Expand\Lcg\Rbac\Controllers;
 
-use App\Models\Rbac\Role;
+use App\Expand\Lcg\Http\Responses\Response;
+use App\Expand\Lcg\Rbac\Models\Role;
+use App\Expand\Lcg\Rbac\Models\RoleUser;
 use App\Http\Controllers\Controller;
-use App\Models\Rbac\RoleUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Lcg\Http\Responses\ApiResponse;
 
 /**
  * @OA\Tag(name="Role", description="Role")
@@ -44,7 +44,7 @@ class RoleController extends Controller
     public function index(Request $request){
         $search = Role::search($request);
         $paginate = Role::paginate($search, $request);
-        return ApiResponse::OK([
+        return Response::OK([
             "paginate" => $paginate,
             "data" => $search->get(),
         ]);
@@ -72,7 +72,7 @@ class RoleController extends Controller
         $model = new Role();
         $model->loadParams($request->input());
         $model->save();
-        return ApiResponse::OK(["data" => $model]);
+        return Response::OK(["data" => $model]);
     }
 
     /**
@@ -90,10 +90,10 @@ class RoleController extends Controller
         //Find
         $model = Role::findOne($id);
         if($model == null)
-            return ApiResponse::NotFound("Not Found");
+            return Response::NotFound("Not Found");
 
         //Return
-        return ApiResponse::OK(["data" => $model]);
+        return Response::OK(["data" => $model]);
     }
 
     /**
@@ -121,7 +121,7 @@ class RoleController extends Controller
         //Find
         $model = Role::findOne($id);
         if($model == null)
-            return ApiResponse::NotFound("Not Found");
+            return Response::NotFound("Not Found");
 
         //Load
         $model->loadParams($request->input());
@@ -146,13 +146,13 @@ class RoleController extends Controller
         //Find
         $model = Role::findOne($id);
         if($model == null)
-            return ApiResponse::NotFound("Not Found");
+            return Response::NotFound("Not Found");
 
         //Delete
         $model->delete();
 
         //Return
-        return ApiResponse::OK(["message" => "OK"]);
+        return Response::OK(["message" => "OK"]);
     }
 
     /**
@@ -170,9 +170,7 @@ class RoleController extends Controller
     public function userSearch(Request $request){
         $key = $request->input("k", "");
         $list = User::where('email', 'LIKE', "%{$key}%")->get(["name", "email"]);
-        return ApiResponse::OK([
-            "data" => $list,
-        ]);
+        return Response::OK(["data" => $list,]);
     }
 
     /**
@@ -190,10 +188,10 @@ class RoleController extends Controller
         //Find
         $model = Role::findOne($id);
         if($model == null)
-            return ApiResponse::NotFound("Not Found");
+            return Response::NotFound("Not Found");
 
         //Return
-        return ApiResponse::OK(["data" => $model->roleUsers]);
+        return Response::OK(["data" => $model->roleUsers]);
     }
 
     /**
@@ -218,7 +216,7 @@ class RoleController extends Controller
         $email = $request->input("email", "");
         $user = User::where('email', $email)->first();
         if($user == null)
-            return ApiResponse::NotFound("Not Found");
+            return Response::NotFound("Not Found");
 
         //PUSH
         $model = new RoleUser();
@@ -227,7 +225,7 @@ class RoleController extends Controller
         $model->save();
 
         //Return
-        return ApiResponse::OK(["message" => "OK"]);
+        return Response::OK(["message" => "OK"]);
     }
 
     /**
@@ -246,12 +244,12 @@ class RoleController extends Controller
         //Find
         $model = RoleUser::findOne(["role_id" => $id, "user_id" => $user_id]);
         if($model == null)
-            return ApiResponse::NotFound("Not Found");
+            return Response::NotFound("Not Found");
 
         //Delete
         $model->delete();
 
         //Return
-        return ApiResponse::OK(["message" => "OK"]);
+        return Response::OK(["message" => "OK"]);
     }
 }

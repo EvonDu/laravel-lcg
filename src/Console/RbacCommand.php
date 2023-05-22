@@ -69,8 +69,8 @@ class RbacCommand extends Command
      */
     protected function installCommon(){
         //Model
-        (new Filesystem)->ensureDirectoryExists(base_path('app/Models/Rbac'));
-        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/app/Models/Rbac', base_path('app/Models/Rbac'));
+        (new Filesystem)->ensureDirectoryExists(base_path('app/Expand/Lcg/Rbac/Models'));
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/rbac/app/Expand/Lcg/Rbac/Models', base_path('app/Expand/Lcg/Rbac/Models'));
 
         //MiddlewareAfter
         (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Middleware'));
@@ -97,10 +97,10 @@ class RbacCommand extends Command
         $view_path = 'Rbac/Role';
 
         //Controller
-        $content = file_get_contents(__DIR__ . '/../../stubs/rbac/app/Http/Controllers/Rbac/RoleController.php');
+        $content = file_get_contents(__DIR__ . '/../../stubs/rbac/app/Expand/Lcg/Rbac/Controllers/RoleController.php');
         $content = str_replace("__VIEW_PATH__", $view_path, $content);
-        (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Controllers/Rbac'));
-        file_put_contents(base_path('app/Http/Controllers/Rbac/RoleController.php'), $content);
+        (new Filesystem)->ensureDirectoryExists(base_path('app/Expand/Lcg/Rbac/Controllers'));
+        file_put_contents(base_path('app/Expand/Lcg/Rbac/Controllers/RoleController.php'), $content);
 
         //View
         (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac'));
@@ -118,10 +118,10 @@ class RbacCommand extends Command
         $view_path = 'Rbac/Role/Index';
 
         //Controller
-        $content = file_get_contents(__DIR__ . '/../../stubs/rbac/app/Http/Controllers/Rbac/RoleController.php');
+        $content = file_get_contents(__DIR__ . '/../../stubs/rbac/app/Expand/Lcg/Rbac/Controllers/RoleController.php');
         $content = str_replace("__VIEW_PATH__", $view_path, $content);
-        (new Filesystem)->ensureDirectoryExists(base_path('app/Http/Controllers/Rbac'));
-        file_put_contents(base_path('app/Http/Controllers/Rbac/RoleController.php'), $content);
+        (new Filesystem)->ensureDirectoryExists(base_path('app/Expand/Lcg/Rbac/Controllers'));
+        file_put_contents(base_path('app/Expand/Lcg/Rbac/Controllers/RoleController.php'), $content);
 
         //View
         (new Filesystem)->ensureDirectoryExists(base_path('resources/js/Pages/Rbac/Role'));
@@ -153,12 +153,12 @@ class RbacCommand extends Command
         $rows = [];
         $rows[] = "//RBAC";
         $rows[] = "Route::prefix('/rbac/roles')->middleware(['auth.permission:ROLE_ALL'])->group(function () {";
-        $rows[] = "    Route::get('/', [App\Http\Controllers\Rbac\RoleController::class, 'page']);";
-        $rows[] = "    Route::resource('/interface', App\Http\Controllers\Rbac\RoleController::class);";
-        $rows[] = "    Route::get('/interface/{id}/search', [App\Http\Controllers\Rbac\RoleController::class, 'userSearch']);";
-        $rows[] = "    Route::get('/interface/{id}/users', [App\Http\Controllers\Rbac\RoleController::class, 'userList']);";
-        $rows[] = "    Route::post('/interface/{id}/users', [App\Http\Controllers\Rbac\RoleController::class, 'userPush']);";
-        $rows[] = "    Route::delete('/interface/{id}/users/{user_id}', [App\Http\Controllers\Rbac\RoleController::class, 'userRemove']);";
+        $rows[] = "    Route::get('/', [App\Expand\Lcg\Rbac\Controllers\RoleController::class, 'page']);";
+        $rows[] = "    Route::resource('/interface', App\Expand\Lcg\Rbac\Controllers\RoleController::class);";
+        $rows[] = "    Route::get('/interface/{id}/search', [App\Expand\Lcg\Rbac\Controllers\RoleController::class, 'userSearch']);";
+        $rows[] = "    Route::get('/interface/{id}/users', [App\Expand\Lcg\Rbac\Controllers\RoleController::class, 'userList']);";
+        $rows[] = "    Route::post('/interface/{id}/users', [App\Expand\Lcg\Rbac\Controllers\RoleController::class, 'userPush']);";
+        $rows[] = "    Route::delete('/interface/{id}/users/{user_id}', [App\Expand\Lcg\Rbac\Controllers\RoleController::class, 'userRemove']);";
         $rows[] = "});";
         $route = implode("\n", $rows);
 
@@ -242,12 +242,12 @@ class RbacCommand extends Command
         $tips[] = "[*]routes/web.php:";
         $tips[] = "//Roles";
         $tips[] = "Route::prefix('/rbac/roles')->middleware(['auth.permission:ROLE_ALL'])->group(function () {";
-        $tips[] = "    Route::get('/', [App\Http\Controllers\Rbac\RoleController::class, 'page']);";
-        $tips[] = "    Route::resource('/interface', App\Http\Controllers\Rbac\RoleController::class);";
-        $tips[] = "    Route::get('/interface/{id}/search', [App\Http\Controllers\Rbac\RoleController::class, 'userSearch']);";
-        $tips[] = "    Route::get('/interface/{id}/users', [App\Http\Controllers\Rbac\RoleController::class, 'userList']);";
-        $tips[] = "    Route::post('/interface/{id}/users', [App\Http\Controllers\Rbac\RoleController::class, 'userPush']);";
-        $tips[] = "    Route::delete('/interface/{id}/users/{user_id}', [App\Http\Controllers\Rbac\RoleController::class, 'userRemove']);";
+        $tips[] = "    Route::get('/', [App\Expand\Lcg\Rbac\Controllers\RoleController::class, 'page']);";
+        $tips[] = "    Route::resource('/interface', App\Expand\Lcg\Rbac\Controllers\RoleController::class);";
+        $tips[] = "    Route::get('/interface/{id}/search', [App\Expand\Lcg\Rbac\Controllers\RoleController::class, 'userSearch']);";
+        $tips[] = "    Route::get('/interface/{id}/users', [App\Expand\Lcg\Rbac\Controllers\RoleController::class, 'userList']);";
+        $tips[] = "    Route::post('/interface/{id}/users', [App\Expand\Lcg\Rbac\Controllers\RoleController::class, 'userPush']);";
+        $tips[] = "    Route::delete('/interface/{id}/users/{user_id}', [App\Expand\Lcg\Rbac\Controllers\RoleController::class, 'userRemove']);";
         $tips[] = "});";
         $tips[] = "``````````````````````````````````````````````````````````````````";
         $tips[] = "";
