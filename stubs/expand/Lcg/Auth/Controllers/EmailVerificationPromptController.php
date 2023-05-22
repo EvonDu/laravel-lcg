@@ -1,11 +1,11 @@
 <?php
 
-namespace Lcg\Http\Controllers\Auth;
+namespace App\Expand\Lcg\Auth\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
-use Lcg\Contracts\VerifyEmailViewResponse;
+use App\Expand\Lcg\Auth\Contracts\VerifyEmailViewResponse;
 
 class EmailVerificationPromptController extends Controller
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace Lcg\Http\Responses;
+namespace App\Expand\Lcg\Auth\Responses;
 
 use Illuminate\Contracts\Support\Responsable;
-use Lcg\Contracts\ConfirmPasswordViewResponse;
-use Lcg\Contracts\LoginViewResponse;
-use Lcg\Contracts\ResetPasswordViewResponse;
-use Lcg\Contracts\RegisterViewResponse;
-use Lcg\Contracts\RequestPasswordResetLinkViewResponse;
-use Lcg\Contracts\VerifyEmailViewResponse;
+use App\Expand\Lcg\Auth\Contracts\ConfirmPasswordViewResponse;
+use App\Expand\Lcg\Auth\Contracts\LoginViewResponse;
+use App\Expand\Lcg\Auth\Contracts\ResetPasswordViewResponse;
+use App\Expand\Lcg\Auth\Contracts\RegisterViewResponse;
+use App\Expand\Lcg\Auth\Contracts\RequestPasswordResetLinkViewResponse;
+use App\Expand\Lcg\Auth\Contracts\VerifyEmailViewResponse;
 
 class SimpleViewResponse implements
     LoginViewResponse,

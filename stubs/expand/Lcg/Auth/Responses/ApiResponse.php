@@ -1,5 +1,5 @@
 <?php
-namespace Lcg\Http\Responses;
+namespace App\Expand\Lcg\Auth\Responses;
 
 use Illuminate\Http\JsonResponse;
 

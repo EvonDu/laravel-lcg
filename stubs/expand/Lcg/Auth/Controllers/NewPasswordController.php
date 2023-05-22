@@ -1,6 +1,6 @@
 <?php
 
-namespace Lcg\Http\Controllers\Auth;
+namespace App\Expand\Lcg\Auth\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\PasswordReset;
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
-use Lcg\Contracts\ResetPasswordViewResponse;
+use App\Expand\Lcg\Auth\Contracts\ResetPasswordViewResponse;
 
 class NewPasswordController extends Controller
 {

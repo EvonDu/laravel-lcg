@@ -1,12 +1,12 @@
 <?php
 
-namespace Lcg\Http\Controllers\Auth;
+namespace App\Expand\Lcg\Auth\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
-use Lcg\Contracts\RequestPasswordResetLinkViewResponse;
+use App\Expand\Lcg\Auth\Contracts\RequestPasswordResetLinkViewResponse;
 
 class PasswordResetLinkController extends Controller
 {

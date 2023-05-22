@@ -5,21 +5,21 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
-use Lcg\Contracts\ConfirmPasswordViewResponse;
-use Lcg\Contracts\LoginViewResponse;
-use Lcg\Contracts\RegisterViewResponse;
-use Lcg\Contracts\RequestPasswordResetLinkViewResponse;
-use Lcg\Contracts\ResetPasswordViewResponse;
-use Lcg\Contracts\VerifyEmailViewResponse;
-use Lcg\Http\Controllers\Auth\AuthenticatedSessionController;
-use Lcg\Http\Controllers\Auth\ConfirmablePasswordController;
-use Lcg\Http\Controllers\Auth\EmailVerificationNotificationController;
-use Lcg\Http\Controllers\Auth\EmailVerificationPromptController;
-use Lcg\Http\Controllers\Auth\NewPasswordController;
-use Lcg\Http\Controllers\Auth\PasswordResetLinkController;
-use Lcg\Http\Controllers\Auth\RegisteredUserController;
-use Lcg\Http\Controllers\Auth\VerifyEmailController;
-use Lcg\Http\Responses\SimpleViewResponse;
+use App\Expand\Lcg\Auth\Contracts\ConfirmPasswordViewResponse;
+use App\Expand\Lcg\Auth\Contracts\LoginViewResponse;
+use App\Expand\Lcg\Auth\Contracts\RegisterViewResponse;
+use App\Expand\Lcg\Auth\Contracts\RequestPasswordResetLinkViewResponse;
+use App\Expand\Lcg\Auth\Contracts\ResetPasswordViewResponse;
+use App\Expand\Lcg\Auth\Contracts\VerifyEmailViewResponse;
+use App\Expand\Lcg\Auth\Controllers\AuthenticatedSessionController;
+use App\Expand\Lcg\Auth\Controllers\ConfirmablePasswordController;
+use App\Expand\Lcg\Auth\Controllers\EmailVerificationNotificationController;
+use App\Expand\Lcg\Auth\Controllers\EmailVerificationPromptController;
+use App\Expand\Lcg\Auth\Controllers\NewPasswordController;
+use App\Expand\Lcg\Auth\Controllers\PasswordResetLinkController;
+use App\Expand\Lcg\Auth\Controllers\RegisteredUserController;
+use App\Expand\Lcg\Auth\Controllers\VerifyEmailController;
+use App\Expand\Lcg\Auth\Responses\SimpleViewResponse;
 
 class AuthRouteServiceProvider extends ServiceProvider
 {

@@ -20,7 +20,7 @@ class InertiaServiceProvider extends ServiceProvider
         // Cover Inertia\Response
         $callback = function($class){
             if($class == "Inertia\Inertia"){
-                require_once base_path("vendor/evondu/laravel-lcg/src/Exceptions/Inertia/Response.php");
+                require_once base_path("app/Expand/Lcg/Inertia/Response.php");
                 return true;
             }
             return false;

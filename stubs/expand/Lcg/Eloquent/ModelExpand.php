@@ -1,6 +1,6 @@
 <?php
 
-namespace Lcg\Exceptions\Eloquent;
+namespace App\Expand\Lcg\Eloquent;
 
 use DateTimeInterface;
 use Illuminate\Http\Request;

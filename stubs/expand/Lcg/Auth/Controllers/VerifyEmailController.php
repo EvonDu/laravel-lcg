@@ -1,6 +1,6 @@
 <?php
 
-namespace Lcg\Http\Controllers\Auth;
+namespace App\Expand\Lcg\Auth\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;

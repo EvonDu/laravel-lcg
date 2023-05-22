@@ -1,6 +1,6 @@
 <?php
 
-namespace Lcg\Http\Requests\Auth;
+namespace App\Expand\Lcg\Auth\Requests;
 
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;

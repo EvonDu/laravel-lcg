@@ -1,13 +1,13 @@
 <?php
 
-namespace Lcg\Http\Controllers\Auth;
+namespace App\Expand\Lcg\Auth\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Lcg\Contracts\ConfirmPasswordViewResponse;
+use App\Expand\Lcg\Auth\Contracts\ConfirmPasswordViewResponse;
 
 class ConfirmablePasswordController extends Controller
 {

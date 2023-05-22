@@ -1,6 +1,6 @@
 <?php
 
-namespace Lcg\Contracts;
+namespace App\Expand\Lcg\Auth\Contracts;
 
 use Illuminate\Contracts\Support\Responsable;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Lcg\Http\Controllers\Auth;
+namespace App\Expand\Lcg\Auth\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Lcg\Contracts\RegisterViewResponse;
+use App\Expand\Lcg\Auth\Contracts\RegisterViewResponse;
 
 class RegisteredUserController extends Controller
 {
