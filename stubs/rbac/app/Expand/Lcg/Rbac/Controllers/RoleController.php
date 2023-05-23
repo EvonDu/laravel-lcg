@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @OA\Tag(name="Role", description="Role")
@@ -90,7 +91,7 @@ class RoleController extends Controller
         //Find
         $model = Role::findOne($id);
         if($model == null)
-            return Response::NotFound("Not Found");
+            throw new NotFoundHttpException("Not Found");
 
         //Return
         return Response::OK(["data" => $model]);
@@ -121,7 +122,7 @@ class RoleController extends Controller
         //Find
         $model = Role::findOne($id);
         if($model == null)
-            return Response::NotFound("Not Found");
+            throw new NotFoundHttpException("Not Found");
 
         //Load
         $model->loadParams($request->input());
@@ -146,7 +147,7 @@ class RoleController extends Controller
         //Find
         $model = Role::findOne($id);
         if($model == null)
-            return Response::NotFound("Not Found");
+            throw new NotFoundHttpException("Not Found");
 
         //Delete
         $model->delete();
@@ -188,7 +189,7 @@ class RoleController extends Controller
         //Find
         $model = Role::findOne($id);
         if($model == null)
-            return Response::NotFound("Not Found");
+            throw new NotFoundHttpException("Not Found");
 
         //Return
         return Response::OK(["data" => $model->roleUsers]);
@@ -216,7 +217,7 @@ class RoleController extends Controller
         $email = $request->input("email", "");
         $user = User::where('email', $email)->first();
         if($user == null)
-            return Response::NotFound("Not Found");
+            throw new NotFoundHttpException("Not Found");
 
         //PUSH
         $model = new RoleUser();
@@ -244,7 +245,7 @@ class RoleController extends Controller
         //Find
         $model = RoleUser::findOne(["role_id" => $id, "user_id" => $user_id]);
         if($model == null)
-            return Response::NotFound("Not Found");
+            throw new NotFoundHttpException("Not Found");
 
         //Delete
         $model->delete();
