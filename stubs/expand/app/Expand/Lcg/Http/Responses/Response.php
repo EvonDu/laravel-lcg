@@ -20,16 +20,4 @@ class Response{
     public static function Error($message, $code=500): JsonResponse{
         return self::Base(["message"=>$message], $code);
     }
-
-    public static function BadRequest($message): JsonResponse{
-        return self::Base(["message"=>$message], 400);
-    }
-
-    public static function Unauthorized($message): JsonResponse{
-        return self::Base(["message"=>$message], 401);
-    }
-
-    public static function NotFound($message): JsonResponse{
-        return self::Base(["message"=>$message], 404);
-    }
 }
