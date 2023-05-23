@@ -5,7 +5,8 @@ namespace __CONTROLLER_NAMESPACE__;
 /** CONTROLLER_USES */
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Lcg\Http\Responses\ApiResponse;
+use App\Expand\Lcg\Http\Responses\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @OA\Tag(name="__MODEL_NAME__", description="__MODEL_NAME__")
@@ -40,7 +41,7 @@ class __CONTROLLER_NAME__ extends Controller
     public function index(Request $request){
         $search = __MODEL_NAME__::search($request);
         $paginate = __MODEL_NAME__::paginate($search, $request);
-        return ApiResponse::OK([
+        return Response::OK([
             "paginate" => $paginate,
             "data" => $search->get(),
         ]);
@@ -66,7 +67,7 @@ class __CONTROLLER_NAME__ extends Controller
         $model = new __MODEL_NAME__();
         $model->loadParams($request->input());
         $model->save();
-        return ApiResponse::OK(["data" => $model]);
+        return Response::OK(["data" => $model]);
     }
 
     /**
@@ -84,10 +85,10 @@ class __CONTROLLER_NAME__ extends Controller
         //Find
         $model = __MODEL_NAME__::findOne($id);
         if($model == null)
-            return ApiResponse::NotFound("Not Found");
+            throw new NotFoundHttpException("Not Found");
 
         //Return
-        return ApiResponse::OK(["data" => $model]);
+        return Response::OK(["data" => $model]);
     }
 
     /**
@@ -113,14 +114,14 @@ class __CONTROLLER_NAME__ extends Controller
         //Find
         $model = __MODEL_NAME__::findOne($id);
         if($model == null)
-            return ApiResponse::NotFound("Not Found");
+            throw new NotFoundHttpException("Not Found");
 
         //Load
         $model->loadParams($request->input());
         $model->save();
 
         //Return
-        return $model;
+        return Response::OK(["data" => $model]);
     }
 
     /**
@@ -138,12 +139,12 @@ class __CONTROLLER_NAME__ extends Controller
         //Find
         $model = __MODEL_NAME__::findOne($id);
         if($model == null)
-            return ApiResponse::NotFound("Not Found");
+            throw new NotFoundHttpException("Not Found");
 
         //Delete
         $model->delete();
 
         //Return
-        return ApiResponse::OK(["message" => "OK"]);
+        return Response::OK(["message" => "OK"]);
     }
 }

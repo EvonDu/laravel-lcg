@@ -2,10 +2,10 @@
 
 namespace __MODEL_NAMESPACE__;
 
+use App\Expand\Lcg\Eloquent\ModelExpand;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Lcg\Exceptions\Eloquent\ModelExpand;
 
 /** MODEL_ANNOTATE */
 class __MODEL_NAME__ extends Model
