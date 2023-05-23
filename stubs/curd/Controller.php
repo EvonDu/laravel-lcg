@@ -5,7 +5,7 @@ namespace __CONTROLLER_NAMESPACE__;
 /** CONTROLLER_USES */
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Expand\Lcg\Http\Responses\Response;
+use App\Expand\Lcg\Http\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

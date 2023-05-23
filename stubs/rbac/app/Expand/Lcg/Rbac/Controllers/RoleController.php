@@ -2,7 +2,7 @@
 
 namespace App\Expand\Lcg\Rbac\Controllers;
 
-use App\Expand\Lcg\Http\Responses\Response;
+use App\Expand\Lcg\Http\Response;
 use App\Expand\Lcg\Rbac\Models\Role;
 use App\Expand\Lcg\Rbac\Models\RoleUser;
 use App\Http\Controllers\Controller;
