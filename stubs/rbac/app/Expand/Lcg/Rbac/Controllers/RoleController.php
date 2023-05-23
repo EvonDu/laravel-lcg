@@ -129,7 +129,7 @@ class RoleController extends Controller
         $model->save();
 
         //Return
-        return $model;
+        return Response::OK(["data" => $model]);
     }
 
     /**
@@ -219,7 +219,7 @@ class RoleController extends Controller
         if($user == null)
             throw new NotFoundHttpException("Not Found");
 
-        //PUSH
+        //Push
         $model = new RoleUser();
         $model->role_id = $id;
         $model->user_id = $user->id;

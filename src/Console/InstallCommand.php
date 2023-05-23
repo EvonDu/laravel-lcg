@@ -116,6 +116,9 @@ class InstallCommand extends Command
         $this->installServiceProviderAfter('RouteServiceProvider', 'InertiaServiceProvider');
         copy(__DIR__ . '/../../stubs/inertia-common/app/Providers/InertiaServiceProvider.php', app_path('Providers/InertiaServiceProvider.php'));
 
+        // Exceptions...
+        copy(__DIR__.'/../../stubs/inertia-common/app/Exceptions/Handler.php', app_path('Exceptions/Handler.php'));
+
         // Views...
         copy(__DIR__ . '/../../stubs/inertia-vite/resources/views/app.blade.php', resource_path('views/app.blade.php'));
 
@@ -205,6 +208,9 @@ class InstallCommand extends Command
         // Providers...
         $this->installServiceProviderAfter('RouteServiceProvider', 'InertiaServiceProvider');
         copy(__DIR__ . '/../../stubs/inertia-common/app/Providers/InertiaServiceProvider.php', app_path('Providers/InertiaServiceProvider.php'));
+
+        // Exceptions...
+        copy(__DIR__.'/../../stubs/inertia-common/app/Exceptions/Handler.php', app_path('Exceptions/Handler.php'));
 
         // Views...
         copy(__DIR__.'/../../stubs/inertia-webpack/resources/views/app.blade.php', resource_path('views/app.blade.php'));
