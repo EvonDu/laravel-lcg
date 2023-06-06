@@ -26,7 +26,7 @@ defineExpose({
 </script>
 
 <template>
-    <lte-modal v-model="data.show" title="编辑" size="lg">
+    <lte-modal v-model="data.show" title="详情" size="lg">
         <el-descriptions size="large" :column="2" border>
             __DETAIL_ITEMS__
         </el-descriptions>
